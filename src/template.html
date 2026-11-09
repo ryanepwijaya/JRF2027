@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Road to JRF 2027</title>
+<meta name="description" content="Program lari Ryan menuju JRF 2027 Full Marathon (24 Okt 2027): Fase Diet & Base + Blok Intensif 20 minggu, lengkap dengan menu WU/Main/CD per sesi.">
+<meta name="theme-color" content="#ff5a1f">
+<meta property="og:title" content="Road to JRF 2027 · Full Marathon">
+<meta property="og:description" content="43 minggu, 6 blok, target finish ≤ 4:30. Program lari lengkap menuju Jakarta Running Festival 2027.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ff5a1f'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='26' font-weight='800' fill='white' text-anchor='middle'%3E42K%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5f0; --paper:#ffffff; --ink:#14161c; --ink2:#4a5060; --ink3:#8a90a0;
+  --line:#e7e3da; --line2:#f0ede6; --soft:#faf8f4;
+  --easy:#16a34a; --easy-bg:#ecfdf3;
+  --rec:#64748b; --rec-bg:#f1f5f9;
+  --long:#0284c7; --long-bg:#eaf6fd;
+  --qual:#ea580c; --qual-bg:#fff3eb;
+  --race:#dc2626; --race-bg:#fdecec;
+  --hol:#b45309; --hol-bg:#fff8e6;
+  --accent:#ff5a1f;
+  --r:14px;
+  --font:"Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+h1,h2,h3{margin:0;letter-spacing:-.02em}
+button{font:inherit}
+
+/* HERO (compact) */
+.hero{background:linear-gradient(135deg,#fff 0%,#fff6ef 55%,#ffe9dc 100%);border-bottom:1px solid var(--line);position:relative;overflow-x:clip}
+.hero::before{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,90,31,.18),rgba(255,90,31,0) 70%)}
+.hero .wrap{padding-top:28px;padding-bottom:22px;position:relative}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.hero h1{font-size:clamp(30px,5vw,48px);font-weight:800;line-height:1.05;margin-top:8px}
+.hero h1 span{color:var(--accent)}
+.hero .sub{margin-top:8px;color:var(--ink2);font-size:15px;max-width:760px}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:18px}
+.stat{background:rgba(255,255,255,.85);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.stat .k{font-size:11px;color:var(--ink3);font-weight:600}
+.stat .v{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.stat .v small{font-size:12px;font-weight:600;color:var(--ink2);margin-left:3px}
+.stat .s{font-size:11px;color:var(--ink2)}
+.stat.hl{background:var(--ink);color:#fff;border-color:var(--ink)}
+.stat.hl .k,.stat.hl .s{color:#c9cbd3}
+
+/* TIMELINE (always visible) */
+.tl-box{margin-top:22px}
+.tl-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.tl-top h2{font-size:18px;font-weight:800}
+.tl-top p{margin:0;font-size:12px;color:var(--ink3);font-weight:600}
+.phase-split{display:flex;font-size:11px;font-weight:700;color:var(--ink2);margin-bottom:4px}
+.phase-split div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.timeline{display:flex;height:44px;border-radius:12px;border:1px solid var(--line);background:#fff;position:relative}
+.tl-seg{position:relative;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;
+  padding:0 4px;transition:filter .15s, opacity .15s;border-right:2px solid #fff;min-width:0}
+.tl-seg:first-child{border-radius:11px 0 0 11px}
+.tl-seg:last-child{border-right:none;border-radius:0 11px 11px 0}
+.tl-seg span{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden}
+.tl-seg span.hide{visibility:hidden}
+.tl-seg:hover,.tl-seg.pop{filter:brightness(1.1)}
+.tl-seg.dim{opacity:.28}
+.tl-seg.split{border-left:2px dashed #14161c}
+.tl-axis{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin-top:5px;font-weight:600}
+.popover{position:absolute;top:52px;z-index:30;width:300px;max-width:calc(100vw - 32px);background:#fff;border:1px solid var(--line);border-radius:12px;
+  box-shadow:0 12px 32px rgba(20,22,28,.14);padding:12px 14px;display:none}
+.popover.show{display:block}
+.popover::before{content:"";position:absolute;top:-7px;left:var(--ax,40px);width:12px;height:12px;background:#fff;border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+.popover .pt{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px}
+.popover .sw{width:12px;height:12px;border-radius:4px;flex:none}
+.popover .pm{font-size:12px;color:var(--ink3);font-weight:600;margin-top:2px}
+.popover .pd{font-size:13px;color:var(--ink2);margin-top:6px}
+.popover .pb{display:flex;gap:6px;margin-top:10px}
+
+/* PILLS / INFO PANELS */
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.pill{border:1px solid var(--line);background:#fff;font-size:13px;font-weight:700;color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.pill:hover{border-color:var(--ink3)}
+.pill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill .chev{font-size:10px;transition:transform .15s}
+.pill.on .chev{transform:rotate(180deg)}
+.panel{display:none;margin-top:12px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;position:relative}
+.panel.show{display:block;animation:fade .15s ease}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.panel h3{font-size:16px;font-weight:800}
+.panel .ph-sub{font-size:13px;color:var(--ink2);margin:2px 0 12px}
+.panel .x{position:absolute;right:12px;top:10px;border:0;background:var(--soft);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:14px;color:var(--ink2)}
+
+.btn{border:1px solid var(--line);background:#fff;font-size:13px;font-weight:700;color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer}
+.btn:hover{border-color:var(--ink3)}
+.btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.sm{padding:5px 11px;font-size:12px}
+
+.blocks{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.blk{padding:10px 12px;border-radius:10px;background:var(--soft);border:1px solid var(--line2);cursor:pointer}
+.blk:hover{border-color:var(--ink3)}
+.blk .t{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+.blk .sw{width:12px;height:12px;border-radius:4px;flex:none}
+.blk .m{font-size:12px;color:var(--ink3);font-weight:600;margin-top:2px}
+.blk .d{font-size:13px;color:var(--ink2);margin-top:4px}
+
+.chart-wrap{position:relative;overflow-x:auto}
+#chart{display:block;min-width:760px}
+#chart .bar{cursor:pointer;transition:opacity .12s}
+#chart .bar:hover{opacity:.8}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;font-size:12px;padding:8px 10px;border-radius:8px;white-space:nowrap;opacity:0;transform:translate(-50%,-110%);transition:opacity .1s;z-index:5}
+
+.zones{width:100%;border-collapse:separate;border-spacing:0}
+.zones th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-weight:700}
+.zones td{padding:10px 12px;border-bottom:1px solid var(--line2);vertical-align:top;font-size:14px}
+.zones tr:last-child td{border-bottom:none}
+.zname{display:flex;align-items:center;gap:10px;font-weight:700}
+.zname i{width:8px;height:24px;border-radius:4px;display:block;flex:none}
+.mode{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;padding:3px 8px;border-radius:999px;text-transform:uppercase}
+.mode.HR{background:#fde8ef;color:#be185d}
+.mode.Pace{background:#e8efff;color:#1d4ed8}
+.mode.Feel{background:#fef6d8;color:#a16207}
+.zv{font-family:var(--mono);font-weight:700;font-size:13px;white-space:nowrap}
+.zone-foot{margin-top:10px;font-size:13px;color:var(--ink2);background:var(--soft);padding:10px 12px;border-radius:10px}
+
+.rules{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}
+.rule{padding:12px 14px;background:var(--soft);border-radius:10px;border:1px solid var(--line2)}
+.rule h4{margin:0;font-size:14px}
+.rule p{margin:4px 0 0;font-size:13px;color:var(--ink2)}
+
+.hols{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.hol-i{display:flex;gap:10px;align-items:center;padding:8px 10px;background:var(--soft);border:1px solid var(--line2);border-radius:10px;font-size:13px}
+.hol-i .hd{font-family:var(--mono);font-weight:700;font-size:12px;background:var(--hol-bg);color:var(--hol);padding:4px 8px;border-radius:6px;white-space:nowrap}
+.hol-i .ht{font-weight:600}
+.hol-i .hx{font-size:11px;color:var(--ink3)}
+
+/* TOOLBAR */
+.toolbar{position:sticky;top:0;z-index:20;background:rgba(247,245,240,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-top:22px}
+.toolbar .wrap{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding-top:9px;padding-bottom:9px}
+.seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;font-size:13px;font-weight:700;color:var(--ink2);padding:5px 13px;border-radius:999px;cursor:pointer}
+.seg button.on{background:var(--ink);color:#fff}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-left:auto;font-size:12px;font-weight:600;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:3px;display:block}
+.filter-note{font-size:13px;font-weight:700;color:var(--ink);background:#fff;border:1px solid var(--line);padding:5px 6px 5px 12px;border-radius:999px;display:none;align-items:center;gap:6px}
+.filter-note.show{display:inline-flex}
+.filter-note button{border:0;background:var(--soft);border-radius:999px;width:22px;height:22px;cursor:pointer;color:var(--ink2)}
+
+/* WEEKS */
+.weeks{display:flex;flex-direction:column;gap:8px;margin-top:16px;padding-bottom:60px}
+.phase-head{margin-top:12px;padding:12px 16px;border-radius:12px;color:#fff;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.phase-head.p1{background:linear-gradient(120deg,#0f766e,#0ea5e9)}
+.phase-head.p2{background:linear-gradient(120deg,#be123c,#ff5a1f)}
+.phase-head h2{font-size:17px;font-weight:800}
+.phase-head p{margin:2px 0 0;font-size:13px;opacity:.92;max-width:700px}
+.phase-head .pk{font-family:var(--mono);font-size:22px;font-weight:700;white-space:nowrap}
+.phase-head .pk small{font-size:12px;font-family:var(--font);font-weight:600;opacity:.9}
+
+.week{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;scroll-margin-top:64px}
+.week.current{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,90,31,.15)}
+.wk-h{display:grid;grid-template-columns:62px minmax(150px,220px) 1fr auto 20px;gap:14px;align-items:center;padding:10px 14px 10px 12px;border-left:5px solid var(--bc);cursor:pointer;user-select:none}
+.wk-h:hover{background:var(--soft)}
+.wk-id{font-family:var(--mono);font-weight:700;font-size:16px}
+.wk-meta{min-width:0}
+.wk-meta .dates{font-weight:700;font-size:14px;white-space:nowrap}
+.wk-meta .blkname{font-size:12px;font-weight:700;color:var(--bc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chips{display:flex;gap:5px;flex-wrap:wrap;min-width:0}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--kbg);color:var(--kc);box-shadow:inset 0 0 0 1px var(--kb);white-space:nowrap}
+.chip b{font-family:var(--mono);font-weight:700;color:var(--ink)}
+.chip.h{--kc:var(--hol);--kbg:var(--hol-bg);--kb:#f5deb0}
+.chip.now{--kc:#fff;--kbg:var(--accent);--kb:var(--accent)}
+.chip.ram{--kc:#6d28d9;--kbg:#f3efff;--kb:#e3d9ff}
+.wk-km{text-align:right;min-width:92px}
+.wk-km .n{font-family:var(--mono);font-size:22px;font-weight:700;line-height:1}
+.wk-km .n small{font-family:var(--font);font-size:12px;color:var(--ink2);font-weight:600}
+.wk-km .bar{height:5px;border-radius:99px;background:var(--line2);margin-top:6px;overflow:hidden}
+.wk-km .bar i{display:block;height:100%;border-radius:99px;background:var(--bc)}
+.caret{color:var(--ink3);font-size:12px;transition:transform .15s;text-align:center}
+.week.open .caret{transform:rotate(180deg)}
+.wk-body{border-top:1px solid var(--line2);padding-top:12px}
+.wk-note{padding:0 16px 10px;font-size:13px;color:var(--ink2)}
+.wk-note b{color:var(--ink)}
+.hint{padding:0 16px 8px;font-size:12px;color:var(--ink3);font-weight:600}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;padding:0 14px 14px}
+.day{border-radius:12px;padding:10px;border:1px solid var(--line2);background:var(--soft);min-height:100px;display:flex;flex-direction:column;gap:3px}
+.day .dn{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em}
+.day .dd{font-size:12px;font-weight:600;color:var(--ink2)}
+.day .ttl{font-size:13px;font-weight:700;line-height:1.25;margin-top:2px}
+.day .km{font-family:var(--mono);font-weight:700;font-size:15px;margin-top:auto}
+.day .km small{font-family:var(--font);font-size:11px;font-weight:600;color:var(--ink2)}
+.day .hol{font-size:11px;font-weight:700;color:var(--hol);line-height:1.25}
+.day.run{cursor:pointer;background:var(--kbg);border-color:transparent;box-shadow:inset 0 0 0 1px var(--kb)}
+.day.run:hover{box-shadow:inset 0 0 0 2px var(--kc)}
+.day.run.sel{box-shadow:inset 0 0 0 2px var(--kc), 0 4px 14px rgba(20,22,28,.08)}
+.day.run .kind{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--kc)}
+.day.gym{background:#fafafa}
+.day.gym .ttl,.day.off .ttl{color:var(--ink3);font-weight:600}
+.day.holiday{background:repeating-linear-gradient(135deg,var(--hol-bg),var(--hol-bg) 8px,#fff2cc 8px,#fff2cc 16px);border-color:#f5deb0}
+.day.holiday .ttl{color:var(--hol)}
+.day.none{background:transparent;border-style:dashed;opacity:.5}
+.k-easy{--kc:var(--easy);--kbg:var(--easy-bg);--kb:#bfe8cf}
+.k-recovery{--kc:var(--rec);--kbg:var(--rec-bg);--kb:#d6dde6}
+.k-long{--kc:var(--long);--kbg:var(--long-bg);--kb:#b9e0f5}
+.k-quality{--kc:var(--qual);--kbg:var(--qual-bg);--kb:#fdd2b6}
+.k-race{--kc:var(--race);--kbg:var(--race-bg);--kb:#f7bcbc}
+
+.details{padding:0 14px 14px}
+.det{border-radius:12px;border:1px solid var(--kb);background:#fff;overflow:hidden}
+.det-h{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;background:var(--kbg)}
+.det-h .l{display:flex;flex-direction:column}
+.det-h .kind{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--kc)}
+.det-h h3{font-size:17px;font-weight:800}
+.det-h .when{font-size:12px;color:var(--ink2);font-weight:600}
+.det-h .r{display:flex;align-items:center;gap:10px}
+.det-h .tot{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--kc);white-space:nowrap}
+.det-h .tot small{font-family:var(--font);font-size:12px;color:var(--ink2)}
+.det-h .x{border:0;background:rgba(255,255,255,.7);width:28px;height:28px;border-radius:50%;cursor:pointer;color:var(--ink2)}
+.phases3{display:grid;grid-template-columns:1fr 2fr 1fr;border-top:1px solid var(--line2)}
+.ph{padding:12px 16px;border-right:1px solid var(--line2)}
+.ph:last-child{border-right:none}
+.ph .pl{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.ph .pl .pk{font-family:var(--mono);font-size:14px;color:var(--ink);letter-spacing:0}
+.ph p{margin:6px 0 0;font-size:13px;color:var(--ink2)}
+.ph.main{background:var(--soft)}
+.ph.main .pl{color:var(--kc)}
+.ph ul{margin:8px 0 0;padding-left:18px;font-size:13px}
+.ph li{margin:2px 0}
+.target{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;padding:12px 16px;border-top:1px solid var(--line2)}
+.target .tl{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding-top:4px}
+.target .tv{font-family:var(--mono);font-weight:700;font-size:15px}
+.target .tn{font-size:13px;color:var(--ink2);flex-basis:100%}
+.dnotes{padding:10px 16px;border-top:1px solid var(--line2);font-size:13px;background:#fffdf6;color:#6b5420}
+footer{padding:24px 0 40px;color:var(--ink3);font-size:12px;border-top:1px solid var(--line)}
+
+@media (max-width: 900px){
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .wk-h{grid-template-columns:52px 1fr auto 16px;row-gap:8px}
+  .chips{grid-column:1 / -1;grid-row:2}
+  .days{grid-template-columns:1fr;gap:6px}
+  .day{min-height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:4px 10px}
+  .day .dn{width:100%}
+  .day .km{margin-top:0;margin-left:auto}
+  .phases3{grid-template-columns:1fr}
+  .ph{border-right:none;border-bottom:1px solid var(--line2)}
+  .legend{display:none}
+}
+@media (max-width: 560px){
+  .wrap{padding:0 14px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(n+5){display:none}
+  .zv{white-space:normal}
+  .zones th,.zones td{padding:8px 6px}
+  .zones th:nth-child(5),.zones td:nth-child(5){display:none}
+  .wk-meta .dates{font-size:13px}
+}
+
+.tl-seg .no{display:none;font-family:var(--mono);font-size:13px;font-weight:700}
+.tl-seg.narrow .nm{display:none}
+.tl-seg.narrow .no{display:inline}
+.tl-seg.sel{box-shadow:inset 0 0 0 3px #14161c}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:1px solid var(--line);background:#fff;font-size:13px;font-weight:700;color:var(--ink2);padding:6px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.tab i{width:9px;height:9px;border-radius:3px;display:block}
+.tab:hover{border-color:var(--ink3)}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.picker{background:#fff;border:1px dashed #d8d2c4;border-radius:var(--r);padding:22px;text-align:center}
+.picker h3{font-size:17px;font-weight:800}
+.picker p{margin:4px 0 14px;color:var(--ink2);font-size:14px}
+.pick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:left}
+.pick{border:1px solid var(--line);border-left:6px solid var(--bc);border-radius:12px;padding:12px 14px;cursor:pointer;background:#fff;transition:transform .12s, box-shadow .12s}
+.pick:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(20,22,28,.07)}
+.pick .pn{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--bc)}
+.pick .pt{font-weight:800;font-size:15px}
+.pick .pm{font-size:12px;color:var(--ink3);font-weight:600;margin-top:2px}
+.blk-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;padding:14px 16px;border-radius:12px;background:#fff;border:1px solid var(--line);border-left:6px solid var(--bc);margin-top:8px}
+.blk-head:first-child{margin-top:0}
+.blk-head .bn{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--bc)}
+.blk-head h2{font-size:19px;font-weight:800}
+.blk-head p{margin:4px 0 0;font-size:13px;color:var(--ink2);max-width:760px}
+.blk-head .bk{font-family:var(--mono);font-size:22px;font-weight:700;white-space:nowrap}
+.blk-head .bk small{font-family:var(--font);font-size:12px;color:var(--ink2);font-weight:600}
+.wk-meta .blkname{color:var(--ink3)}
+@media (max-width: 900px){ .pick-grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width: 560px){ .pick-grid{grid-template-columns:1fr} }
+@media print{.toolbar,.pills{display:none} body{background:#fff}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span>Training Block · Ryan</div>
+    <h1>Road to <span>JRF 2027</span> Full Marathon</h1>
+    <p class="sub">Minggu, 24 Oktober 2027 · Target finish <b>≤ 4:30</b> (COT 5 jam, cadangan 30 menit untuk sholat, WS & darurat). <b>Fase 1 Diet &amp; Base</b> 1 Jan – 6 Jun, lalu <b>Blok Intensif 20 minggu</b> 7 Jun – 24 Okt.</p>
+    <div class="stats" id="stats"></div>
+
+    <div class="tl-box">
+      <div class="tl-top"><h2>Peta Blok</h2><p>Klik blok untuk membuka minggu-minggunya · hover untuk info</p></div>
+      <div class="phase-split" id="phaseSplit"></div>
+      <div style="position:relative">
+        <div class="timeline" id="timeline"></div>
+        <div class="popover" id="popover"></div>
+      </div>
+      <div class="tl-axis"><span>1 Jan 2027</span><span>JAKIM 13 Jun</span><span>JRF 24 Okt 2027</span></div>
+    </div>
+
+    <div class="pills" id="pills">
+      <button class="pill" data-panel="p-blocks">🧭 Penjelasan Blok <span class="chev">▼</span></button>
+      <button class="pill" data-panel="p-chart">📊 Volume Mingguan <span class="chev">▼</span></button>
+      <button class="pill" data-panel="p-zones">🎯 Panduan Zona <span class="chev">▼</span></button>
+      <button class="pill" data-panel="p-rules">📌 Aturan Main <span class="chev">▼</span></button>
+      <button class="pill" data-panel="p-hols">🎌 Libur 2027 <span class="chev">▼</span></button>
+    </div>
+
+    <div class="panel" id="p-blocks"><button class="x" data-close>✕</button>
+      <h3>Penjelasan Blok</h3><p class="ph-sub">Klik kartu untuk membuka minggu di blok itu.</p>
+      <div class="blocks" id="blocks"></div></div>
+
+    <div class="panel" id="p-chart"><button class="x" data-close>✕</button>
+      <h3>Volume Mingguan</h3><p class="ph-sub">Total km terprogram per minggu. Klik batang untuk lompat ke minggunya.</p>
+      <div class="chart-wrap"><svg id="chart" height="240"></svg><div class="tip" id="tip"></div></div></div>
+
+    <div class="panel" id="p-zones"><button class="x" data-close>✕</button>
+      <h3>Panduan Zona</h3><p class="ph-sub">Setiap menu menyebut jelas: main pakai <b>HR</b> atau <b>Pace</b>.</p>
+      <div style="overflow-x:auto"><table class="zones">
+        <thead><tr><th>Zona</th><th>Main pakai</th><th>Fase 1</th><th>Fase 2</th><th>Dipakai untuk</th></tr></thead>
+        <tbody id="zones"></tbody></table></div>
+      <div class="zone-foot">HR max estimasi ± 191 bpm (zona Strava & HR max race 189). Pace di atas titik awal. <b>Kalibrasi ulang</b> setelah TT 5K (F1·04), JAKIM (B01), dan HM Time Trial (B13): MP = pace HM + 25–30 dtk/km.</div></div>
+
+    <div class="panel" id="p-rules"><button class="x" data-close>✕</button>
+      <h3>Aturan Main</h3><p class="ph-sub">Prinsip yang berlaku di seluruh program.</p>
+      <div class="rules">
+        <div class="rule"><h4>❤️ HR menang atas pace</h4><p>Di easy, recovery & long run, patokannya HR. Jakarta panas; kalau HR naik, pelankan.</p></div>
+        <div class="rule"><h4>🏃 WU & CD itu lari</h4><p>Warm up & cool down sudah termasuk total km. Dynamic stretching di luar program.</p></div>
+        <div class="rule"><h4>📅 Libur = kosong</h4><p>Libur & cuti bersama di hari lari dikosongkan, isi sendiri kalau mau. Sabtu–Minggu tetap latihan.</p></div>
+        <div class="rule"><h4>🏋️ Senin leg day</h4><p>Selasa selalu easy, sesi berat di Kamis. Gym Senin/Rabu/Jumat kamu atur sendiri.</p></div>
+        <div class="rule"><h4>🌙 Ramadhan ± 8 Feb – 9 Mar</h4><p>Deload. Lari setelah tarawih atau ngabuburun pendek. Tanpa sesi berat saat puasa.</p></div>
+        <div class="rule"><h4>🕌 Latih jeda sholat</h4><p>Long run panjang di blok Peak dimulai sebelum Subuh, biasakan ritme berhenti–lanjut seperti race.</p></div>
+        <div class="rule"><h4>⚡ Asupan saat long run</h4><p>≥ 18 km: gel/karbo tiap ± 45 menit. Mulai B07: simulasi WS tiap 2,5–3 km seperti JRF.</p></div>
+        <div class="rule"><h4>🎯 Target 4:30 ambisius</h4><p>Butuh 6:24/km selama 42 km. Kalau HM TT minggu ke-13 &gt; 2:12, turunkan target ke 4:40–4:45.</p></div>
+      </div></div>
+
+    <div class="panel" id="p-hols"><button class="x" data-close>✕</button>
+      <h3>Libur Nasional & Cuti Bersama 2027</h3><p class="ph-sub">SKB 3 Menteri, 15 Sep 2026. Cuti bersama ASN final mengikuti Keppres.</p>
+      <div class="hols" id="hols"></div></div>
+  </div>
+</header>
+
+<div class="toolbar" id="toolbar">
+  <div class="wrap">
+    <div class="tabs" id="tabs"></div>
+    <button class="btn" id="goNow" style="display:none">Ke minggu ini</button>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="weeks" id="weeks"></div>
+</main>
+
+<footer><div class="wrap">Program lari JRF 2027 · disusun 28 Okt 2026 dari data Coros & Strava (Jan–Okt 2026). Gym & nutrisi di luar program ini.</div></footer>
+
+<script>
+const DATA = __DATA__;
+const B = DATA.blocks;
+const MON = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+const DAYS = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"];
+const KIND = {easy:"Easy",recovery:"Recovery",long:"Long Run",quality:"Kualitas",race:"Race / Time Trial"};
+const SHORT = {easy:"E",recovery:"Rec",long:"LR",quality:"Q",race:"Race"};
+const pd = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const fd = (s, y) => { const d = pd(s); return d.getDate()+" "+MON[d.getMonth()]+(y?" "+d.getFullYear():""); };
+const fmt = n => (Math.round(n*10)/10).toLocaleString("id-ID",{minimumFractionDigits:n%1?1:0, maximumFractionDigits:1});
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const weeks = DATA.weeks;
+const maxKm = Math.max(...weeks.map(w => w.total));
+const runs = weeks.flatMap(w => w.days.filter(d => d.type === "run").map(d => ({...d.session, date:d.date})));
+const longest = runs.filter(s => s.kind === "long").reduce((a,b) => b.km > a.km ? b : a);
+const peak = weeks.reduce((a,b) => b.total > a.total ? b : a);
+const sumP = p => weeks.filter(w => w.phase === p).reduce((a,w) => a + w.total, 0);
+const nP = p => weeks.filter(w => w.phase === p).length;
+
+const today = new Date(); today.setHours(0,0,0,0);
+const cur = weeks.find(w => today >= pd(w.start) && today <= pd(w.end));
+const daysLeft = Math.round((pd("2027-10-24") - today) / 86400000);
+
+const blockOrder = [];
+weeks.forEach(w => { if (!blockOrder.includes(w.block)) blockOrder.push(w.block); });
+const bWeeks = id => weeks.filter(w => w.block === id);
+const bS = i => i.first.start < "2027-01-01" ? "2027-01-01" : i.first.start;
+const bInfo = id => { const ws = bWeeks(id); return {ws, km: ws.reduce((a,w)=>a+w.total,0), first: ws[0], last: ws[ws.length-1]}; };
+
+// state: semua tertutup secara default
+let selBlock = null;            // null = belum pilih, "all" = semua, atau id blok
+const openWeeks = new Set();
+const openSess = {};
+
+// ---------- STATS ----------
+document.getElementById("stats").innerHTML = [
+  {k:"Hari menuju JRF", v: daysLeft > 0 ? daysLeft : "Race!", u: daysLeft > 0 ? "hari" : "", s:"24 Okt 2027", hl:true},
+  {k:"Total program", v: fmt(sumP(1)+sumP(2)), u:"km", s: weeks.length+" minggu · 6 blok"},
+  {k:"Fase 1 · Diet & Base", v: fmt(sumP(1)), u:"km", s:"3 lari/minggu"},
+  {k:"Fase 2 · Blok 20 mgg", v: fmt(sumP(2)), u:"km", s:"4 lari/minggu"},
+  {k:"Minggu terberat", v: fmt(peak.total), u:"km", s: peak.label+" · "+fd(peak.start)},
+  {k:"Long run terjauh", v: fmt(longest.km), u:"km", s:"Dress rehearsal · "+fd(longest.date)},
+].map(x => `<div class="stat${x.hl?" hl":""}"><div class="k">${x.k}</div><div class="v">${x.v}<small>${x.u}</small></div><div class="s">${x.s}</div></div>`).join("");
+
+// ---------- TIMELINE ----------
+document.getElementById("phaseSplit").innerHTML =
+  `<div style="flex:${nP(1)}">FASE 1 · Diet &amp; Base</div><div style="flex:${nP(2)};padding-left:6px">FASE 2 · Blok Intensif 20 mgg</div>`;
+const firstP2 = blockOrder.find(id => B[id].phase === 2);
+document.getElementById("timeline").innerHTML = blockOrder.map(id =>
+  `<div class="tl-seg${id===firstP2?" split":""}" data-seg="${id}" style="flex:${bWeeks(id).length};background:${B[id].color}">
+     <span class="nm">${B[id].no} · ${esc(B[id].name)}</span><span class="no">${B[id].no}</span></div>`).join("");
+
+function fitLabels(){
+  document.querySelectorAll(".tl-seg").forEach(seg => {
+    seg.classList.remove("narrow");
+    const nm = seg.querySelector(".nm");
+    if (nm.scrollWidth > seg.clientWidth - 14) seg.classList.add("narrow");
+  });
+}
+
+const pop = document.getElementById("popover");
+function showPop(id, seg){
+  const i = bInfo(id), tl = document.getElementById("timeline");
+  pop.innerHTML = `<div class="pt"><span class="sw" style="background:${B[id].color}"></span>Blok ${B[id].no} · ${esc(B[id].name)}</div>
+    <div class="pm">${i.first.label} – ${i.last.label} · ${fd(bS(i))} – ${fd(i.last.end)} · ${i.ws.length} mgg · ${fmt(i.km)} km</div>
+    <div class="pd">${esc(B[id].desc)}</div>
+    <div class="pm" style="margin-top:8px;color:var(--accent)">Klik untuk buka minggunya →</div>`;
+  const tlr = tl.getBoundingClientRect(), sr = seg.getBoundingClientRect();
+  const pw = Math.min(300, window.innerWidth - 32);
+  let left = sr.left - tlr.left + sr.width/2 - pw/2;
+  left = Math.max(0, Math.min(left, tlr.width - pw));
+  pop.style.left = left + "px";
+  pop.style.setProperty("--ax", Math.max(12, Math.min(pw-24, sr.left - tlr.left + sr.width/2 - left - 6)) + "px");
+  pop.classList.add("show");
+}
+function hidePop(){ pop.classList.remove("show"); }
+const canHover = window.matchMedia("(hover:hover)").matches;
+document.querySelectorAll(".tl-seg").forEach(seg => {
+  const id = seg.dataset.seg;
+  if (canHover){
+    seg.addEventListener("mouseenter", () => showPop(id, seg));
+    seg.addEventListener("mouseleave", hidePop);
+  }
+  seg.addEventListener("click", () => { hidePop(); selectBlock(id, true); });
+});
+
+// ---------- PANELS ----------
+function togglePanel(id){
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("show", p.id === id && !p.classList.contains("show")));
+  document.querySelectorAll(".pill").forEach(b => b.classList.toggle("on", document.getElementById(b.dataset.panel).classList.contains("show")));
+  if (id === "p-chart" && document.getElementById(id).classList.contains("show")) drawChart();
+}
+document.querySelectorAll(".pill").forEach(b => b.addEventListener("click", () => togglePanel(b.dataset.panel)));
+document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => togglePanel(null)));
+
+document.getElementById("blocks").innerHTML = blockOrder.map(id => {
+  const i = bInfo(id);
+  return `<div class="blk" data-blk="${id}"><div class="t"><span class="sw" style="background:${B[id].color}"></span>Blok ${B[id].no} · ${esc(B[id].name)}</div>
+    <div class="m">${i.first.label} – ${i.last.label} · ${fd(bS(i))} – ${fd(i.last.end)} · ${i.ws.length} mgg · ${fmt(i.km)} km</div>
+    <div class="d">${esc(B[id].desc)}</div></div>`;
+}).join("");
+document.querySelectorAll(".blk").forEach(el => el.addEventListener("click", () => { togglePanel(null); selectBlock(el.dataset.blk, true); }));
+
+document.getElementById("zones").innerHTML = DATA.zones.map(z => `<tr>
+  <td><div class="zname"><i style="background:${z.color}"></i>${esc(z.name)}</div></td>
+  <td><span class="mode ${z.mode}">${z.mode}</span></td>
+  <td class="zv">${esc(z.f1)}</td><td class="zv">${esc(z.f2)}</td>
+  <td style="color:var(--ink2);font-size:13px">${esc(z.use)}</td></tr>`).join("");
+
+document.getElementById("hols").innerHTML = DATA.holidays.map(h => {
+  const d = pd(h.date), dow = (d.getDay()+6)%7, run = [1,3].includes(dow);
+  return `<div class="hol-i"><span class="hd">${DAYS[dow].slice(0,3)} ${fd(h.date)}</span><div><div class="ht">${esc(h.name)}</div>
+  <div class="hx">${run ? "Hari lari → dikosongkan" : (dow>=5 ? "Akhir pekan → latihan tetap jalan" : "Hari gym")}</div></div></div>`;
+}).join("");
+
+function drawChart(){
+  const svg = document.getElementById("chart");
+  const W = Math.max(svg.parentElement.clientWidth, 760), H = 240, pl = 34, pr = 8, pt = 16, pb = 34;
+  svg.setAttribute("width", W); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const n = weeks.length, bw = (W - pl - pr) / n, top = 70;
+  const y = v => pt + (H - pt - pb) * (1 - v / top);
+  let g = "";
+  for (let v = 0; v <= top; v += 10) {
+    g += `<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="#ece8df"/>`;
+    g += `<text x="${pl-6}" y="${y(v)+4}" text-anchor="end" font-size="10" fill="#8a90a0" font-family="JetBrains Mono, monospace">${v}</text>`;
+  }
+  const splitX = pl + bw * nP(1);
+  g += `<line x1="${splitX}" x2="${splitX}" y1="${pt-6}" y2="${H-pb+4}" stroke="#14161c" stroke-dasharray="3 3"/>`;
+  g += `<text x="${splitX+6}" y="${pt+4}" font-size="10" font-weight="700" fill="#14161c">FASE 2 →</text>`;
+  weeks.forEach((w, i) => {
+    const x = pl + i * bw + bw * 0.14, isCur = cur && cur.label === w.label;
+    g += `<rect class="bar" data-i="${i}" x="${x}" y="${y(w.total)}" width="${bw*0.72}" height="${Math.max(y(0)-y(w.total),0)}" rx="3" fill="${B[w.block].color}" ${isCur?'stroke="#14161c" stroke-width="2"':''}/>`;
+    if (i % 2 === 0) g += `<text x="${x + bw*0.36}" y="${H-pb+14}" text-anchor="middle" font-size="9" fill="#8a90a0" font-family="JetBrains Mono, monospace">${w.phase===1?w.num:"B"+w.num}</text>`;
+  });
+  g += `<text x="${pl}" y="${H-4}" font-size="10" fill="#8a90a0">km/minggu · warna = blok · angka = minggu Fase 1, B = minggu blok intensif</text>`;
+  svg.innerHTML = g;
+  const tip = document.getElementById("tip");
+  svg.querySelectorAll(".bar").forEach(r => {
+    const w = weeks[+r.dataset.i];
+    r.addEventListener("mousemove", e => {
+      const box = svg.parentElement.getBoundingClientRect();
+      tip.innerHTML = `<b>${w.label} · ${fmt(w.total)} km</b><br>${fd(w.start)} – ${fd(w.end)}<br>Blok ${B[w.block].no} · ${esc(B[w.block].name)}`;
+      tip.style.left = (e.clientX - box.left + svg.parentElement.scrollLeft) + "px";
+      tip.style.top = (e.clientY - box.top) + "px"; tip.style.opacity = 1;
+    });
+    r.addEventListener("mouseleave", () => tip.style.opacity = 0);
+    r.addEventListener("click", () => { tip.style.opacity = 0; togglePanel(null); jump(w.label); });
+  });
+}
+
+// ---------- TABS ----------
+function renderTabs(){
+  document.getElementById("tabs").innerHTML =
+    blockOrder.map(id => `<button class="tab${selBlock===id?" on":""}" data-tab="${id}"><i style="background:${B[id].color}"></i>${B[id].no} · ${esc(B[id].name)}</button>`).join("") +
+    `<button class="tab${selBlock==="all"?" on":""}" data-tab="all">Semua minggu</button>`;
+  document.querySelectorAll("[data-tab]").forEach(b => b.addEventListener("click", () => selectBlock(selBlock === b.dataset.tab ? null : b.dataset.tab, false)));
+}
+
+// ---------- WEEKS ----------
+function detailHTML(w, d){
+  const s = d.session, t = s.target;
+  const steps = s.main.steps && s.main.steps.length ? `<ul>${s.main.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  return `<div class="details"><div class="det k-${s.kind}">
+    <div class="det-h"><div class="l"><span class="kind">${KIND[s.kind]}</span><h3>${esc(s.title)}</h3><span class="when">${DAYS[d.dow]}, ${fd(d.date,true)}</span></div>
+      <div class="r"><div class="tot">${fmt(s.km)}<small> km</small></div><button class="x" data-closesess="${w.label}">✕</button></div></div>
+    <div class="phases3">
+      <div class="ph"><div class="pl">Warm Up <span class="pk">${fmt(s.wu.km)} km</span></div><p>${esc(s.wu.desc)}</p></div>
+      <div class="ph main"><div class="pl">Main Menu <span class="pk">${fmt(s.main.km)} km</span></div><p>${esc(s.main.desc)}</p>${steps}</div>
+      <div class="ph"><div class="pl">Cool Down <span class="pk">${fmt(s.cd.km)} km</span></div><p>${esc(s.cd.desc)}</p></div>
+    </div>
+    <div class="target"><span class="tl">Main pakai</span><span class="mode ${t.mode}">${t.mode}</span><span class="tv">${esc(t.range)}</span>${t.note?`<span class="tn">${esc(t.note)}</span>`:""}</div>
+    ${s.notes ? `<div class="dnotes">📝 ${esc(s.notes)}</div>` : ""}
+  </div></div>`;
+}
+
+function dayHTML(w, d){
+  const dn = `<div class="dn"><span>${DAYS[d.dow]}</span>${d.ramadan?'<span title="Ramadhan">🌙</span>':""}</div>`;
+  const date = `<span class="dd">${fd(d.date)}</span>`;
+  const hol = d.holiday ? `<div class="hol">🎌 ${esc(d.holiday)}</div>` : "";
+  if (d.type === "none") return `<div class="day none">${dn}${date}<div class="ttl" style="color:var(--ink3)">2026</div></div>`;
+  if (d.type === "gym") return `<div class="day gym">${dn}${date}${hol}<div class="ttl">🏋️ ${d.dow===0?"Gym · Leg day":"Gym"}</div><div class="km"><small>program sendiri</small></div></div>`;
+  if (d.type === "off") return `<div class="day off">${dn}${date}${hol}<div class="ttl">😴 Off / istirahat</div></div>`;
+  if (d.type === "holiday") return `<div class="day holiday">${dn}${date}<div class="ttl" style="font-weight:800">🎌 ${esc(d.holiday)}</div><div class="hol" style="color:var(--ink2);font-weight:600">Libur → isi sendiri</div></div>`;
+  const s = d.session, sel = openSess[w.label] === d.dow;
+  return `<div class="day run k-${s.kind}${sel?" sel":""}" data-w="${w.label}" data-dow="${d.dow}">${dn}${date}${hol}
+    <span class="kind">${KIND[s.kind]}</span><div class="ttl">${esc(s.title)}</div>
+    <div class="km">${fmt(s.km)}<small> km</small></div></div>`;
+}
+
+function chipsHTML(w){
+  const isCur = cur && cur.label === w.label;
+  let c = isCur ? `<span class="chip now">● Minggu ini</span>` : "";
+  w.days.forEach(d => {
+    if (d.type === "run") c += `<span class="chip k-${d.session.kind}">${DAYS[d.dow].slice(0,3)} ${SHORT[d.session.kind]} <b>${fmt(d.session.km)}</b></span>`;
+    else if (d.type === "holiday") c += `<span class="chip h">${DAYS[d.dow].slice(0,3)} libur</span>`;
+  });
+  if (w.days.some(d => d.ramadan)) c += `<span class="chip ram">🌙</span>`;
+  return c;
+}
+
+function weekHTML(w){
+  const bk = B[w.block], isOpen = openWeeks.has(w.label), isCur = cur && cur.label === w.label;
+  const sd = openSess[w.label], selDay = sd !== undefined ? w.days.find(d => d.dow === sd && d.type === "run") : null;
+  return `<article class="week${isCur?" current":""}${isOpen?" open":""}" id="w-${w.label}" style="--bc:${bk.color}">
+    <div class="wk-h" data-toggle="${w.label}">
+      <div class="wk-id">${w.label}</div>
+      <div class="wk-meta"><div class="dates">${fd(w.start)} – ${fd(w.end)}</div><div class="blkname">${esc(w.stage)}</div></div>
+      <div class="chips">${chipsHTML(w)}</div>
+      <div class="wk-km"><div class="n">${fmt(w.total)}<small> km</small></div><div class="bar"><i style="width:${w.total/maxKm*100}%"></i></div></div>
+      <div class="caret">▼</div>
+    </div>
+    ${isOpen ? `<div class="wk-body">
+      ${w.note ? `<div class="wk-note"><b>Catatan:</b> ${esc(w.note)}</div>` : ""}
+      ${selDay ? "" : `<div class="hint">👆 Klik sesi lari untuk lihat WU / Main / CD</div>`}
+      <div class="days">${w.days.map(d => dayHTML(w, d)).join("")}</div>
+      ${selDay ? detailHTML(w, selDay) : ""}
+    </div>` : ""}
+  </article>`;
+}
+
+function blockHead(id){
+  const i = bInfo(id), bk = B[id];
+  return `<div class="blk-head" style="--bc:${bk.color}"><div><div class="bn">BLOK ${bk.no} · FASE ${bk.phase}</div><h2>${esc(bk.name)}</h2><p>${esc(bk.desc)}</p></div>
+    <div class="bk">${fmt(i.km)}<small> km · ${i.ws.length} mgg</small></div></div>`;
+}
+
+function pickerHTML(){
+  return `<div class="picker"><h3>Pilih blok untuk melihat menunya</h3><p>Semua minggu tertutup. Klik blok di peta, di tab atas, atau di bawah ini.</p>
+    <div class="pick-grid">${blockOrder.map(id => { const i = bInfo(id);
+      return `<div class="pick" data-pick="${id}" style="--bc:${B[id].color}"><div class="pn">BLOK ${B[id].no} · FASE ${B[id].phase}</div><div class="pt">${esc(B[id].name)}</div>
+        <div class="pm">${fd(bS(i))} – ${fd(i.last.end)} · ${i.ws.length} mgg · ${fmt(i.km)} km</div></div>`; }).join("")}</div></div>`;
+}
+
+function render(){
+  const el = document.getElementById("weeks");
+  if (!selBlock) {
+    el.innerHTML = pickerHTML();
+    el.querySelectorAll("[data-pick]").forEach(p => p.addEventListener("click", () => selectBlock(p.dataset.pick, true)));
+  } else {
+    const ids = selBlock === "all" ? blockOrder : [selBlock];
+    el.innerHTML = ids.map(id => blockHead(id) + bWeeks(id).map(weekHTML).join("")).join("");
+  }
+  el.querySelectorAll("[data-toggle]").forEach(h => h.addEventListener("click", () => {
+    const l = h.dataset.toggle;
+    if (openWeeks.has(l)) { openWeeks.delete(l); delete openSess[l]; } else openWeeks.add(l);
+    render();
+  }));
+  el.querySelectorAll(".day.run").forEach(d => d.addEventListener("click", () => {
+    const l = d.dataset.w, dow = +d.dataset.dow;
+    if (openSess[l] === dow) delete openSess[l]; else openSess[l] = dow;
+    render();
+    if (openSess[l] !== undefined) { const det = document.querySelector(`#w-${CSS.escape(l)} .details`); if (det && det.getBoundingClientRect().bottom > window.innerHeight) det.scrollIntoView({behavior:"smooth", block:"nearest"}); }
+  }));
+  el.querySelectorAll("[data-closesess]").forEach(x => x.addEventListener("click", e => { e.stopPropagation(); delete openSess[x.dataset.closesess]; render(); }));
+  document.querySelectorAll(".tl-seg").forEach(s => s.classList.toggle("sel", s.dataset.seg === selBlock));
+  renderTabs();
+}
+
+function selectBlock(id, scroll){
+  if (id !== selBlock) { openWeeks.clear(); for (const k in openSess) delete openSess[k]; }
+  selBlock = id;
+  render();
+  if (scroll) document.getElementById("toolbar").scrollIntoView({behavior:"smooth"});
+}
+
+function jump(label){
+  const w = weeks.find(x => x.label === label);
+  if (selBlock !== "all" && selBlock !== w.block) { selBlock = w.block; openWeeks.clear(); }
+  openWeeks.add(label);
+  render();
+  const el = document.getElementById("w-"+label); if (el) el.scrollIntoView({behavior:"smooth", block:"start"});
+}
+if (cur) { const g = document.getElementById("goNow"); g.style.display = ""; g.onclick = () => jump(cur.label); }
+
+render(); fitLabels();
+window.addEventListener("resize", () => { clearTimeout(window.__rt); window.__rt = setTimeout(() => { fitLabels(); hidePop(); if (document.getElementById("p-chart").classList.contains("show")) drawChart(); }, 150); });
+document.fonts && document.fonts.ready.then(fitLabels);
+
+</script>
+</body>
+</html>
