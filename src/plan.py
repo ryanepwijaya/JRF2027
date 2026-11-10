@@ -252,7 +252,7 @@ p2("jakim",
    sat=sess("easy", "Shakeout Pra-JAKIM", W(0.5, "Jog super pelan."),
         M(3.0, "Shakeout + 3 strides, lalu istirahat, siapkan race kit.", ["2,6 km jog santai", "3 × 100 m strides"]),
         W(0.5, "Jog super pelan."), HR_T("≤ 140 bpm", "Pendek saja.")),
-   sun=sess("race", "🏁 RACE: Jakarta International Marathon — Half Marathon", W(1.5, "1 km jog pelan + 3 strides, 15–20 menit sebelum start."),
+   sun=sess("race", "RACE: Jakarta International Marathon — Half Marathon (tune-up)", W(1.5, "1 km jog pelan + 3 strides, 15–20 menit sebelum start."),
         M(21.1, "HM all-out terkontrol. Hasilnya dipakai menghitung MP blok ini.",
           ["Km 0–5: 5–10 dtk lebih lambat dari target (HR ≤ 165)", "Km 5–16: target pace", "Km 16–21: habiskan kalau masih ada"]),
         W(1.0, "Jalan/jog pelan setelah finish."),
@@ -400,7 +400,7 @@ p2("taper",
    sat=sess("easy", "Shakeout Pra-Race", W(0.5, "Jog super pelan."),
         M(2.0, "Shakeout + 3 strides. Ambil race pack, siapkan race kit, tidur awal.", ["1,7 km jog santai", "3 × 100 m strides"]),
         W(0.5, "Jog super pelan."), HR_T("≤ 140 bpm", "Pendek saja.")),
-   sun=sess("race", "RACE DAY: JRF 2027 Full Marathon", W(0.5, "Jog sangat pelan 5 menit + 2 strides sebelum masuk start."),
+   sun=sess("race", "🏁 RACE DAY: Jakarta Running Festival 2027 — Full Marathon", W(0.5, "Jog sangat pelan 5 menit + 2 strides sebelum masuk start."),
         M(42.2, "Target finish ≤ 4:30 (COT 5 jam, cadangan 30 menit untuk sholat, WS, darurat).",
           ["Km 0–5: 6:35–6:40 /km (sengaja lebih lambat, HR ≤ 158)",
            "Km 5–30: 6:22–6:26 /km, HR 158–165",
@@ -551,7 +551,7 @@ weeks = []
 # Fase 1: W0 mulai Senin 28 Des 2026 (hanya 1–3 Jan aktif)
 start = D(2026,12,28)
 for n, wk in enumerate(P1):
-    weeks.append(build_week(start, wk, 1, f"F1·{n:02d}", n))
+    weeks.append(build_week(start, wk, 1, f"A{n:02d}", n))
     start += dt.timedelta(days=7)
 assert start == D(2027,6,7), start
 for n, wk in enumerate(P2, 1):
@@ -561,7 +561,7 @@ assert start == D(2027,10,25), start
 assert len(P1) == 23 and len(P2) == 20
 
 ZONES = [
-  dict(name="Recovery", mode="HR", f1="≤ 135 bpm", f2="≤ 135 bpm", use="Recovery run Minggu (Fase 2), WU & CD", color="#94a3b8"),
+  dict(name="Recovery", mode="HR", f1="≤ 135 bpm", f2="≤ 135 bpm", use="Recovery run Minggu (Fase B), WU & CD", color="#94a3b8"),
   dict(name="Easy (Z2)", mode="HR", f1="135–148 bpm", f2="135–148 bpm", use="Easy run Selasa. Pace referensi ± 7:15–7:45 /km (akan makin cepat seiring BB turun)", color="#22c55e"),
   dict(name="Steady / Long Run", mode="HR", f1="140–152 bpm", f2="145–155 bpm", use="Long run Sabtu. Konstan, enjoy the view", color="#0ea5e9"),
   dict(name="Marathon Pace (MP)", mode="Pace", f1="—", f2="6:55 → 6:24 /km (naik bertahap)", use="Sesi MP Kamis. HR guard 155–165. Dikalibrasi ulang setelah JAKIM & HM TT", color="#6366f1"),
