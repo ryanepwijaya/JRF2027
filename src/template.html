@@ -317,6 +317,43 @@ footer{padding:24px 0 40px;color:var(--ink3);font-size:12px;border-top:1px solid
 .dm-btn:hover{background:#000}
 .dm-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 body.dm-open{overflow:hidden}
+
+/* HERO INFO TOOLTIP */
+.h1row{position:relative}
+.info{display:inline-block;vertical-align:middle;margin-left:10px;position:relative;top:-4px}
+.info-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink2);font-weight:800;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font);padding:0}
+.info-btn:hover,.h1row.open .info-btn{background:var(--ink);color:#fff;border-color:var(--ink)}
+.info-tip{position:absolute;left:0;top:100%;margin-top:8px;z-index:40;width:340px;max-width:100%;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 32px rgba(20,22,28,.14);padding:12px 14px;font-size:13px;color:var(--ink2);display:none}
+.info-tip b{color:var(--ink)}
+.info-tip div{padding:4px 0;border-top:1px solid var(--line2)}
+.info-tip div:first-child{border-top:0}
+.h1row.open .info-tip{display:block}
+@media (hover:hover){ .h1row:has(.info:hover) .info-tip{display:block} }
+
+/* JAKIM HIGHLIGHT */
+.jk{margin-top:18px;border-radius:16px;padding:16px 18px;color:#fff;position:relative;overflow:hidden;
+  background:linear-gradient(120deg,#9d174d 0%,#db2777 45%,#f97316 100%);box-shadow:0 10px 26px rgba(219,39,119,.25);
+  display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+.jk::after{content:"21K";position:absolute;right:150px;top:-18px;font-size:96px;font-weight:800;letter-spacing:-.04em;color:rgba(255,255,255,.09);pointer-events:none;font-family:var(--mono)}
+.jk .je{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.9}
+.jk h3{font-size:22px;font-weight:800;line-height:1.15;margin-top:4px}
+.jk .js{font-size:13px;opacity:.95;margin-top:4px}
+.jk .jr{text-align:right;position:relative;z-index:1}
+.jk .jc{font-family:var(--mono);font-size:30px;font-weight:700;line-height:1}
+.jk .jc small{font-family:var(--font);font-size:12px;font-weight:600;opacity:.9}
+.jk-btn{margin-top:10px;border:0;background:#fff;color:#9d174d;font-size:13px;font-weight:800;padding:8px 14px;border-radius:999px;cursor:pointer}
+.jk-btn:hover{background:#fff1f6}
+@media (max-width:560px){ .jk{grid-template-columns:1fr} .jk .jr{text-align:left;display:flex;align-items:center;justify-content:space-between;gap:10px} .jk-btn{margin-top:0} .jk::after{right:-10px} }
+
+.jk-pin{position:absolute;top:-6px;bottom:-6px;width:0;z-index:5;pointer-events:none}
+.jk-pin::before{content:"";position:absolute;left:-1.5px;top:0;bottom:0;width:3px;border-radius:3px;background:#14161c}
+.jk-pin span{position:absolute;top:100%;margin-top:4px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#db2777;color:#fff;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px}
+.tl-axis{margin-top:24px}
+
+.week.jakim{border:2px solid #db2777;box-shadow:0 0 0 4px rgba(219,39,119,.12)}
+.week.jakim .wk-h{background:linear-gradient(90deg,#fff1f6,#fff)}
+.chip.jkc{--kc:#fff;--kbg:#db2777;--kb:#db2777}
+.day.run.k-race.jkd{box-shadow:inset 0 0 0 2px #db2777, 0 0 0 3px rgba(219,39,119,.18)}
 @media print{.toolbar,.pills{display:none} body{background:#fff}}
 </style>
 </head>
@@ -350,8 +387,23 @@ body.dm-open{overflow:hidden}
 <header class="hero">
   <div class="wrap">
     <div class="eyebrow"><span class="dot"></span>Training Block · Ryan</div>
-    <h1>Road to <span>JRF 2027</span> Full Marathon</h1>
-    <p class="sub">Minggu, 24 Oktober 2027 · Target finish <b>≤ 4:30</b> (COT 5 jam, cadangan 30 menit untuk sholat, WS & darurat). <b>Fase 1 Diet &amp; Base</b> 1 Jan – 6 Jun, lalu <b>Blok Intensif 20 minggu</b> 7 Jun – 24 Okt.</p>
+    <div class="h1row">
+      <h1>Road to <span>JRF 2027</span> Full&nbsp;Marathon<span class="info" id="info"><button class="info-btn" id="infoBtn" aria-label="Detail race & program" aria-expanded="false">i</button></span></h1>
+      <div class="info-tip" id="infoTip" role="tooltip">
+          <div>🏁 <b>JRF 2027 Full Marathon</b> · Minggu, 24 Oktober 2027</div>
+          <div>🎯 Target finish <b>≤ 4:30</b> (COT 5 jam, cadangan 30 menit untuk sholat, WS & darurat)</div>
+          <div>🥗 <b>Fase 1 · Diet &amp; Base</b> · 1 Jan – 6 Jun 2027</div>
+          <div>🔥 <b>Fase 2 · Blok Intensif 20 minggu</b> · 7 Jun – 24 Okt 2027</div>
+      </div>
+    </div>
+    <div class="jk" id="jakim">
+      <div>
+        <div class="je">🏁 Race Highlight</div>
+        <h3>Jakarta International Marathon 2027</h3>
+        <div class="js">Half Marathon 21,1 km · Minggu, 13 Juni 2027 · Race pembuka Blok Intensif &amp; benchmark target JRF</div>
+      </div>
+      <div class="jr"><div class="jc" id="jkCount"></div><button class="jk-btn" id="jkGo">Lihat persiapan →</button></div>
+    </div>
     <div class="stats" id="stats"></div>
 
     <div class="tl-box">
@@ -361,7 +413,7 @@ body.dm-open{overflow:hidden}
         <div class="timeline" id="timeline"></div>
         <div class="popover" id="popover"></div>
       </div>
-      <div class="tl-axis"><span>1 Jan 2027</span><span>JAKIM 13 Jun</span><span>JRF 24 Okt 2027</span></div>
+      <div class="tl-axis"><span>1 Jan 2027</span><span>JRF 24 Okt 2027</span></div>
     </div>
 
     <div class="pills" id="pills">
@@ -432,6 +484,7 @@ const fmt = n => (Math.round(n*10)/10).toLocaleString("id-ID",{minimumFractionDi
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 const weeks = DATA.weeks;
+const JK_WEEK = "B01", JK_DATE = "2027-06-13";
 const maxKm = Math.max(...weeks.map(w => w.total));
 const runs = weeks.flatMap(w => w.days.filter(d => d.type === "run").map(d => ({...d.session, date:d.date})));
 const longest = runs.filter(s => s.kind === "long").reduce((a,b) => b.km > a.km ? b : a);
@@ -552,6 +605,7 @@ function drawChart(){
   weeks.forEach((w, i) => {
     const x = pl + i * bw + bw * 0.14, isCur = cur && cur.label === w.label;
     g += `<rect class="bar" data-i="${i}" x="${x}" y="${y(w.total)}" width="${bw*0.72}" height="${Math.max(y(0)-y(w.total),0)}" rx="3" fill="${B[w.block].color}" ${isCur?'stroke="#14161c" stroke-width="2"':''}/>`;
+    if (w.label === JK_WEEK) g += `<text x="${x + bw*0.36}" y="${y(w.total)-5}" text-anchor="middle" font-size="11" font-weight="800" fill="#db2777">🏁 JAKIM</text>`;
     if (i % 2 === 0) g += `<text x="${x + bw*0.36}" y="${H-pb+14}" text-anchor="middle" font-size="9" fill="#8a90a0" font-family="JetBrains Mono, monospace">${w.phase===1?w.num:"B"+w.num}</text>`;
   });
   g += `<text x="${pl}" y="${H-4}" font-size="10" fill="#8a90a0">km/minggu · warna = blok · angka = minggu Fase 1, B = minggu blok intensif</text>`;
@@ -616,7 +670,8 @@ function dayHTML(w, d){
   if (d.type === "off") return `<div class="day off">${dn}${date}${hol}<div class="ttl">😴 Off / istirahat</div></div>`;
   if (d.type === "holiday") return `<div class="day holiday">${dn}${date}<div class="ttl" style="font-weight:800">🎌 ${esc(d.holiday)}</div><div class="hol" style="color:var(--ink2);font-weight:600">Libur → isi sendiri</div></div>`;
   const s = d.session, sel = openSess[w.label] === d.dow;
-  return `<div class="day run k-${s.kind}${sel?" sel":""}" data-w="${w.label}" data-dow="${d.dow}">${dn}${date}${hol}
+  const jkd = d.date === JK_DATE ? " jkd" : "";
+  return `<div class="day run k-${s.kind}${sel?" sel":""}${jkd}" data-w="${w.label}" data-dow="${d.dow}">${dn}${date}${hol}
     <span class="kind">${KIND[s.kind]}</span><div class="ttl">${esc(s.title)}</div>
     <div class="km">${fmt(s.km)}<small> km</small></div></div>`;
 }
@@ -624,6 +679,7 @@ function dayHTML(w, d){
 function chipsHTML(w){
   const isCur = cur && cur.label === w.label;
   let c = isCur ? `<span class="chip now">● Minggu ini</span>` : "";
+  if (w.label === JK_WEEK) c += `<span class="chip jkc">🏁 JAKIM</span>`;
   w.days.forEach(d => {
     if (d.type === "run") c += `<span class="chip k-${d.session.kind}">${DAYS[d.dow].slice(0,3)} ${SHORT[d.session.kind]} <b>${fmt(d.session.km)}</b></span>`;
     else if (d.type === "holiday") c += `<span class="chip h">${DAYS[d.dow].slice(0,3)} libur</span>`;
@@ -637,10 +693,11 @@ function chipsHTML(w){
 function weekHTML(w){
   const bk = B[w.block], isOpen = openWeeks.has(w.label), isCur = cur && cur.label === w.label;
   const sd = openSess[w.label], selDay = sd !== undefined ? w.days.find(d => d.dow === sd && (d.type === "run" || d.type === "gym")) : null;
-  return `<article class="week${isCur?" current":""}${isOpen?" open":""}" id="w-${w.label}" style="--bc:${bk.color}">
+  const isJk = w.label === JK_WEEK;
+  return `<article class="week${isCur?" current":""}${isOpen?" open":""}${isJk?" jakim":""}" id="w-${w.label}" style="--bc:${bk.color}">
     <div class="wk-h" data-toggle="${w.label}">
       <div class="wk-id">${w.label}</div>
-      <div class="wk-meta"><div class="dates">${fd(w.start)} – ${fd(w.end)}</div><div class="blkname">${esc(w.stage)}</div></div>
+      <div class="wk-meta"><div class="dates">${fd(w.start)} – ${fd(w.end)}</div><div class="blkname">${isJk ? '<span style="color:#db2777">🏁 Race week · JAKIM HM</span>' : esc(w.stage)}</div></div>
       <div class="chips">${chipsHTML(w)}</div>
       <div class="wk-km"><div class="n">${fmt(w.total)}<small> km</small></div><div class="bar"><i style="width:${w.total/maxKm*100}%"></i></div></div>
       <div class="caret">▼</div>
@@ -707,6 +764,21 @@ function jump(label){
   const el = document.getElementById("w-"+label); if (el) el.scrollIntoView({behavior:"smooth", block:"start"});
 }
 if (cur) { const g = document.getElementById("goNow"); g.style.display = ""; g.onclick = () => jump(cur.label); }
+
+// ---------- JAKIM & INFO ----------
+(function(){
+  const left = Math.round((pd(JK_DATE) - today) / 86400000);
+  document.getElementById("jkCount").innerHTML = left > 0 ? `${left}<small> hari lagi</small>` : (left === 0 ? "Race day! 🏁" : `<small>Selesai ✅</small>`);
+  document.getElementById("jkGo").onclick = () => { openSess[JK_WEEK] = 6; jump(JK_WEEK); };
+  const idx = weeks.findIndex(w => w.label === JK_WEEK);
+  const pin = document.createElement("div"); pin.className = "jk-pin";
+  pin.style.left = ((idx + 6.5/7) / weeks.length * 100) + "%";
+  pin.innerHTML = "<span>🏁 JAKIM 13 Jun</span>";
+  document.getElementById("timeline").parentElement.appendChild(pin);
+  const row = document.querySelector(".h1row"), ib = document.getElementById("infoBtn"), tip = document.getElementById("infoTip");
+  ib.addEventListener("click", e => { e.stopPropagation(); const o = row.classList.toggle("open"); ib.setAttribute("aria-expanded", o); });
+  document.addEventListener("click", e => { if (!ib.contains(e.target) && !tip.contains(e.target)) { row.classList.remove("open"); ib.setAttribute("aria-expanded", false); } });
+})();
 
 render(); fitLabels();
 window.addEventListener("resize", () => { clearTimeout(window.__rt); window.__rt = setTimeout(() => { fitLabels(); hidePop(); if (document.getElementById("p-chart").classList.contains("show")) drawChart(); }, 150); });
