@@ -289,10 +289,56 @@ footer{padding:24px 0 40px;color:var(--ink3);font-size:12px;border-top:1px solid
 .wk-meta .blkname{color:var(--ink3)}
 @media (max-width: 900px){ .pick-grid{grid-template-columns:repeat(2,1fr)} }
 @media (max-width: 560px){ .pick-grid{grid-template-columns:1fr} }
+
+/* DISCLAIMER MODAL */
+.dm-back{position:fixed;inset:0;z-index:100;background:rgba(20,22,28,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;animation:dmf .2s ease}
+.dm-back.hide{display:none}
+@keyframes dmf{from{opacity:0}to{opacity:1}}
+@keyframes dmu{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+.dm{background:#fff;border-radius:18px;max-width:440px;width:100%;box-shadow:0 24px 60px rgba(20,22,28,.3);overflow:hidden;animation:dmu .25s ease}
+.dm-top{background:linear-gradient(135deg,#fff6ef,#ffe2d1);padding:22px 22px 16px;text-align:center}
+.dm-ic{width:52px;height:52px;border-radius:14px;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 6px 16px rgba(255,90,31,.35)}
+.dm-top h2{font-size:20px;font-weight:800;margin-top:12px}
+.dm-body{padding:16px 22px 6px;font-size:14px;color:var(--ink2)}
+.dm-body p{margin:0 0 10px}
+.dm-body b{color:var(--ink)}
+.dm-list{margin:0 0 12px;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.dm-list li{display:flex;gap:10px;align-items:flex-start;background:var(--soft);border:1px solid var(--line2);border-radius:10px;padding:9px 11px}
+.dm-list li span:first-child{font-size:16px;line-height:1.3}
+.dm-foot{padding:6px 22px 20px}
+.dm-btn{width:100%;border:0;background:var(--ink);color:#fff;font-size:15px;font-weight:800;padding:13px;border-radius:12px;cursor:pointer}
+.dm-btn:hover{background:#000}
+.dm-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+body.dm-open{overflow:hidden}
 @media print{.toolbar,.pills{display:none} body{background:#fff}}
 </style>
 </head>
 <body>
+<div class="dm-back" id="disclaimer" role="dialog" aria-modal="true" aria-labelledby="dm-title" aria-describedby="dm-desc">
+  <div class="dm">
+    <div class="dm-top"><div class="dm-ic" aria-hidden="true">⚠️</div><h2 id="dm-title">Sebelum kamu lanjut…</h2></div>
+    <div class="dm-body" id="dm-desc">
+      <p>Program ini <b>dipersonalisasi khusus untuk @ryanepwijaya</b>, berdasarkan data latihan, kondisi fisik, target, dan jadwal pribadinya.</p>
+      <ul class="dm-list">
+        <li><span>🤖</span><span>Disusun dengan bantuan <b>AI</b>, bukan oleh pelatih bersertifikat.</span></li>
+        <li><span>❤️</span><span>Zona HR, pace, dan volume di sini <b>belum tentu cocok</b> untuk kondisi tubuhmu.</span></li>
+        <li><span>🧑‍🏫</span><span>Mau pakai sebagai referensi? <b>Konsultasikan dulu ke coach atau tenaga kesehatan</b> sebelum menjalankannya.</span></li>
+      </ul>
+      <p style="font-size:12px;color:var(--ink3)">Latihan di luar kemampuan bisa berisiko cedera. Gunakan dengan bijak.</p>
+    </div>
+    <div class="dm-foot"><button class="dm-btn" id="dm-ok">Saya mengerti, lanjut lihat</button></div>
+  </div>
+</div>
+<script>
+(function(){
+  var m = document.getElementById("disclaimer"), b = document.getElementById("dm-ok");
+  document.body.classList.add("dm-open");
+  function close(){ m.classList.add("hide"); document.body.classList.remove("dm-open"); }
+  b.addEventListener("click", close);
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !m.classList.contains("hide")) close(); });
+  setTimeout(function(){ try { b.focus({preventScroll:true}); } catch(_) {} }, 50);
+})();
+</script>
 
 <header class="hero">
   <div class="wrap">
