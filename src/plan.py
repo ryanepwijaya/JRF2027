@@ -438,6 +438,79 @@ BLOCKS = {
 DAYNAMES = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"]
 KEYS = {1:"tue",3:"thu",5:"sat",6:"sun"}
 
+
+# ---------------- GYM (Senin lower, Rabu upper, Jumat shoulder & core) ----------------
+# Gerakan diambil dari log Hevy/Strava Ryan (alat yang tersedia di gym-nya). Menu A/B bergantian tiap minggu.
+GYM_MENU = {
+  0: dict(focus="Lower Body", menus={
+      "A": [("Squat (Machine)",4),("Romanian Deadlift (Barbell)",4),("Bulgarian Split Squat (Dumbbell)",3),
+            ("Hip Thrust (Smith Machine)",3),("Standing Calf Raise (Machine)",4),("Weighted Tibialis",3)],
+      "B": [("Leg Press (Machine)",4),("Romanian Deadlift (Dumbbell)",4),("Lying Leg Curl (Machine)",3),
+            ("Hip Thrust (Dumbbell)",3),("Calf Press (Machine)",4),("Weighted Tibialis",3),("Hip Abduction (Machine)",2)]}),
+  2: dict(focus="Upper Body", menus={
+      "A": [("Incline Chest Press (Machine)",4),("Lat Pulldown (Cable)",4),("Seated Cable Row - V Grip (Cable)",4),
+            ("Chest Fly (Machine)",3),("Bicep Curl (Dumbbell)",3),("Triceps Rope Pushdown",3)],
+      "B": [("Incline Bench Press (Dumbbell)",4),("Pull Up (Assisted)",4),("Bent Over Row (Barbell)",4),
+            ("Chest Dip (Assisted)",3),("Bicep Curl (Cable)",3),("Triceps Extension (Dumbbell)",3)]}),
+  4: dict(focus="Shoulder & Core", menus={
+      "A": [("Lateral Raise (Dumbbell)",4),("Face Pull",3),("Plank",3),("Dead Bug",3),("Side Plank",3),
+            ("Standing Calf Raise (Machine) — ringan",3)],
+      "B": [("Lateral Raise (Dumbbell)",4),("Face Pull",3),("Lying Leg Raise",3),("Russian Twist (Bodyweight)",3),
+            ("Superman",3),("Weighted Tibialis — ringan",2)]}),
+}
+GYM_NOTES = {
+  "f1":      {0:"Fase bangun kekuatan: 8–12 rep, beban naik bertahap, sisakan 1–2 rep.",
+              2:"8–12 rep, beban naik bertahap. Fokus dada & punggung (bahu dilatih Jumat).",
+              4:"Bahu 12–15 rep. Core terkontrol. Aksesori kaki ringan saja, besok long run."},
+  "ramadan": {0:"Ramadhan: beban turun ± 20%, jangan sampai gagal. Gym setelah berbuka/tarawih.",
+              2:"Ramadhan: beban turun ± 20%, jangan sampai gagal.",
+              4:"Ramadhan: ringan & terkontrol."},
+  "f2":      {0:"Maintenance kekuatan: 5–8 rep berat, sisakan 2–3 rep. Jangan sampai gagal.",
+              2:"Pertahankan, jangan kejar PR. Sisakan 2 rep.",
+              4:"Ringan & terkontrol. Besok long run, kaki jangan capek."},
+  "peak":    {0:"Blok Peak: volume dipangkas, beban tetap. Kaki harus segar untuk Kamis & long run.",
+              2:"Volume dipangkas, beban tetap.",
+              4:"Ringan. Besok long run terpanjang."},
+  "light":   {0:"Ringan: beban ± 60%, fokus gerak. Ada race/benchmark dekat.",
+              2:"Ringan: beban ± 60%.",
+              4:"Ringan: fokus core & mobilitas."},
+}
+MOBILITY = [("Foam roll kaki (betis, paha, glute)","10 mnt"),("Mobility pinggul & ankle","10 mnt"),("Stretching ringan","5 mnt")]
+
+def gym_sets(base, mode, dow):
+    if mode == "f1": return base
+    if mode == "ramadan": return max(2, min(base, 4) - 1)
+    if mode == "f2": return 3 if dow == 0 else (base if dow == 4 else max(3, base - 1))
+    if mode == "peak": return 2 if dow == 0 else max(2, base - 1)
+    if mode == "light": return 2
+    return base
+
+# override per minggu-blok (label, dow) -> mode
+GYM_OVERRIDE = {
+  ("B01",0):"light", ("B01",2):"f2", ("B01",4):"light",      # minggu JAKIM
+  ("B02",0):"skip",                                         # sehari setelah JAKIM HM
+  ("B13",0):"light", ("B13",4):"light",                     # minggu HM Time Trial
+  ("B14",0):"light",                                        # pasca HM TT
+  ("B19",0):"light", ("B19",2):"light", ("B19",4):"light",
+  ("B20",0):"skip",  ("B20",2):"light", ("B20",4):"skip",   # race week
+}
+
+def gym_session(label, phase, stage, dow, variant, ramadan):
+    mode = GYM_OVERRIDE.get((label, dow))
+    if mode is None:
+        if phase == 1: mode = "ramadan" if (ramadan or stage == "ramadan") else "f1"
+        elif stage in ("peak",) or label in ("B15","B16","B17","B18"): mode = "peak"
+        else: mode = "f2"
+    g = GYM_MENU[dow]
+    if mode == "skip":
+        return dict(kind="gym", focus=g["focus"], variant="—", title="Mobility & Pemulihan",
+                    items=[dict(name=n, sets=v) for n, v in MOBILITY],
+                    note="Tanpa beban. " + ("Pemulihan setelah race." if label == "B02" else "Race week: kaki disimpan untuk JRF."),
+                    sets=0, mode=mode)
+    items = [dict(name=n, sets=gym_sets(b, mode, dow)) for n, b in g["menus"][variant]]
+    return dict(kind="gym", focus=g["focus"], variant=variant, title=f"{g['focus']} · Menu {variant}",
+                items=items, note=GYM_NOTES[mode][dow], sets=sum(i["sets"] for i in items), mode=mode)
+
 def build_week(start, wk, phase, label, num):
     days = []
     total = 0.0
@@ -449,8 +522,12 @@ def build_week(start, wk, phase, label, num):
         if phase == 1 and d < D(2027,1,1):
             entry["type"] = "none"
         elif i in (0,2,4):
-            entry["type"] = "gym"
-            entry["gymNote"] = "Leg day" if i == 0 else "Gym"
+            if hol:
+                entry["type"] = "holiday"
+            else:
+                entry["type"] = "gym"
+                variant = "A" if (len(weeks) % 2 == 1) else "B"
+                entry["session"] = gym_session(label, phase, wk["block"], i, variant, ram)
         else:
             key = KEYS[i]
             s = wk.get(key)

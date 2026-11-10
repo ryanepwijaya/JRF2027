@@ -209,6 +209,13 @@ button{font:inherit}
 .k-long{--kc:var(--long);--kbg:var(--long-bg);--kb:#b9e0f5}
 .k-quality{--kc:var(--qual);--kbg:var(--qual-bg);--kb:#fdd2b6}
 .k-race{--kc:var(--race);--kbg:var(--race-bg);--kb:#f7bcbc}
+.k-gym{--kc:#6d28d9;--kbg:#f5f3ff;--kb:#ddd6fe}
+.gym-list{list-style:none;margin:0;padding:0}
+.gym-list li{display:flex;justify-content:space-between;gap:12px;padding:9px 16px;border-top:1px solid var(--line2);font-size:14px}
+.gym-list li:first-child{border-top:0}
+.gym-list li span:first-child{font-weight:600}
+.gym-list .gs{font-family:var(--mono);font-weight:700;color:var(--kc);white-space:nowrap}
+.gym-body{border-top:1px solid var(--line2)}
 
 .details{padding:0 14px 14px}
 .det{border-radius:12px;border:1px solid var(--kb);background:#fff;overflow:hidden}
@@ -386,7 +393,7 @@ body.dm-open{overflow:hidden}
         <div class="rule"><h4>❤️ HR menang atas pace</h4><p>Di easy, recovery & long run, patokannya HR. Jakarta panas; kalau HR naik, pelankan.</p></div>
         <div class="rule"><h4>🏃 WU & CD itu lari</h4><p>Warm up & cool down sudah termasuk total km. Dynamic stretching di luar program.</p></div>
         <div class="rule"><h4>📅 Libur = kosong</h4><p>Libur & cuti bersama di hari lari dikosongkan, isi sendiri kalau mau. Sabtu–Minggu tetap latihan.</p></div>
-        <div class="rule"><h4>🏋️ Senin leg day</h4><p>Selasa selalu easy, sesi berat di Kamis. Gym Senin/Rabu/Jumat kamu atur sendiri.</p></div>
+        <div class="rule"><h4>🏋️ Gym 3×/minggu</h4><p>Senin lower, Rabu upper, Jumat shoulder & core. Menu A/B bergantian tiap minggu; jumlah set menyesuaikan fase. Karena Senin leg day, Selasa selalu easy.</p></div>
         <div class="rule"><h4>🌙 Ramadhan ± 8 Feb – 9 Mar</h4><p>Deload. Lari setelah tarawih atau ngabuburun pendek. Tanpa sesi berat saat puasa.</p></div>
         <div class="rule"><h4>🕌 Latih jeda sholat</h4><p>Long run panjang di blok Peak dimulai sebelum Subuh, biasakan ritme berhenti–lanjut seperti race.</p></div>
         <div class="rule"><h4>⚡ Asupan saat long run</h4><p>≥ 18 km: gel/karbo tiap ± 45 menit. Mulai B07: simulasi WS tiap 2,5–3 km seperti JRF.</p></div>
@@ -410,14 +417,14 @@ body.dm-open{overflow:hidden}
   <div class="weeks" id="weeks"></div>
 </main>
 
-<footer><div class="wrap">Program lari JRF 2027 · disusun 28 Okt 2026 dari data Coros & Strava (Jan–Okt 2026). Gym & nutrisi di luar program ini.</div></footer>
+<footer><div class="wrap">Program lari JRF 2027 · disusun 28 Okt 2026 dari data Coros & Strava (Jan–Okt 2026). Nutrisi di luar program ini. Gerakan gym diambil dari log latihan Ryan.</div></footer>
 
 <script>
 const DATA = __DATA__;
 const B = DATA.blocks;
 const MON = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
 const DAYS = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"];
-const KIND = {easy:"Easy",recovery:"Recovery",long:"Long Run",quality:"Kualitas",race:"Race / Time Trial"};
+const KIND = {easy:"Easy",recovery:"Recovery",long:"Long Run",quality:"Kualitas",race:"Race / Time Trial",gym:"Gym"};
 const SHORT = {easy:"E",recovery:"Rec",long:"LR",quality:"Q",race:"Race"};
 const pd = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
 const fd = (s, y) => { const d = pd(s); return d.getDate()+" "+MON[d.getMonth()]+(y?" "+d.getFullYear():""); };
@@ -525,7 +532,7 @@ document.getElementById("zones").innerHTML = DATA.zones.map(z => `<tr>
 document.getElementById("hols").innerHTML = DATA.holidays.map(h => {
   const d = pd(h.date), dow = (d.getDay()+6)%7, run = [1,3].includes(dow);
   return `<div class="hol-i"><span class="hd">${DAYS[dow].slice(0,3)} ${fd(h.date)}</span><div><div class="ht">${esc(h.name)}</div>
-  <div class="hx">${run ? "Hari lari → dikosongkan" : (dow>=5 ? "Akhir pekan → latihan tetap jalan" : "Hari gym")}</div></div></div>`;
+  <div class="hx">${run ? "Hari lari → dikosongkan" : (dow>=5 ? "Akhir pekan → latihan tetap jalan" : "Hari gym → dikosongkan")}</div></div></div>`;
 }).join("");
 
 function drawChart(){
@@ -572,7 +579,18 @@ function renderTabs(){
 }
 
 // ---------- WEEKS ----------
+function gymDetailHTML(w, d){
+  const s = d.session;
+  return `<div class="details"><div class="det k-gym">
+    <div class="det-h"><div class="l"><span class="kind">Gym · ${esc(s.focus)}</span><h3>${esc(s.title)}</h3><span class="when">${DAYS[d.dow]}, ${fd(d.date,true)}</span></div>
+      <div class="r"><div class="tot">${s.sets ? s.sets+"<small> set</small>" : "<small>mobility</small>"}</div><button class="x" data-closesess="${w.label}">✕</button></div></div>
+    <div class="gym-body"><ul class="gym-list">${s.items.map(i => `<li><span>${esc(i.name)}</span><span class="gs">${typeof i.sets === "number" ? i.sets+" set" : esc(i.sets)}</span></li>`).join("")}</ul></div>
+    ${s.note ? `<div class="dnotes">📝 ${esc(s.note)}</div>` : ""}
+  </div></div>`;
+}
+
 function detailHTML(w, d){
+  if (d.type === "gym") return gymDetailHTML(w, d);
   const s = d.session, t = s.target;
   const steps = s.main.steps && s.main.steps.length ? `<ul>${s.main.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
   return `<div class="details"><div class="det k-${s.kind}">
@@ -593,7 +611,8 @@ function dayHTML(w, d){
   const date = `<span class="dd">${fd(d.date)}</span>`;
   const hol = d.holiday ? `<div class="hol">🎌 ${esc(d.holiday)}</div>` : "";
   if (d.type === "none") return `<div class="day none">${dn}${date}<div class="ttl" style="color:var(--ink3)">2026</div></div>`;
-  if (d.type === "gym") return `<div class="day gym">${dn}${date}${hol}<div class="ttl">🏋️ ${d.dow===0?"Gym · Leg day":"Gym"}</div><div class="km"><small>program sendiri</small></div></div>`;
+  if (d.type === "gym") { const g = d.session, sel = openSess[w.label] === d.dow;
+    return `<div class="day run k-gym${sel?" sel":""}" data-w="${w.label}" data-dow="${d.dow}">${dn}${date}<span class="kind">Gym</span><div class="ttl">🏋️ ${esc(g.title)}</div><div class="km">${g.sets ? g.sets+"<small> set</small>" : "<small>tanpa beban</small>"}</div></div>`; }
   if (d.type === "off") return `<div class="day off">${dn}${date}${hol}<div class="ttl">😴 Off / istirahat</div></div>`;
   if (d.type === "holiday") return `<div class="day holiday">${dn}${date}<div class="ttl" style="font-weight:800">🎌 ${esc(d.holiday)}</div><div class="hol" style="color:var(--ink2);font-weight:600">Libur → isi sendiri</div></div>`;
   const s = d.session, sel = openSess[w.label] === d.dow;
@@ -609,13 +628,15 @@ function chipsHTML(w){
     if (d.type === "run") c += `<span class="chip k-${d.session.kind}">${DAYS[d.dow].slice(0,3)} ${SHORT[d.session.kind]} <b>${fmt(d.session.km)}</b></span>`;
     else if (d.type === "holiday") c += `<span class="chip h">${DAYS[d.dow].slice(0,3)} libur</span>`;
   });
+  const ng = w.days.filter(d => d.type === "gym").length;
+  if (ng) c += `<span class="chip k-gym">🏋️ ${ng}×</span>`;
   if (w.days.some(d => d.ramadan)) c += `<span class="chip ram">🌙</span>`;
   return c;
 }
 
 function weekHTML(w){
   const bk = B[w.block], isOpen = openWeeks.has(w.label), isCur = cur && cur.label === w.label;
-  const sd = openSess[w.label], selDay = sd !== undefined ? w.days.find(d => d.dow === sd && d.type === "run") : null;
+  const sd = openSess[w.label], selDay = sd !== undefined ? w.days.find(d => d.dow === sd && (d.type === "run" || d.type === "gym")) : null;
   return `<article class="week${isCur?" current":""}${isOpen?" open":""}" id="w-${w.label}" style="--bc:${bk.color}">
     <div class="wk-h" data-toggle="${w.label}">
       <div class="wk-id">${w.label}</div>
@@ -626,7 +647,7 @@ function weekHTML(w){
     </div>
     ${isOpen ? `<div class="wk-body">
       ${w.note ? `<div class="wk-note"><b>Catatan:</b> ${esc(w.note)}</div>` : ""}
-      ${selDay ? "" : `<div class="hint">👆 Klik sesi lari untuk lihat WU / Main / CD</div>`}
+      ${selDay ? "" : `<div class="hint">👆 Klik sesi untuk lihat detail: lari (WU / Main / CD) atau gym (gerakan & set)</div>`}
       <div class="days">${w.days.map(d => dayHTML(w, d)).join("")}</div>
       ${selDay ? detailHTML(w, selDay) : ""}
     </div>` : ""}
