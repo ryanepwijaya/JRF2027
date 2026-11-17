@@ -531,6 +531,50 @@ body.sheet-open{overflow:hidden}
 .hrow.cur .ht{box-shadow:0 0 0 2px var(--accent)}
 .hc-legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--ink3);margin-top:10px}
 @media (max-width: 900px){ #p-chart .chart-wrap{display:none} #p-chart .hchart{display:block} }
+
+/* ===== PROGRES ===== */
+.pg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.pg-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.pg-card .k{font-size:11px;font-weight:700;color:var(--ink3)}
+.pg-card .v{font-family:var(--mono);font-size:22px;font-weight:700;margin-top:2px}
+.pg-card .v small{font-family:var(--font);font-size:12px;color:var(--ink2);font-weight:600}
+.pg-card .s{font-size:11px;color:var(--ink2);margin-top:2px}
+.pg-bar{height:6px;border-radius:99px;background:var(--line2);margin-top:8px;overflow:hidden}
+.pg-bar i{display:block;height:100%;border-radius:99px;background:var(--accent)}
+.pg-empty{background:#fff;border:1px dashed #d8d2c4;border-radius:16px;padding:18px;text-align:center}
+.pg-empty .big{font-size:34px}
+.pg-empty h4{margin:6px 0 0;font-size:16px;font-weight:800}
+.pg-empty p{margin:4px 0 0;font-size:13px;color:var(--ink2)}
+.bw{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center}
+.bw .now{font-family:var(--mono);font-size:30px;font-weight:700;line-height:1}
+.bw .now small{font-family:var(--font);font-size:13px;color:var(--ink2)}
+.bw .meta{font-size:12px;color:var(--ink2);margin-top:4px}
+.bw svg{width:100%;height:70px;display:block}
+.bw-comp{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.bw-comp span{font-size:12px;font-weight:700;background:var(--soft);border:1px solid var(--line2);border-radius:999px;padding:3px 10px}
+.pw-row{display:grid;grid-template-columns:52px 1fr 70px;align-items:center;gap:8px;width:100%;border:0;background:none;padding:5px 2px;cursor:pointer;font:inherit;color:var(--ink);text-align:left;border-radius:8px}
+.pw-row:active{background:var(--soft)}
+.pw-row .hl{font-family:var(--mono);font-size:12px;font-weight:700}
+.pw-row .ht{position:relative;height:16px;border-radius:6px;background:var(--line2);overflow:hidden}
+.pw-row .plan{position:absolute;left:0;top:0;bottom:0;border-radius:6px;opacity:.28}
+.pw-row .act{position:absolute;left:0;top:3px;bottom:3px;border-radius:4px}
+.pw-row .hk{font-family:var(--mono);font-size:12px;font-weight:700;text-align:right;white-space:nowrap}
+.pw-row .hk small{color:var(--ink3);font-weight:600}
+.st{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.st.ok{background:#ecfdf3;color:#15803d}.st.part{background:#fff7e6;color:#b45309}.st.miss{background:#fdecec;color:#b91c1c}.st.extra{background:#eef2ff;color:#4338ca}.st.hot{background:#fff1f2;color:#be123c}.st.wait{background:var(--soft);color:var(--ink3)}
+.real{border-top:1px solid var(--line2);padding:12px 16px;background:#fbfffc}
+.real .rl{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#15803d;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.real .rv{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;font-family:var(--mono);font-size:14px;font-weight:700}
+.real .rv span small{font-family:var(--font);font-size:11px;color:var(--ink3);font-weight:600;margin-left:2px}
+.chip.act{--kc:#15803d;--kbg:#ecfdf3;--kb:#bbf7d0}
+.day .done-dot{font-size:11px;font-weight:800}
+.bm-row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line2);font-size:14px}
+.bm-row:first-child{border-top:0}
+.bm-row .bt{font-weight:700}
+.bm-row .bd{font-size:11px;color:var(--ink3)}
+.bm-row .br{font-family:var(--mono);font-weight:700;text-align:right}
+@media (max-width:760px){ .pg-grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width: 900px){ body[data-view="progress"] #v-progress{display:block} }
 @media print{.toolbar,.pills{display:none} body{background:#fff}}
 </style>
 </head>
@@ -604,6 +648,8 @@ body.sheet-open{overflow:hidden}
     </div>
 
     <div class="pills" id="pills">
+      <button class="pill" data-panel="p-progress">📈 Progres <span class="chev">▼</span></button>
+      <button class="pill" data-panel="p-race">🏁 Race & Benchmark <span class="chev">▼</span></button>
       <button class="pill" data-panel="p-blocks">🧭 Penjelasan Blok <span class="chev">▼</span></button>
       <button class="pill" data-panel="p-chart">📊 Volume Mingguan <span class="chev">▼</span></button>
       <button class="pill" data-panel="p-zones">🎯 Panduan Zona <span class="chev">▼</span></button>
@@ -642,6 +688,11 @@ body.sheet-open{overflow:hidden}
     <div class="panel" id="p-hols"><button class="x" data-close>✕</button>
       <h3>Libur Nasional & Cuti Bersama 2027</h3><p class="ph-sub">SKB 3 Menteri, 15 Sep 2026. Cuti bersama ASN final mengikuti Keppres.</p>
       <div class="hols" id="hols"></div></div>
+
+    <div class="panel" id="p-progress"><button class="x" data-close>✕</button><div id="progressPanel"></div></div>
+    <div class="panel" id="p-race"><button class="x" data-close>✕</button>
+      <h3>Race & Benchmark</h3><p class="ph-sub">Race utama, tune-up, dan benchmark sepanjang program. Tap untuk lihat menunya.</p>
+      <div id="raceList"></div></div>
   </div>
 </header>
 
@@ -658,7 +709,7 @@ body.sheet-open{overflow:hidden}
 </main>
 
 <section class="view wrap" id="v-today"></section>
-<section class="view wrap" id="v-race"></section>
+<section class="view wrap" id="v-progress"></section>
 <section class="view wrap" id="v-more"></section>
 <section class="view wrap" id="v-moredetail"><div class="vhead"><button class="back" id="moreBack">‹ More</button></div><div id="moreSlot"></div></section>
 
@@ -673,7 +724,7 @@ body.sheet-open{overflow:hidden}
   <button data-nav="home" class="on"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg><span>Beranda</span></button>
   <button data-nav="program"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M7.5 9.5h9M7.5 13h9M7.5 16.5h5"/></svg><span>Program</span></button>
   <button data-nav="today"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><circle cx="12" cy="14.5" r="2.2" fill="currentColor" stroke="none"/></svg><span>Hari ini</span></button>
-  <button data-nav="race"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4.5h11l-2 4 2 4H5"/></svg><span>Race</span></button>
+  <button data-nav="progress"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5h16"/><path d="M6.5 16v-4M11 16V8.5M15.5 16v-6M20 16V5"/></svg><span>Progres</span></button>
   <button data-nav="more"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>More</span></button>
 </nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -767,7 +818,7 @@ document.querySelectorAll(".tl-seg").forEach(seg => {
 function togglePanel(id){
   document.querySelectorAll(".panel").forEach(p => p.classList.toggle("show", p.id === id && !p.classList.contains("show")));
   document.querySelectorAll(".pill").forEach(b => b.classList.toggle("on", document.getElementById(b.dataset.panel).classList.contains("show")));
-  if (id === "p-chart" && document.getElementById(id).classList.contains("show")) drawChart();
+  if (id && document.getElementById(id).classList.contains("show")) fillPanel(id);
 }
 document.querySelectorAll(".pill").forEach(b => b.addEventListener("click", () => togglePanel(b.dataset.panel)));
 document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => { togglePanel(null); if (b.closest(".sheet")) closeSheet(); }));
@@ -873,6 +924,7 @@ function gymDetailHTML(w, d){
     <div class="det-h"><div class="l"><span class="kind">Gym · ${esc(s.focus)}</span><h3>${esc(s.title)}</h3><span class="when">${DAYS[d.dow]}, ${fd(d.date,true)}</span></div>
       <div class="r"><div class="tot">${s.sets ? s.sets+"<small> set</small>" : "<small>mobility</small>"}</div><button class="x" data-closesess="${w.label}">✕</button></div></div>
     <div class="gym-body"><ul class="gym-list">${s.items.map(i => `<li><span>${esc(i.name)}</span><span class="gs">${typeof i.sets === "number" ? i.sets+" set" : esc(i.sets)}</span></li>`).join("")}</ul></div>
+    ${realHTML(d)}
     ${s.note ? `<div class="dnotes">📝 ${esc(s.note)}</div>` : ""}
   </div></div>`;
 }
@@ -890,6 +942,7 @@ function detailHTML(w, d){
       <div class="ph"><div class="pl">Cool Down <span class="pk">${fmt(s.cd.km)} km</span></div><p>${esc(s.cd.desc)}</p></div>
     </div>
     <div class="target"><span class="tl">Main pakai</span><span class="mode ${t.mode}">${t.mode}</span><span class="tv">${esc(t.range)}</span>${t.note?`<span class="tn">${esc(t.note)}</span>`:""}</div>
+    ${realHTML(d)}
     ${s.notes ? `<div class="dnotes">📝 ${esc(s.notes)}</div>` : ""}
   </div></div>`;
 }
@@ -900,13 +953,13 @@ function dayHTML(w, d){
   const hol = d.holiday ? `<div class="hol">🎌 ${esc(d.holiday)}</div>` : "";
   if (d.type === "none") return `<div class="day none">${dn}${date}<div class="ttl" style="color:var(--ink3)">2026</div></div>`;
   if (d.type === "gym") { const g = d.session, sel = openSess[w.label] === d.dow;
-    return `<div class="day run k-gym${sel?" sel":""}" data-w="${w.label}" data-dow="${d.dow}">${dn}${date}<span class="kind">Gym</span><div class="ttl">🏋️ ${esc(g.title)}</div><div class="km">${g.sets ? g.sets+"<small> set</small>" : "<small>tanpa beban</small>"}</div></div>`; }
+    return `<div class="day run k-gym${sel?" sel":""}" data-w="${w.label}" data-dow="${d.dow}">${dn}${date}<span class="kind">Gym${(st => st ? ` · <span class="done-dot">${st.txt}</span>` : "")(statusOf(d))}</span><div class="ttl">🏋️ ${esc(g.title)}</div><div class="km">${g.sets ? g.sets+"<small> set</small>" : "<small>tanpa beban</small>"}</div></div>`; }
   if (d.type === "off") return `<div class="day off">${dn}${date}${hol}<div class="ttl">😴 Off / istirahat</div></div>`;
   if (d.type === "holiday") return `<div class="day holiday">${dn}${date}<div class="ttl" style="font-weight:800">🎌 ${esc(d.holiday)}</div><div class="hol" style="color:var(--ink2);font-weight:600">Libur → isi sendiri</div></div>`;
   const s = d.session, sel = openSess[w.label] === d.dow;
   const jkd = d.date === JK_DATE ? " jkd" : "";
   return `<div class="day run k-${s.kind}${sel?" sel":""}${jkd}" data-w="${w.label}" data-dow="${d.dow}">${dn}${date}${hol}
-    <span class="kind">${KIND[s.kind]}</span><div class="ttl">${esc(s.title)}</div>
+    <span class="kind">${KIND[s.kind]}${(st => st ? ` · <span class="done-dot">${st.txt}${st.hot ? " 🔥" : ""}</span>` : "")(statusOf(d))}</span><div class="ttl">${esc(s.title)}</div>
     <div class="km">${fmt(s.km)}<small> km</small></div></div>`;
 }
 
@@ -920,6 +973,7 @@ function chipsHTML(w){
   });
   const ng = w.days.filter(d => d.type === "gym").length;
   if (ng) c += `<span class="chip k-gym">🏋️ ${ng}×</span>`;
+  const wa = weekActual(w); if (wa !== null) c += `<span class="chip act">Aktual <b>${fmt(wa)}</b>/${fmt(w.total)}</span>`;
   if (w.days.some(d => d.ramadan)) c += `<span class="chip ram">🌙</span>`;
   return c;
 }
@@ -1049,7 +1103,7 @@ document.getElementById("tlHint").textContent = window.matchMedia("(hover:hover)
 
 // ---------- BOTTOM NAV + HALAMAN (HP) ----------
 const bnav = document.getElementById("bnav");
-const VIEWS = ["home", "program", "today", "race", "more", "moredetail"];
+const VIEWS = ["home", "program", "today", "progress", "more", "moredetail"];
 let curView = "home", movedPage = null;
 const scrollMem = {};
 function toast(msg){ const el = document.getElementById("toast"); el.textContent = msg; el.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove("show"), 2600); }
@@ -1063,6 +1117,7 @@ function restorePage(){
 }
 function applyView(hash){
   let [v, sub] = (hash || "home").split("/");
+  if (v === "race") { v = "more"; sub = "p-race"; }
   if (!VIEWS.includes(v)) v = "home";
   if (v === "more" && sub) v = "moredetail";
   scrollMem[curView] = window.scrollY;
@@ -1070,14 +1125,14 @@ function applyView(hash){
   curView = v; document.body.dataset.view = v;
   setNav(v === "moredetail" ? "more" : v);
   if (v === "today") renderToday();
-  if (v === "race") renderRace();
+  if (v === "progress") renderProgress(document.getElementById("v-progress"), true);
   if (v === "more") renderMore();
   if (v === "moredetail") {
     const el = document.getElementById(sub);
     if (el && el.classList.contains("panel")) {
       movedPage = {el, parent: el.parentNode, next: el.nextSibling};
       el.classList.add("show"); document.getElementById("moreSlot").appendChild(el);
-      if (sub === "p-chart") drawChart();
+      fillPanel(sub);
     }
   }
   window.scrollTo(0, (v === "home" || v === "program") ? (scrollMem[v] || 0) : 0);
@@ -1126,31 +1181,134 @@ function renderToday(){
   document.getElementById("todayOpen").onclick = () => jump(w.label);
 }
 
-function renderRace(){
-  const el = document.getElementById("v-race");
-  const jkLeft = Math.round((pd(JK_DATE) - today) / 86400000);
+function fillPanel(id){
+  if (id === "p-chart") drawChart();
+  if (id === "p-race") renderRaceList(document.getElementById("raceList"));
+  if (id === "p-progress") renderProgress(document.getElementById("progressPanel"), false);
+}
+
+function renderRaceList(el){
   const ms = [];
   weeks.forEach(w => w.days.forEach(d => {
     const s = d.session; if (!s || d.type !== "run") return;
     if (s.kind === "race" || /Time Trial|Dress Rehearsal/i.test(s.title)) ms.push({w, d, s});
   }));
-  el.innerHTML = `<div class="vhead"><h2>Race</h2><p>Race utama, tune-up, dan benchmark sepanjang program</p></div>
-    <div class="race-main" style="flex-direction:column;align-items:flex-start"><div><div class="re">🏁 Main Race</div><h3>Jakarta Running Festival 2027</h3>
-      <div class="rs">Full Marathon 42,2 km · Minggu, 24 Oktober 2027 · Target <b>≤ 4:30</b></div></div>
-      <div class="rc" style="text-align:left">${daysLeft > 0 ? daysLeft + "<small> hari lagi</small>" : "Selesai ✅"}</div></div>
-    <div class="race-tune" style="margin-top:10px"><div class="re">Tune-up Race</div><h4>Jakarta International Marathon 2027</h4>
-      <div class="rs">Half Marathon · Minggu, 13 Juni 2027</div>
-      <div class="rt"><span class="rc2">${jkLeft > 0 ? jkLeft + " hari lagi" : "Selesai ✅"}</span></div></div>
-    <div class="vsec"><h3>Race & benchmark</h3><div class="ms-list">${ms.map(({w, d, s}) => {
-      const done = pd(d.date) < today, main = d.date === "2027-10-24", jk = d.date === JK_DATE;
-      return `<button class="ms${done ? " done" : ""}${main ? " main" : ""}${jk ? " jk" : ""}" data-w="${w.label}" data-dow="${d.dow}">
-        <span class="md">${fd(d.date)}</span><span><div class="mt">${esc(s.title)}</div><div class="mw">${w.label} · ${fmt(s.km)} km</div></span><span class="mc" style="margin-left:auto;color:var(--ink3)">›</span></button>`;
-    }).join("")}</div></div>`;
+  el.innerHTML = `<div class="ms-list">${ms.map(({w, d, s}) => {
+    const done = pd(d.date) < today, main = d.date === "2027-10-24", jk = d.date === JK_DATE;
+    const a = actualOn(d.date);
+    return `<button class="ms${done ? " done" : ""}${main ? " main" : ""}${jk ? " jk" : ""}" data-w="${w.label}" data-dow="${d.dow}">
+      <span class="md">${fd(d.date)}</span><span><div class="mt">${esc(s.title)}</div><div class="mw">${w.label} · ${fmt(s.km)} km${a ? ` · <b style="color:#15803d">${fmtDur(a.dur)} · ${fmtPace(a.pace)}</b>` : ""}</div></span><span class="mc" style="margin-left:auto;color:var(--ink3)">›</span></button>`;
+  }).join("")}</div>`;
   el.querySelectorAll(".ms").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.w, +b.dataset.dow)));
+}
+
+// ---------- REALISASI (data dari Coros/Strava, diperbarui mingguan) ----------
+const ACT = (DATA.actuals && DATA.actuals.activities) || [];
+const BODY = DATA.body || {target_kg: 63, entries: []};
+const fmtDur = s => { if (!s) return "–"; const h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = Math.round(s%60); return (h ? h + ":" + String(m).padStart(2,"0") : m) + ":" + String(x).padStart(2,"0"); };
+const fmtPace = s => s ? `${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,"0")}/km` : "–";
+function actualOn(date){
+  const rs = ACT.filter(a => a.date === date && a.type === "run");
+  if (!rs.length) return null;
+  const km = rs.reduce((x, a) => x + (a.km || 0), 0), dur = rs.reduce((x, a) => x + (a.dur || 0), 0);
+  const hrW = rs.reduce((x, a) => x + (a.hr || 0) * (a.dur || 0), 0);
+  return {km: Math.round(km*100)/100, dur, pace: km ? dur / km : null, hr: dur && hrW ? Math.round(hrW / dur) : null, n: rs.length};
+}
+const gymOn = date => ACT.filter(a => a.date === date && a.type === "gym");
+function hrRange(s){ if (!s || !s.target || s.target.mode !== "HR") return null; const m = s.target.range.match(/(\d{2,3})\D+(\d{2,3})/); if (m) return [+m[1], +m[2]]; const u = s.target.range.match(/≤\s*(\d{2,3})/); return u ? [0, +u[1]] : null; }
+function statusOf(d){
+  const s = d.session, past = pd(d.date) < today || (DATA.actuals && DATA.actuals.updated && d.date <= DATA.actuals.updated);
+  if (d.type === "gym") { const g = gymOn(d.date); return g.length ? {cls: "ok", txt: "✅ Selesai"} : (past && hasData(d.date) ? {cls: "miss", txt: "❌ Terlewat"} : null); }
+  if (d.type !== "run") return null;
+  const a = actualOn(d.date);
+  if (!a) return past && hasData(d.date) ? {cls: "miss", txt: "❌ Terlewat"} : null;
+  const r = a.km / s.km;
+  const st = r >= 0.9 ? {cls: "ok", txt: "✅ Selesai"} : r >= 0.6 ? {cls: "part", txt: "⚠️ Kurang"} : {cls: "miss", txt: "❌ Jauh kurang"};
+  const hr = hrRange(s);
+  if (hr && a.hr && a.hr > hr[1] + 3) st.hot = `HR ${a.hr} > ${hr[1]}`;
+  return Object.assign(st, {a});
+}
+// hanya nilai hari yang sudah tercakup update terakhir
+function hasData(date){ return DATA.actuals && DATA.actuals.updated && date <= DATA.actuals.updated; }
+function weekActual(w){
+  let km = 0, any = false;
+  w.days.forEach(d => { const a = actualOn(d.date); if (a) { km += a.km; any = true; } });
+  return any ? Math.round(km*10)/10 : (w.days.some(d => hasData(d.date)) ? 0 : null);
+}
+function realHTML(d){
+  const st = statusOf(d); if (!st) return "";
+  if (d.type === "gym") return `<div class="real"><div class="rl">Realisasi <span class="st ${st.cls}">${st.txt}</span></div></div>`;
+  if (!st.a) return `<div class="real"><div class="rl">Realisasi <span class="st ${st.cls}">${st.txt}</span></div></div>`;
+  const a = st.a;
+  return `<div class="real"><div class="rl">Realisasi <span><span class="st ${st.cls}">${st.txt}</span>${st.hot ? ` <span class="st hot">🔥 ${st.hot}</span>` : ""}</span></div>
+    <div class="rv"><span>${fmt(a.km)}<small>km</small></span><span>${fmtDur(a.dur)}<small>durasi</small></span><span>${fmtPace(a.pace)}<small>pace</small></span>${a.hr ? `<span>${a.hr}<small>bpm</small></span>` : ""}</div></div>`;
+}
+
+function weightCard(){
+  const E = (BODY.entries || []).slice().sort((x, y) => x.date < y.date ? -1 : 1), tgt = BODY.target_kg || 63;
+  if (!E.length) return `<div class="pg-empty"><div class="big">⚖️</div><h4>Berat badan · target ${tgt} kg</h4><p>Belum ada data. Diisi dari hasil InBody / timbangan saat update mingguan.</p></div>`;
+  const first = E[0], last = E[E.length - 1], lost = first.weight - last.weight, need = first.weight - tgt;
+  const pct = need > 0 ? Math.max(0, Math.min(100, lost / need * 100)) : 100;
+  let spark = "";
+  if (E.length >= 2) {
+    const ws = E.map(e => e.weight).concat([tgt]), mx = Math.max(...ws) + .5, mn = Math.min(...ws) - .5;
+    const t0 = pd(E[0].date).getTime(), t1 = pd(last.date).getTime() || t0 + 1, X = t => 4 + (t - t0) / Math.max(1, t1 - t0) * 292, Y = v => 6 + (mx - v) / (mx - mn) * 58;
+    spark = `<svg viewBox="0 0 300 70" preserveAspectRatio="none"><line x1="0" x2="300" y1="${Y(tgt)}" y2="${Y(tgt)}" stroke="#16a34a" stroke-dasharray="4 4"/><text x="296" y="${Y(tgt)-3}" text-anchor="end" font-size="9" fill="#16a34a">${tgt} kg</text>
+      <polyline fill="none" stroke="#ff5a1f" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" points="${E.map(e => X(pd(e.date).getTime()) + "," + Y(e.weight)).join(" ")}"/>
+      ${E.map(e => `<circle cx="${X(pd(e.date).getTime())}" cy="${Y(e.weight)}" r="2.5" fill="#ff5a1f"/>`).join("")}</svg>`;
+  }
+  const lc = E.slice().reverse().find(e => e.bodyfat != null || e.smm != null) || {};
+  const comp = [lc.bodyfat != null ? `Lemak ${fmt(lc.bodyfat)}%` : "", lc.smm != null ? `Otot rangka ${fmt(lc.smm)} kg` : "", lc.date && lc !== last ? `InBody ${fd(lc.date)}` : "", last.source ? `Sumber: ${esc(last.source)}` : ""].filter(Boolean);
+  return `<div class="pg-card"><div class="k">Berat badan · target ${tgt} kg</div>
+    <div class="bw"><div><div class="now">${fmt(last.weight)}<small> kg</small></div><div class="meta">${lost >= 0 ? "−" : "+"}${fmt(Math.abs(lost))} kg sejak ${fd(first.date)}<br>sisa ${fmt(Math.max(0, last.weight - tgt))} kg</div></div><div>${spark}</div></div>
+    <div class="pg-bar"><i style="width:${pct}%;background:#16a34a"></i></div>
+    ${comp.length ? `<div class="bw-comp">${comp.map(c => `<span>${c}</span>`).join("")}</div>` : ""}</div>`;
+}
+
+function renderProgress(el, page){
+  const upd = DATA.actuals && DATA.actuals.updated;
+  let html = page ? `<div class="vhead"><h2>Progres</h2><p>${upd ? `Data Coros/Strava s.d. ${fd(upd, true)} · diperbarui mingguan` : "Realisasi dari Coros/Strava · diperbarui mingguan"}</p></div>`
+                  : `<h3>Progres</h3><p class="ph-sub">${upd ? `Data Coros/Strava s.d. ${fd(upd, true)} · diperbarui mingguan` : "Realisasi dari Coros/Strava · diperbarui mingguan"}</p>`;
+  const done = weeks.filter(w => w.days.some(d => hasData(d.date)));
+  if (!upd || !done.length) {
+    html += `<div class="pg-empty"><div class="big">📈</div><h4>Log dimulai 1 Januari 2027</h4><p>Setiap minggu, data lari & gym dari Coros/Strava ditarik dan dicocokkan dengan program. Hasilnya muncul di sini dan di tiap sesi pada halaman Program.</p></div>`;
+    html += `<div class="vsec"><h3>Berat badan</h3>${weightCard()}</div>`;
+    el.innerHTML = html; return;
+  }
+  // ringkasan s.d. update
+  let planKm = 0, actKm = 0, nPlan = 0, nDone = 0, nZone = 0, nZoneOk = 0, nGymPlan = 0, nGym = 0, longest = 0;
+  done.forEach(w => w.days.forEach(d => {
+    if (!hasData(d.date)) return;
+    if (d.type === "run") { planKm += d.session.km; nPlan++; const st = statusOf(d); if (st && st.a) { if (st.cls !== "miss") nDone++; if (hrRange(d.session) && st.a.hr) { nZone++; if (!st.hot) nZoneOk++; } } }
+    if (d.type === "gym") { nGymPlan++; if (gymOn(d.date).length) nGym++; }
+  }));
+  ACT.forEach(a => { if (a.type === "run") { actKm += a.km || 0; longest = Math.max(longest, a.km || 0); } });
+  const pc = (x, y) => y ? Math.round(x / y * 100) : 0;
+  html += `<div class="pg-grid">
+    <div class="pg-card"><div class="k">km aktual / rencana</div><div class="v">${fmt(Math.round(actKm))}<small> / ${fmt(Math.round(planKm))} km</small></div><div class="pg-bar"><i style="width:${Math.min(100, pc(actKm, planKm))}%"></i></div></div>
+    <div class="pg-card"><div class="k">Sesi lari dijalankan</div><div class="v">${pc(nDone, nPlan)}<small>%</small></div><div class="s">${nDone} dari ${nPlan} sesi</div></div>
+    <div class="pg-card"><div class="k">Easy/long dalam zona HR</div><div class="v">${nZone ? pc(nZoneOk, nZone) : "–"}<small>${nZone ? "%" : ""}</small></div><div class="s">${nZoneOk} dari ${nZone} sesi</div></div>
+    <div class="pg-card"><div class="k">Gym · long run terjauh</div><div class="v">${nGym}<small>/${nGymPlan} gym</small></div><div class="s">Long run terjauh ${fmt(longest)} km</div></div>
+  </div>`;
+  html += `<div class="vsec"><h3>Berat badan</h3>${weightCard()}</div>`;
+  // rencana vs aktual per minggu
+  const max = Math.max(...done.map(w => Math.max(w.total, weekActual(w) || 0)));
+  html += `<div class="vsec"><h3>Rencana vs aktual per minggu</h3><div class="pg-card">${done.slice().reverse().map(w => {
+    const a = weekActual(w) || 0;
+    return `<button class="pw-row" data-l="${w.label}"><span class="hl">${w.label}</span><span class="ht"><span class="plan" style="width:${w.total/max*100}%;background:${B[w.block].color}"></span><span class="act" style="width:${a/max*100}%;background:${B[w.block].color}"></span></span><span class="hk">${fmt(a)}<small>/${fmt(w.total)}</small></span></button>`;
+  }).join("")}<div style="font-size:11px;color:var(--ink3);margin-top:6px">Batang samar = rencana · batang solid = aktual · terbaru di atas</div></div></div>`;
+  // benchmark
+  const bms = [];
+  weeks.forEach(w => w.days.forEach(d => { const s = d.session; if (s && d.type === "run" && (s.kind === "race" || /Time Trial|Dress Rehearsal/i.test(s.title))) bms.push({w, d, s}); }));
+  html += `<div class="vsec"><h3>Benchmark</h3><div class="pg-card">${bms.map(({w, d, s}) => { const a = actualOn(d.date);
+    return `<div class="bm-row"><div><div class="bt">${esc(s.title.replace(/^🏁\s*/, ""))}</div><div class="bd">${fd(d.date, true)} · ${w.label}</div></div><div class="br">${a ? `${fmtDur(a.dur)}<br><span style="font-size:11px;color:var(--ink3)">${fmtPace(a.pace)}</span>` : `<span class="st wait">${pd(d.date) < today ? "–" : "Belum"}</span>`}</div></div>`; }).join("")}</div></div>`;
+  el.innerHTML = html;
+  el.querySelectorAll(".pw-row").forEach(b => b.addEventListener("click", () => jump(b.dataset.l)));
 }
 
 function renderMore(){
   const items = [
+    ["p-race", "🏁", "Race & Benchmark", "JRF, JAKIM, time trial & dress rehearsal"],
     ["p-blocks", "🧭", "Penjelasan Blok", "6 blok, periode, dan fokus tiap blok"],
     ["p-chart", "📊", "Volume Mingguan", "Grafik km per minggu dari Jan–Okt"],
     ["p-zones", "🎯", "Panduan Zona", "Rentang HR & pace tiap jenis lari"],
