@@ -1,4 +1,5 @@
 __pycache__/
-*.png
+/*.png
 .DS_Store
 .vercel
+src/plan.json
