@@ -513,6 +513,24 @@ body.sheet-open{overflow:hidden}
   body[data-view="program"] .toolbar{margin-top:0}
   #weeks{margin-top:12px}
 }
+
+/* VOLUME MINGGUAN versi HP: batang horizontal mengalir ke bawah */
+.hchart{display:none}
+.hc-blk{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:14px 2px 6px;font-size:12px;font-weight:800}
+.hc-blk:first-child{margin-top:4px}
+.hc-blk span:last-child{font-family:var(--mono);color:var(--ink2);font-weight:700}
+.hrow{display:grid;grid-template-columns:52px 1fr 46px;align-items:center;gap:8px;width:100%;border:0;background:none;padding:5px 2px;cursor:pointer;font:inherit;color:var(--ink);text-align:left;border-radius:8px}
+.hrow:active{background:var(--soft)}
+.hrow .hl{font-family:var(--mono);font-size:12px;font-weight:700;line-height:1.1}
+.hrow .hl small{display:block;font-family:var(--font);font-size:10px;font-weight:600;color:var(--ink3)}
+.hrow .ht{position:relative;height:18px;border-radius:6px;background:var(--line2);overflow:hidden}
+.hrow .hb{position:absolute;left:0;top:0;bottom:0;border-radius:6px}
+.hrow .hm{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:800;color:var(--ink);white-space:nowrap;background:rgba(255,255,255,.92);padding:1px 6px;border-radius:99px;line-height:1.4}
+.hrow .hk{font-family:var(--mono);font-size:13px;font-weight:700;text-align:right}
+.hrow.cur .hl{color:var(--accent)}
+.hrow.cur .ht{box-shadow:0 0 0 2px var(--accent)}
+.hc-legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--ink3);margin-top:10px}
+@media (max-width: 900px){ #p-chart .chart-wrap{display:none} #p-chart .hchart{display:block} }
 @media print{.toolbar,.pills{display:none} body{background:#fff}}
 </style>
 </head>
@@ -598,8 +616,8 @@ body.sheet-open{overflow:hidden}
       <div class="blocks" id="blocks"></div></div>
 
     <div class="panel" id="p-chart"><button class="x" data-close>✕</button>
-      <h3>Volume Mingguan</h3><p class="ph-sub">Total km terprogram per minggu. Klik batang untuk lompat ke minggunya.</p>
-      <div class="chart-wrap"><svg id="chart" height="240"></svg><div class="tip" id="tip"></div></div></div>
+      <h3>Volume Mingguan</h3><p class="ph-sub" id="chartSub">Total km terprogram per minggu. Klik batang untuk lompat ke minggunya.</p>
+      <div class="chart-wrap"><svg id="chart" height="240"></svg><div class="tip" id="tip"></div></div><div class="hchart" id="hchart"></div></div>
 
     <div class="panel" id="p-zones"><button class="x" data-close>✕</button>
       <h3>Panduan Zona</h3><p class="ph-sub">Setiap menu menyebut jelas: main pakai <b>HR</b> atau <b>Pace</b>.</p>
@@ -774,7 +792,34 @@ document.getElementById("hols").innerHTML = DATA.holidays.map(h => {
   <div class="hx">${run ? "Hari lari → dikosongkan" : (dow>=5 ? "Akhir pekan → latihan tetap jalan" : "Hari gym → dikosongkan")}</div></div></div>`;
 }).join("");
 
+function drawHChart(){
+  const el = document.getElementById("hchart"), max = Math.max(...weeks.map(w => w.total));
+  document.getElementById("chartSub").textContent = "Total km terprogram per minggu. Tap baris untuk membuka minggunya.";
+  let html = "";
+  blockOrder.forEach(id => {
+    const ws = bWeeks(id), km = ws.reduce((a, w) => a + w.total, 0);
+    html += `<div class="hc-blk" style="color:${B[id].color}"><span>${BL(id)} · ${esc(B[id].name)}</span><span>${fmt(km)} km</span></div>`;
+    ws.forEach(w => {
+      const tags = [];
+      if (w.label === JK_WEEK) tags.push("JAKIM");
+      if (w === weeks[weeks.length - 1]) tags.push("🏁 JRF");
+      if (w === peak) tags.push("Puncak");
+      if (w.days.some(d => d.ramadan)) tags.push("🌙");
+      const isCur = cur && cur.label === w.label;
+      html += `<button class="hrow${isCur ? " cur" : ""}" data-l="${w.label}">
+        <span class="hl">${w.label}<small>${fd(w.start)}</small></span>
+        <span class="ht"><span class="hb" style="width:${(w.total / max * 100).toFixed(1)}%;background:${B[w.block].color}"></span>${tags.length ? `<span class="hm">${tags.join(" · ")}</span>` : ""}</span>
+        <span class="hk">${fmt(w.total)}</span></button>`;
+    });
+  });
+  html += `<div class="hc-legend"><span>Angka kanan = km/minggu</span><span>🌙 Ramadhan</span><span>Puncak = minggu terberat</span></div>`;
+  el.innerHTML = html;
+  el.querySelectorAll(".hrow").forEach(b => b.addEventListener("click", () => jump(b.dataset.l)));
+}
+
 function drawChart(){
+  if (isMobile()) { drawHChart(); return; }
+  document.getElementById("chartSub").textContent = "Total km terprogram per minggu. Klik batang untuk lompat ke minggunya.";
   const svg = document.getElementById("chart");
   const W = Math.max(svg.parentElement.clientWidth, 760), H = 240, pl = 34, pr = 8, pt = 16, pb = 34;
   svg.setAttribute("width", W); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
