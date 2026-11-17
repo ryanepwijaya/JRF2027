@@ -2,14 +2,21 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Road to JRF 2027</title>
 <meta name="description" content="Program lari Ryan menuju Jakarta Running Festival (JRF) 2027 Full Marathon, 24 Okt 2027: Fase A (Diet & Base) + Fase B (Blok Intensif 20 minggu), lengkap dengan menu WU/Main/CD per sesi.">
 <meta name="theme-color" content="#ff5a1f">
 <meta property="og:title" content="Road to JRF 2027 · Jakarta Running Festival Full Marathon">
 <meta property="og:description" content="43 minggu, 6 blok, target finish ≤ 4:30. Program lari lengkap menuju Jakarta Running Festival 2027.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ff5a1f'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='26' font-weight='800' fill='white' text-anchor='middle'%3E42K%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JRF 2027">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -372,6 +379,61 @@ body.dm-open{overflow:hidden}
 
 .chip.jkc{--kc:#db2777;--kbg:#fff1f6;--kb:#f9a8d4}
 
+
+/* ===== MOBILE & APP ===== */
+html{-webkit-text-size-adjust:100%}
+body{-webkit-tap-highlight-color:transparent;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+button,.day.run,.tl-seg,.wk-h,.pick,.blk,.tab{touch-action:manipulation}
+.eyerow{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.inst{position:relative}
+.install-btn{border:1px solid var(--accent);background:#fff;color:var(--accent);font-size:12px;font-weight:800;padding:6px 12px;border-radius:999px;cursor:pointer}
+.install-btn:hover{background:var(--accent);color:#fff}
+.ios-tip{position:absolute;right:0;top:36px;z-index:40;width:250px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 32px rgba(20,22,28,.14);padding:10px 12px;font-size:13px;color:var(--ink2)}
+.ios-tip b{color:var(--ink)}
+@media (display-mode: standalone){ .install-btn{display:none!important} footer{padding-bottom:calc(30px + env(safe-area-inset-bottom))} }
+
+.sheet-back{position:fixed;inset:0;z-index:90;background:rgba(20,22,28,.45);display:flex;align-items:flex-end;justify-content:center;animation:dmf .18s ease}
+.sheet-back[hidden]{display:none}
+.sheet{background:var(--bg);width:100%;max-width:640px;max-height:88vh;overflow-y:auto;overscroll-behavior:contain;border-radius:20px 20px 0 0;
+  padding:6px 10px calc(14px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(20,22,28,.25);animation:shup .22s ease}
+@keyframes shup{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+.sheet-grab{width:44px;height:5px;border-radius:99px;background:#d6d0c4;margin:6px auto 10px}
+.sheet .details{padding:0}
+body.sheet-open{overflow:hidden}
+
+@media (max-width: 900px){
+  .days{gap:6px}
+  .day{display:grid;grid-template-columns:54px 1fr auto;grid-auto-rows:auto;column-gap:10px;row-gap:1px;align-items:center;padding:10px 12px;min-height:0}
+  .day .dn{grid-column:1;grid-row:1;width:auto;display:flex;gap:4px}
+  .day .dd{grid-column:1;grid-row:2;font-size:12px}
+  .day .kind{grid-column:2;grid-row:1}
+  .day .ttl{grid-column:2;grid-row:2;margin:0;font-size:14px}
+  .day:not(:has(.kind)) .ttl{grid-row:1 / span 2}
+  .day .km{grid-column:3;grid-row:1 / span 2;margin:0;text-align:right;white-space:nowrap}
+  .day .hol{grid-column:2 / span 2}
+  .day.run::after{content:"›";grid-column:4;grid-row:1 / span 2;color:var(--kc);font-size:20px;font-weight:700;line-height:1;margin-left:-4px}
+  .day.run{grid-template-columns:54px 1fr auto 10px}
+  .pills{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-left:-14px;margin-right:-14px;padding:0 14px 2px}
+  .pills::-webkit-scrollbar{display:none}
+  .pill{flex:none}
+  .wk-h{padding:12px 12px 12px 10px}
+}
+@media (max-width: 560px){
+  .hero .wrap{padding-top:18px;padding-bottom:16px}
+  .hero h1{font-size:32px}
+  .stats{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;gap:8px;margin:12px -14px 0;padding:0 14px 2px;scroll-padding-inline:14px}
+  .stats::-webkit-scrollbar{display:none}
+  .stat,.stat:nth-child(n+5){display:block;flex:0 0 44%;scroll-snap-align:start}
+  .race-main{padding:14px 16px}
+  .race-main h3{font-size:19px}
+  .race-main .rc{font-size:28px}
+  .race-main .rc small{display:inline;margin-left:4px}
+  .tl-top p{font-size:11px}
+  .toolbar .wrap{padding-top:8px;padding-bottom:8px}
+  .tab{padding:8px 12px}
+  .det-h h3{font-size:16px}
+  .phases3 .ph{padding:12px 14px}
+}
 @media print{.toolbar,.pills{display:none} body{background:#fff}}
 </style>
 </head>
@@ -404,7 +466,9 @@ body.dm-open{overflow:hidden}
 
 <header class="hero">
   <div class="wrap">
-    <div class="eyebrow"><span class="dot"></span>Training Block · Ryan</div>
+    <div class="eyerow"><div class="eyebrow"><span class="dot"></span>Training Block · Ryan</div>
+      <div class="inst"><button class="install-btn" id="installBtn" hidden>📲 Install app</button>
+        <div class="ios-tip" id="iosTip" hidden>Di Safari: tap tombol <b>Share</b> <span aria-hidden="true">⬆️</span>, lalu pilih <b>Add to Home Screen</b>.</div></div></div>
     <div class="h1row">
       <h1>Road to <span>JRF 2027</span><span class="info" id="info"><button class="info-btn" id="infoBtn" aria-label="Detail race & program" aria-expanded="false">i</button></span></h1>
       <div class="info-tip" id="infoTip" role="tooltip">
@@ -434,7 +498,7 @@ body.dm-open{overflow:hidden}
     <div class="stats" id="stats"></div>
 
     <div class="tl-box">
-      <div class="tl-top"><h2>Peta Blok</h2><p>Klik blok untuk membuka minggu-minggunya · hover untuk info</p></div>
+      <div class="tl-top"><h2>Peta Blok</h2><p id="tlHint">Klik blok untuk membuka minggu-minggunya · hover untuk info</p></div>
       <div style="position:relative" id="tlWrap">
         <div class="timeline" id="timeline"></div>
         <div class="popover" id="popover"></div>
@@ -494,6 +558,13 @@ body.dm-open{overflow:hidden}
 <main class="wrap">
   <div class="weeks" id="weeks"></div>
 </main>
+
+<div class="sheet-back" id="sheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-label="Detail sesi">
+    <div class="sheet-grab" aria-hidden="true"></div>
+    <div id="sheetBody"></div>
+  </div>
+</div>
 
 <footer><div class="wrap">Program lari JRF 2027 · disusun 28 Okt 2026 dari data Coros & Strava (Jan–Okt 2026). Nutrisi di luar program ini. Gerakan gym diambil dari log latihan Ryan.</div></footer>
 
@@ -652,6 +723,8 @@ function renderTabs(){
     blockOrder.map(id => `<button class="tab${selBlock===id?" on":""}" data-tab="${id}"><i style="background:${B[id].color}"></i>${PH(B[id].phase)}${B[id].no} · ${esc(B[id].name)}</button>`).join("") +
     `<button class="tab${selBlock==="all"?" on":""}" data-tab="all">Semua minggu</button>`;
   document.querySelectorAll("[data-tab]").forEach(b => b.addEventListener("click", () => selectBlock(selBlock === b.dataset.tab ? null : b.dataset.tab, false)));
+  const tabs = document.getElementById("tabs"), on = tabs.querySelector(".tab.on");
+  if (on) tabs.scrollTo({left: on.offsetLeft - (tabs.clientWidth - on.clientWidth) / 2, behavior: "smooth"});
 }
 
 // ---------- WEEKS ----------
@@ -726,7 +799,7 @@ function weekHTML(w){
     </div>
     ${isOpen ? `<div class="wk-body">
       ${w.note ? `<div class="wk-note"><b>Catatan:</b> ${esc(w.note)}</div>` : ""}
-      ${selDay ? "" : `<div class="hint">👆 Klik sesi untuk lihat detail: lari (WU / Main / CD) atau gym (gerakan & set)</div>`}
+      ${selDay ? "" : `<div class="hint">👆 ${isMobile() ? "Tap" : "Klik"} sesi untuk lihat detail: lari (WU / Main / CD) atau gym (gerakan & set)</div>`}
       <div class="days">${w.days.map(d => dayHTML(w, d)).join("")}</div>
       ${selDay ? detailHTML(w, selDay) : ""}
     </div>` : ""}
@@ -757,11 +830,14 @@ function render(){
   }
   el.querySelectorAll("[data-toggle]").forEach(h => h.addEventListener("click", () => {
     const l = h.dataset.toggle;
-    if (openWeeks.has(l)) { openWeeks.delete(l); delete openSess[l]; } else openWeeks.add(l);
+    const opening = !openWeeks.has(l);
+    if (!opening) { openWeeks.delete(l); delete openSess[l]; } else openWeeks.add(l);
     render();
+    if (opening && isMobile()) { const wEl = document.getElementById("w-"+l); const top = wEl.getBoundingClientRect().top; if (top < 60 || top > window.innerHeight * 0.5) wEl.scrollIntoView({behavior:"smooth", block:"start"}); }
   }));
   el.querySelectorAll(".day.run").forEach(d => d.addEventListener("click", () => {
     const l = d.dataset.w, dow = +d.dataset.dow;
+    if (isMobile()) { openSheet(l, dow); return; }
     if (openSess[l] === dow) delete openSess[l]; else openSess[l] = dow;
     render();
     if (openSess[l] !== undefined) { const det = document.querySelector(`#w-${CSS.escape(l)} .details`); if (det && det.getBoundingClientRect().bottom > window.innerHeight) det.scrollIntoView({behavior:"smooth", block:"nearest"}); }
@@ -787,12 +863,55 @@ function jump(label){
 }
 if (cur) { const g = document.getElementById("goNow"); g.style.display = ""; g.onclick = () => jump(cur.label); }
 
+// ---------- MOBILE: BOTTOM SHEET ----------
+function isMobile(){ return window.matchMedia("(max-width: 900px)").matches; }
+const sheet = document.getElementById("sheet"), sheetBody = document.getElementById("sheetBody");
+function openSheet(label, dow){
+  const w = weeks.find(x => x.label === label), d = w && w.days.find(x => x.dow === dow && x.session);
+  if (!d) return;
+  sheetBody.innerHTML = detailHTML(w, d);
+  sheetBody.querySelectorAll("[data-closesess]").forEach(x => x.addEventListener("click", e => { e.stopPropagation(); closeSheet(); }));
+  sheet.hidden = false; document.body.classList.add("sheet-open");
+  sheet.querySelector(".sheet").scrollTop = 0;
+}
+function closeSheet(){ sheet.hidden = true; document.body.classList.remove("sheet-open"); }
+sheet.addEventListener("click", e => { if (e.target === sheet) closeSheet(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !sheet.hidden) closeSheet(); });
+(function(){ // geser ke bawah untuk menutup
+  const s = sheet.querySelector(".sheet"); let y0 = null;
+  s.addEventListener("touchstart", e => { y0 = s.scrollTop <= 0 ? e.touches[0].clientY : null; }, {passive:true});
+  s.addEventListener("touchmove", e => { if (y0 === null) return; const dy = e.touches[0].clientY - y0; if (dy > 0) s.style.transform = `translateY(${dy}px)`; }, {passive:true});
+  s.addEventListener("touchend", e => { if (y0 === null) return; const dy = e.changedTouches[0].clientY - y0; s.style.transform = ""; if (dy > 90) closeSheet(); y0 = null; });
+})();
+document.getElementById("tlHint").textContent = window.matchMedia("(hover:hover)").matches
+  ? "Klik blok untuk membuka minggu-minggunya · hover untuk info" : "Tap nomor blok untuk membuka minggu-minggunya";
+
+// ---------- PWA: install & service worker ----------
+(function(){
+  const btn = document.getElementById("installBtn"), tip = document.getElementById("iosTip");
+  const standalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  let deferred = null;
+  if (!standalone && ios) btn.hidden = false;
+  window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; if (!standalone) btn.hidden = false; });
+  window.addEventListener("appinstalled", () => { btn.hidden = true; tip.hidden = true; deferred = null; });
+  btn.addEventListener("click", async e => {
+    e.stopPropagation();
+    if (deferred) { deferred.prompt(); const r = await deferred.userChoice; if (r.outcome === "accepted") btn.hidden = true; deferred = null; }
+    else tip.hidden = !tip.hidden;
+  });
+  document.addEventListener("click", e => { if (!tip.hidden && !tip.contains(e.target)) tip.hidden = true; });
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+  }
+})();
+
 // ---------- JAKIM & INFO ----------
 (function(){
   const left = Math.round((pd(JK_DATE) - today) / 86400000);
   document.getElementById("jkCount").textContent = left > 0 ? `${left} hari lagi` : (left === 0 ? "Race day!" : "Selesai ✅");
   document.getElementById("jrfCount").innerHTML = daysLeft > 0 ? `${daysLeft}<small>hari lagi</small>` : (daysLeft === 0 ? "Race day! 🏁" : "<small>Selesai ✅</small>");
-  document.getElementById("jkGo").onclick = () => { openSess[JK_WEEK] = 6; jump(JK_WEEK); };
+  document.getElementById("jkGo").onclick = () => { if (isMobile()) { jump(JK_WEEK); setTimeout(() => openSheet(JK_WEEK, 6), 450); } else { openSess[JK_WEEK] = 6; jump(JK_WEEK); } };
   const jw = weeks.find(w => w.label === JK_WEEK), seg = document.querySelector(`.tl-seg[data-seg="${jw.block}"]`);
   const pin = document.createElement("div"); pin.className = "jk-pin";
   pin.style.left = ((6.5/7) / bWeeks(jw.block).length * 100) + "%";
