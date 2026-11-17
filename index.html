@@ -434,6 +434,42 @@ body.sheet-open{overflow:hidden}
   .det-h h3{font-size:16px}
   .phases3 .ph{padding:12px 14px}
 }
+
+/* ===== BOTTOM NAV (HP) ===== */
+.bnav{display:none}
+.toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(10px);z-index:95;background:var(--ink);color:#fff;font-size:13px;font-weight:600;
+  padding:9px 14px;border-radius:12px;max-width:calc(100vw - 32px);text-align:center;opacity:0;pointer-events:none;transition:opacity .2s, transform .2s}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.more-list{display:flex;flex-direction:column;gap:6px}
+.more-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;font:inherit;color:var(--ink)}
+.more-item:active{background:var(--soft)}
+.more-item .mi{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--soft);flex:none}
+.more-item .mt{font-weight:800;font-size:15px}
+.more-item .ms{font-size:12px;color:var(--ink3);margin-top:1px}
+.more-item .mc{margin-left:auto;color:var(--ink3);font-size:20px}
+.sheet-h{display:flex;justify-content:space-between;align-items:center;padding:0 4px 10px}
+.sheet-h h3{font-size:18px;font-weight:800}
+.sheet-h .back{border:0;background:none;color:var(--accent);font-weight:800;font-size:15px;cursor:pointer;padding:4px 0}
+.sheet-h .x{border:0;background:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;color:var(--ink2);border:1px solid var(--line)}
+.sheet .panel.in-sheet{display:block;margin-top:0;animation:none}
+.sheet .panel.in-sheet .x{display:none}
+.race-sheet{display:flex;flex-direction:column;gap:10px}
+.race-sheet .race-main{flex-direction:column;align-items:flex-start}
+.race-sheet .race-main .rc{text-align:left}
+.race-sheet .rbtn{margin-top:10px;border:0;background:var(--accent);color:#fff;font-weight:800;font-size:13px;padding:9px 14px;border-radius:999px;cursor:pointer}
+@media (max-width: 900px){
+  .bnav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:80;background:rgba(255,255,255,.94);
+    backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-top:1px solid var(--line);
+    padding:6px max(6px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left))}
+  .bnav button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0 4px;color:var(--ink3);font-size:10.5px;font-weight:700;cursor:pointer;border-radius:12px}
+  .bnav button.on{color:var(--accent)}
+  .bnav button.on svg{stroke-width:2.3}
+  .bnav button:active{background:var(--soft)}
+  body{padding-bottom:calc(68px + env(safe-area-inset-bottom))}
+  .pills,.panel:not(.in-sheet){display:none!important}
+  .sheet-back{bottom:calc(66px + env(safe-area-inset-bottom))}
+  .sheet{padding-bottom:14px;max-height:calc(100% - 40px);box-shadow:0 -10px 40px rgba(20,22,28,.25), 0 1px 0 var(--line)}
+}
 @media print{.toolbar,.pills{display:none} body{background:#fff}}
 </style>
 </head>
@@ -566,6 +602,15 @@ body.sheet-open{overflow:hidden}
   </div>
 </div>
 
+<nav class="bnav" id="bnav" aria-label="Menu utama">
+  <button data-nav="home" class="on"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg><span>Beranda</span></button>
+  <button data-nav="program"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M7.5 9.5h9M7.5 13h9M7.5 16.5h5"/></svg><span>Program</span></button>
+  <button data-nav="today"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><circle cx="12" cy="14.5" r="2.2" fill="currentColor" stroke="none"/></svg><span>Hari ini</span></button>
+  <button data-nav="race"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4.5h11l-2 4 2 4H5"/></svg><span>Race</span></button>
+  <button data-nav="more"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>More</span></button>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <footer><div class="wrap">Program lari JRF 2027 · disusun 28 Okt 2026 dari data Coros & Strava (Jan–Okt 2026). Nutrisi di luar program ini. Gerakan gym diambil dari log latihan Ryan.</div></footer>
 
 <script>
@@ -658,7 +703,7 @@ function togglePanel(id){
   if (id === "p-chart" && document.getElementById(id).classList.contains("show")) drawChart();
 }
 document.querySelectorAll(".pill").forEach(b => b.addEventListener("click", () => togglePanel(b.dataset.panel)));
-document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => togglePanel(null)));
+document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => { togglePanel(null); if (b.closest(".sheet")) closeSheet(); }));
 
 document.getElementById("blocks").innerHTML = blockOrder.map(id => {
   const i = bInfo(id);
@@ -869,12 +914,33 @@ const sheet = document.getElementById("sheet"), sheetBody = document.getElementB
 function openSheet(label, dow){
   const w = weeks.find(x => x.label === label), d = w && w.days.find(x => x.dow === dow && x.session);
   if (!d) return;
+  restorePanel();
   sheetBody.innerHTML = detailHTML(w, d);
   sheetBody.querySelectorAll("[data-closesess]").forEach(x => x.addEventListener("click", e => { e.stopPropagation(); closeSheet(); }));
   sheet.hidden = false; document.body.classList.add("sheet-open");
   sheet.querySelector(".sheet").scrollTop = 0;
 }
-function closeSheet(){ sheet.hidden = true; document.body.classList.remove("sheet-open"); }
+let movedPanel = null;
+function restorePanel(){
+  if (!movedPanel) return;
+  const {el, parent, next} = movedPanel;
+  el.classList.remove("in-sheet", "show"); parent.insertBefore(el, next); movedPanel = null;
+}
+function showSheet(html){
+  restorePanel();
+  sheetBody.innerHTML = html;
+  sheetBody.querySelectorAll("[data-sheetclose]").forEach(x => x.addEventListener("click", closeSheet));
+  sheet.hidden = false; document.body.classList.add("sheet-open"); sheet.querySelector(".sheet").scrollTop = 0;
+}
+function openPanelSheet(id){
+  showSheet(`<div class="sheet-h"><button class="back" data-back>‹ More</button><button class="x" data-sheetclose aria-label="Tutup">✕</button></div>`);
+  sheetBody.querySelector("[data-back]").addEventListener("click", () => moreSheet());
+  const el = document.getElementById(id);
+  movedPanel = {el, parent: el.parentNode, next: el.nextSibling};
+  el.classList.add("in-sheet", "show"); sheetBody.appendChild(el);
+  if (id === "p-chart") drawChart();
+}
+function closeSheet(){ sheet.hidden = true; document.body.classList.remove("sheet-open"); restorePanel(); syncNav(); }
 sheet.addEventListener("click", e => { if (e.target === sheet) closeSheet(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !sheet.hidden) closeSheet(); });
 (function(){ // geser ke bawah untuk menutup
@@ -886,12 +952,82 @@ document.addEventListener("keydown", e => { if (e.key === "Escape" && !sheet.hid
 document.getElementById("tlHint").textContent = window.matchMedia("(hover:hover)").matches
   ? "Klik blok untuk membuka minggu-minggunya · hover untuk info" : "Tap nomor blok untuk membuka minggu-minggunya";
 
+// ---------- BOTTOM NAV ----------
+const bnav = document.getElementById("bnav");
+function toast(msg){ const el = document.getElementById("toast"); el.textContent = msg; el.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove("show"), 2600); }
+function setNav(k){ bnav.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.nav === k)); }
+function syncNav(){ const tb = document.getElementById("toolbar"); setNav(window.scrollY + 120 < tb.offsetTop ? "home" : "program"); }
+window.addEventListener("scroll", () => { if (sheet.hidden) syncNav(); }, {passive:true});
+function sheetHead(title){ return `<div class="sheet-h"><h3>${title}</h3><button class="x" data-sheetclose aria-label="Tutup">✕</button></div>`; }
+
+function goToday(){
+  const todayIso = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+  if (!cur) {
+    const first = weeks.find(w => w.days.some(d => d.type === "run"));
+    if (today < pd(weeks[0].end)) { toast("Program mulai 1 Jan 2027 — ini minggu pertamamu"); jump(first.label); }
+    else { toast("Program sudah selesai 🎉"); jump(weeks[weeks.length-1].label); }
+    return;
+  }
+  jump(cur.label);
+  const d = cur.days.find(x => x.date === todayIso);
+  if (d && d.session) setTimeout(() => openSheet(cur.label, d.dow), 450);
+  else toast(d && d.type === "holiday" ? `Hari ini libur: ${d.holiday}` : "Hari ini tidak ada sesi terjadwal 😴");
+}
+
+function raceSheet(){
+  const jkLeft = Math.round((pd(JK_DATE) - today) / 86400000);
+  showSheet(sheetHead("Race") + `<div class="race-sheet">
+    <div class="race-main"><div><div class="re">🏁 Main Race</div><h3>Jakarta Running Festival 2027</h3>
+      <div class="rs">Full Marathon 42,2 km · Minggu, 24 Oktober 2027 · Target <b>≤ 4:30</b></div></div>
+      <div class="rc">${daysLeft > 0 ? daysLeft + "<small>hari lagi</small>" : "Selesai ✅"}</div>
+      <button class="rbtn" data-go="B20">Lihat race week →</button></div>
+    <div class="race-tune"><div class="re">Tune-up Race</div><h4>Jakarta International Marathon 2027</h4>
+      <div class="rs">Half Marathon · Minggu, 13 Juni 2027</div>
+      <div class="rt"><span class="rc2">${jkLeft > 0 ? jkLeft + " hari lagi" : "Selesai ✅"}</span><button class="link-btn" data-go="B01">Lihat persiapan →</button></div></div>
+  </div>`);
+  sheetBody.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => {
+    const l = b.dataset.go; closeSheet(); jump(l); setTimeout(() => openSheet(l, 6), 450);
+  }));
+}
+
+function moreSheet(){
+  const items = [
+    ["p-blocks", "🧭", "Penjelasan Blok", "6 blok, periode, dan fokus tiap blok"],
+    ["p-chart", "📊", "Volume Mingguan", "Grafik km per minggu dari Jan–Okt"],
+    ["p-zones", "🎯", "Panduan Zona", "Rentang HR & pace tiap jenis lari"],
+    ["p-rules", "📌", "Aturan Main", "Prinsip yang berlaku di seluruh program"],
+    ["p-hols", "🎌", "Libur 2027", "Libur nasional & cuti bersama yang dikosongkan"],
+  ];
+  let html = sheetHead("More") + `<div class="more-list">` + items.map(([id, ic, tt, st]) =>
+    `<button class="more-item" data-panel-open="${id}"><span class="mi">${ic}</span><span><div class="mt">${tt}</div><div class="ms">${st}</div></span><span class="mc">›</span></button>`).join("");
+  if (window.__canInstall && window.__canInstall()) html += `<button class="more-item" data-act="install"><span class="mi">📲</span><span><div class="mt">Install app</div><div class="ms">Pasang di layar utama, buka seperti aplikasi</div></span><span class="mc">›</span></button>`;
+  html += `<button class="more-item" data-act="about"><span class="mi">ℹ️</span><span><div class="mt">Tentang program ini</div><div class="ms">Disclaimer: dipersonalisasi untuk @ryanepwijaya, disusun dengan AI</div></span><span class="mc">›</span></button></div>`;
+  showSheet(html);
+  sheetBody.querySelectorAll("[data-panel-open]").forEach(b => b.addEventListener("click", () => openPanelSheet(b.dataset.panelOpen)));
+  const inst = sheetBody.querySelector('[data-act="install"]'); if (inst) inst.addEventListener("click", () => window.__install());
+  sheetBody.querySelector('[data-act="about"]').addEventListener("click", () => {
+    closeSheet(); const m = document.getElementById("disclaimer"); m.classList.remove("hide"); document.body.classList.add("dm-open");
+  });
+}
+
+bnav.addEventListener("click", e => {
+  const b = e.target.closest("button[data-nav]"); if (!b) return;
+  const k = b.dataset.nav;
+  if (k === "home") { closeSheet(); window.scrollTo({top: 0, behavior: "smooth"}); setNav("home"); }
+  else if (k === "program") { closeSheet(); document.getElementById("toolbar").scrollIntoView({behavior: "smooth"}); setNav("program"); }
+  else if (k === "today") { closeSheet(); goToday(); }
+  else if (k === "race") { setNav("race"); raceSheet(); }
+  else if (k === "more") { setNav("more"); moreSheet(); }
+});
+
 // ---------- PWA: install & service worker ----------
 (function(){
   const btn = document.getElementById("installBtn"), tip = document.getElementById("iosTip");
   const standalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   let deferred = null;
+  window.__install = () => { if (deferred) btn.click(); else { closeSheet(); toast(ios ? "Di Safari: tap Share ⬆️ lalu \"Add to Home Screen\"" : "Pakai menu browser → Install app / Add to Home screen"); } };
+  window.__canInstall = () => !standalone;
   if (!standalone && ios) btn.hidden = false;
   window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; if (!standalone) btn.hidden = false; });
   window.addEventListener("appinstalled", () => { btn.hidden = true; tip.hidden = true; deferred = null; });
