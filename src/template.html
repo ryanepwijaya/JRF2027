@@ -767,7 +767,7 @@ body.sheet-open{overflow:hidden}
       <button class="pill" data-panel="p-chart">📊 Volume Mingguan <span class="chev">▼</span></button>
       <button class="pill" data-panel="p-zones">🎯 Panduan Zona <span class="chev">▼</span></button>
       <button class="pill" data-panel="p-rules">📌 Aturan Main <span class="chev">▼</span></button>
-      <button class="pill" data-panel="p-hols">🎌 Libur 2027 <span class="chev">▼</span></button>
+      <button class="pill" data-panel="p-hols">🇮🇩 Libur 2027 <span class="chev">▼</span></button>
     </div>
 
     <div class="panel" id="p-blocks"><button class="x" data-close>✕</button>
@@ -1066,12 +1066,12 @@ function detailHTML(w, d){
 function dayHTML(w, d){
   const dn = `<div class="dn"><span class="dfull">${DAYS[d.dow]}</span><span class="dshort">${DAYS[d.dow].slice(0,3)}</span>${d.ramadan?'<span title="Ramadhan">🌙</span>':""}</div>`;
   const date = `<span class="dd">${fd(d.date)}</span>`;
-  const hol = d.holiday ? `<div class="hol">🎌 ${esc(d.holiday)}</div>` : "";
+  const hol = d.holiday ? `<div class="hol">🇮🇩 ${esc(d.holiday)}</div>` : "";
   if (d.type === "none") return `<div class="day none">${dn}${date}<div class="ttl" style="color:var(--ink3)">2026</div></div>`;
   if (d.type === "gym") { const g = d.session, sel = openSess[w.label] === d.dow;
     return `<div class="day run k-gym${sel?" sel":""}" data-w="${w.label}" data-dow="${d.dow}">${dn}${date}<span class="kind">Gym${(st => st ? ` · <span class="done-dot">${st.txt}</span>` : "")(statusOf(d))}</span><div class="ttl">🏋️ ${esc(g.title)}</div><div class="km">${g.sets ? g.sets+"<small> set</small>" : "<small>tanpa beban</small>"}</div></div>`; }
   if (d.type === "off") return `<div class="day off">${dn}${date}${hol}<div class="ttl">😴 Off / istirahat</div></div>`;
-  if (d.type === "holiday") return `<div class="day holiday">${dn}${date}<div class="ttl" style="font-weight:800">🎌 ${esc(d.holiday)}</div><div class="hol" style="color:var(--ink2);font-weight:600">Libur → isi sendiri</div></div>`;
+  if (d.type === "holiday") return `<div class="day holiday">${dn}${date}<div class="ttl" style="font-weight:800">🇮🇩 ${esc(d.holiday)}</div><div class="hol" style="color:var(--ink2);font-weight:600">Libur → isi sendiri</div></div>`;
   const s = d.session, sel = openSess[w.label] === d.dow;
   const jkd = d.date === JK_DATE ? " jkd" : "";
   return `<div class="day run k-${s.kind}${sel?" sel":""}${jkd}" data-w="${w.label}" data-dow="${d.dow}">${dn}${date}${hol}
@@ -1302,7 +1302,7 @@ function renderToday(){
     const d = cur.days.find(x => x.date === isoToday);
     html += `<div class="vsec"><h3>Sesi hari ini</h3>`;
     if (d && d.session) html += detailHTML(cur, d);
-    else if (d && d.type === "holiday") html += `<div class="vcard today-empty"><div class="big">🎌</div><h3>Libur: ${esc(d.holiday)}</h3><p>Isi sendiri dengan easy run kalau mau.</p></div>`;
+    else if (d && d.type === "holiday") html += `<div class="vcard today-empty"><div class="big">🇮🇩</div><h3>Libur: ${esc(d.holiday)}</h3><p>Isi sendiri dengan easy run kalau mau.</p></div>`;
     else html += `<div class="vcard today-empty"><div class="big">😴</div><h3>Hari istirahat</h3><p>Tidak ada sesi terjadwal. Pulihkan badan.</p></div>`;
     html += `</div>`;
   }
@@ -1448,7 +1448,7 @@ function renderMore(){
     ["p-chart", "📊", "Volume Mingguan", "Grafik km per minggu dari Jan–Okt"],
     ["p-zones", "🎯", "Panduan Zona", "Rentang HR & pace tiap jenis lari"],
     ["p-rules", "📌", "Aturan Main", "Prinsip yang berlaku di seluruh program"],
-    ["p-hols", "🎌", "Libur 2027", "Libur nasional & cuti bersama yang dikosongkan"],
+    ["p-hols", "🇮🇩", "Libur 2027", "Libur nasional & cuti bersama yang dikosongkan"],
   ];
   let html = `<div class="vhead"><h2>More</h2><p>Penjelasan detail & pengaturan</p></div><div class="more-list">` + items.map(([id, ic, tt, st]) =>
     `<button class="more-item" data-page="${id}"><span class="mi">${ic}</span><span><div class="mt">${tt}</div><div class="ms2" style="font-size:12px;color:var(--ink3)">${st}</div></span><span class="mc">›</span></button>`).join("");
@@ -1550,7 +1550,7 @@ function renderDash(){
   wEl.innerHTML = `<div class="d-lbl"><span>${cur ? L("Minggu ini", "This week") : L("Minggu pertama", "First week")} · ${wk.label}</span><span>${fmt(wk.total)} km</span></div>
     <div class="wstrip">${wk.days.map(d => {
       const k = d.session ? (d.type === "gym" ? "gym" : d.session.kind) : "";
-      const val = d.type === "run" ? fmt(d.session.km) : d.type === "gym" ? gymCode(d.session) : d.type === "holiday" ? "🎌" : d.type === "none" ? "" : "—";
+      const val = d.type === "run" ? fmt(d.session.km) : d.type === "gym" ? gymCode(d.session) : d.type === "holiday" ? "🇮🇩" : d.type === "none" ? "" : "—";
       const cls = ["wd", k ? "k-" + k : "", d.session ? "tap" : "", d.date === isoToday ? "today" : "", d.date < isoToday ? "past" : ""].join(" ");
       return `<button class="${cls}" ${d.session ? `data-w="${wk.label}" data-dow="${d.dow}"` : "tabindex=-1"}><span class="wn">${DAYS[d.dow].slice(0,3)}</span><span class="wb"></span><span class="wv${d.type === "run" ? "" : d.type === "gym" ? " gym" : " dim"}">${val}</span></button>`;
     }).join("")}</div>
