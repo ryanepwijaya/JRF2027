@@ -692,6 +692,10 @@ body.sheet-open{overflow:hidden}
 .wd .wv{font-family:var(--mono);font-size:12px;font-weight:700;white-space:nowrap}
 .wd .wv.dim{color:var(--ink3);font-family:var(--font);font-weight:600;font-size:11px}
 .wd.k-easy .wb,.wd.k-long .wb,.wd.k-quality .wb,.wd.k-recovery .wb,.wd.k-race .wb,.wd.k-gym .wb{background:var(--kc)}
+.wd .wv.gym{color:var(--kc);font-family:var(--mono);font-weight:800;font-size:13px}
+.wleg{font-size:11px;color:var(--ink3);margin-top:8px}
+.wleg b{color:var(--k-gym-c, #6d28d9);font-family:var(--mono)}
+[data-theme="dark"] .wleg b{color:#a78bfa}
 .wd.today{box-shadow:inset 0 0 0 2px var(--accent);background:var(--paper)}
 .wd.past{opacity:.55}
 .d-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -1494,6 +1498,11 @@ document.body.dataset.view = "home";
 
 // ---------- BERANDA: DASHBOARD ----------
 function openSession(label, dow){ if (isMobile()) openSheet(label, dow); else { openSess[label] = dow; jump(label); } }
+function gymCode(s){
+  if (s.mode === "skip") return "M";
+  const f = (s.focus || "").toLowerCase();
+  return f.includes("lower") ? "L" : f.includes("upper") ? "U" : f.includes("shoulder") ? "SC" : "G";
+}
 function renderDash(){
   // countdown
   document.getElementById("dCount").innerHTML = daysLeft > 0 ? `${daysLeft}<small>hari lagi</small>` : (daysLeft === 0 ? "Race day! 🏁" : "Selesai 🎉");
@@ -1539,10 +1548,11 @@ function renderDash(){
   wEl.innerHTML = `<div class="d-lbl"><span>${cur ? L("Minggu ini", "This week") : L("Minggu pertama", "First week")} · ${wk.label}</span><span>${fmt(wk.total)} km</span></div>
     <div class="wstrip">${wk.days.map(d => {
       const k = d.session ? (d.type === "gym" ? "gym" : d.session.kind) : "";
-      const val = d.type === "run" ? fmt(d.session.km) : d.type === "gym" ? "🏋️" : d.type === "holiday" ? "🎌" : d.type === "none" ? "" : "—";
+      const val = d.type === "run" ? fmt(d.session.km) : d.type === "gym" ? gymCode(d.session) : d.type === "holiday" ? "🎌" : d.type === "none" ? "" : "—";
       const cls = ["wd", k ? "k-" + k : "", d.session ? "tap" : "", d.date === isoToday ? "today" : "", d.date < isoToday ? "past" : ""].join(" ");
-      return `<button class="${cls}" ${d.session ? `data-w="${wk.label}" data-dow="${d.dow}"` : "tabindex=-1"}><span class="wn">${DAYS[d.dow].slice(0,3)}</span><span class="wb"></span><span class="wv${d.type === "run" ? "" : " dim"}">${val}</span></button>`;
-    }).join("")}</div>`;
+      return `<button class="${cls}" ${d.session ? `data-w="${wk.label}" data-dow="${d.dow}"` : "tabindex=-1"}><span class="wn">${DAYS[d.dow].slice(0,3)}</span><span class="wb"></span><span class="wv${d.type === "run" ? "" : d.type === "gym" ? " gym" : " dim"}">${val}</span></button>`;
+    }).join("")}</div>
+    ${wk.days.some(d => d.type === "gym") ? `<div class="wleg">${L("Gym", "Gym")}: <b>L</b> Lower · <b>U</b> Upper · <b>SC</b> Shoulder & Core${wk.days.some(d => d.type === "gym" && d.session.mode === "skip") ? " · <b>M</b> Mobility" : ""}</div>` : ""}`;
   wEl.querySelectorAll(".wd.tap").forEach(b => b.addEventListener("click", () => openSession(b.dataset.w, +b.dataset.dow)));
   // tiles: blok sekarang + berat badan
   const bw = cur || weeks.find(w => w.days.some(d => d.date >= "2027-01-01"));
