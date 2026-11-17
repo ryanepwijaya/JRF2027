@@ -200,6 +200,7 @@ button{font:inherit}
 .day{border-radius:12px;padding:10px;border:1px solid var(--line2);background:var(--soft);min-height:100px;display:flex;flex-direction:column;gap:3px}
 .day .dn{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em}
 .day .dd{font-size:12px;font-weight:600;color:var(--ink2)}
+.day .dn .dshort{display:none}
 .day .ttl{font-size:13px;font-weight:700;line-height:1.25;margin-top:2px}
 .day .km{font-family:var(--mono);font-weight:700;font-size:15px;margin-top:auto}
 .day .km small{font-family:var(--font);font-size:11px;font-weight:600;color:var(--ink2)}
@@ -407,6 +408,7 @@ body.sheet-open{overflow:hidden}
   .days{gap:6px}
   .day{display:grid;grid-template-columns:54px 1fr auto;grid-auto-rows:auto;column-gap:10px;row-gap:1px;align-items:center;padding:10px 12px;min-height:0}
   .day .dn{grid-column:1;grid-row:1;width:auto;display:flex;gap:4px}
+  .day .dn .dfull{display:none} .day .dn .dshort{display:inline}
   .day .dd{grid-column:1;grid-row:2;font-size:12px}
   .day .kind{grid-column:2;grid-row:1}
   .day .ttl{grid-column:2;grid-row:2;margin:0;font-size:14px}
@@ -1354,7 +1356,7 @@ function detailHTML(w, d){
 }
 
 function dayHTML(w, d){
-  const dn = `<div class="dn"><span>${DAYS[d.dow]}</span>${d.ramadan?'<span title="Ramadhan">🌙</span>':""}</div>`;
+  const dn = `<div class="dn"><span class="dfull">${DAYS[d.dow]}</span><span class="dshort">${DAYS[d.dow].slice(0,3)}</span>${d.ramadan?'<span title="Ramadhan">🌙</span>':""}</div>`;
   const date = `<span class="dd">${fd(d.date)}</span>`;
   const hol = d.holiday ? `<div class="hol">🎌 ${esc(d.holiday)}</div>` : "";
   if (d.type === "none") return `<div class="day none">${dn}${date}<div class="ttl" style="color:var(--ink3)">2026</div></div>`;
