@@ -20,10 +20,15 @@ plan = json.loads(data)  # validasi
 for key, fn in [("actuals", "actuals.json"), ("body", "body.json")]:
     fp = os.path.join(ROOT, "data", fn)
     plan[key] = json.load(open(fp, encoding="utf-8")) if os.path.exists(fp) else None
+trp = os.path.join(SRC, "i18n_data_en.json")
+plan["tr"] = json.load(open(trp, encoding="utf-8")) if os.path.exists(trp) else {}
 data = json.dumps(plan, ensure_ascii=False)
 tpl = open(os.path.join(SRC, "template.html"), encoding="utf-8").read()
 assert "__DATA__" in tpl
-out = tpl.replace("__DATA__", data.replace("</", "<\\/"))
+uip = os.path.join(SRC, "i18n_ui_en.json")
+ui = open(uip, encoding="utf-8").read() if os.path.exists(uip) else "{}"
+json.loads(ui)
+out = tpl.replace("__DATA__", data.replace("</", "<\\/")).replace("__UI_EN__", ui.replace("</", "<\\/"))
 open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8").write(out)
 
 h = hashlib.sha1()

@@ -1,13 +1,13 @@
 <!doctype html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Road to JRF 2027</title>
-<meta name="description" content="Program lari Ryan menuju Jakarta Running Festival (JRF) 2027 Full Marathon, 24 Okt 2027: Fase A (Diet & Base) + Fase B (Blok Intensif 20 minggu), lengkap dengan menu WU/Main/CD per sesi.">
+<meta name="description" content="Ryan's running program for the Jakarta Running Festival (JRF) 2027 Full Marathon, 24 Oct 2027: Phase A (Diet & Base) + Phase B (20-week Intensive Block), with WU/Main/CD details for every session.">
 <meta name="theme-color" content="#ff5a1f">
 <meta property="og:title" content="Road to JRF 2027 · Jakarta Running Festival Full Marathon">
-<meta property="og:description" content="43 minggu, 6 blok, target finish ≤ 4:30. Program lari lengkap menuju Jakarta Running Festival 2027.">
+<meta property="og:description" content="43 weeks, 6 blocks, target finish ≤ 4:30. A complete running program for the Jakarta Running Festival 2027.">
 <meta property="og:type" content="website">
 <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
 <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
@@ -18,7 +18,7 @@
 <meta name="apple-mobile-web-app-title" content="JRF 2027">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="color-scheme" content="light dark">
-<script>(function(){var m="auto";try{m=localStorage.getItem("jrf-theme")||"auto"}catch(e){}var d=m==="dark"||(m==="auto"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.setAttribute("data-theme",d?"dark":"light");document.documentElement.setAttribute("data-theme-mode",m);})();</script>
+<script>(function(){var m="auto";try{m=localStorage.getItem("jrf-theme")||"auto"}catch(e){}var d=m==="dark"||(m==="auto"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.setAttribute("data-theme",d?"dark":"light");document.documentElement.setAttribute("data-theme-mode",m);var l="en";try{l=localStorage.getItem("jrf-lang")||"en"}catch(e){}document.documentElement.setAttribute("lang",l);})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -632,6 +632,7 @@ body.sheet-open{overflow:hidden}
 [data-theme="dark"] .install-btn:hover{color:#fff}
 .theme-btn{border:1px solid var(--line);background:var(--paper);color:var(--ink2);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:15px;display:inline-flex;align-items:center;justify-content:center;padding:0}
 .theme-btn:hover{border-color:var(--ink3)}
+.lang-btn{width:auto;padding:0 10px;border-radius:999px;font-size:12px;font-weight:800;font-family:var(--mono)}
 .eyerow-r{display:flex;align-items:center;gap:8px}
 
 /* ===== BERANDA: DASHBOARD ===== */
@@ -680,6 +681,30 @@ body.sheet-open{overflow:hidden}
   .hero h1.d-title{font-size:40px;white-space:nowrap}
 }
 @media (max-width: 900px){ footer{display:none!important} body[data-view="home"] .hero{min-height:calc(100dvh - 68px - env(safe-area-inset-bottom));border-bottom:0} }
+
+/* Beranda: minggu ini + tiles */
+.d-week{cursor:default}
+.wstrip{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:10px}
+.wd{border:0;background:var(--soft);border-radius:10px;padding:7px 2px 6px;display:flex;flex-direction:column;align-items:center;gap:3px;font:inherit;color:var(--ink);cursor:default;min-width:0}
+.wd.tap{cursor:pointer}
+.wd .wn{font-size:10px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em}
+.wd .wb{width:70%;height:4px;border-radius:99px;background:var(--line)}
+.wd .wv{font-family:var(--mono);font-size:12px;font-weight:700;white-space:nowrap}
+.wd .wv.dim{color:var(--ink3);font-family:var(--font);font-weight:600;font-size:11px}
+.wd.k-easy .wb,.wd.k-long .wb,.wd.k-quality .wb,.wd.k-recovery .wb,.wd.k-race .wb,.wd.k-gym .wb{background:var(--kc)}
+.wd.today{box-shadow:inset 0 0 0 2px var(--accent);background:var(--paper)}
+.wd.past{opacity:.55}
+.d-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.d-tile{padding:12px 14px}
+.d-tile .tv{font-weight:800;font-size:15px;margin-top:6px;line-height:1.25}
+.d-tile .tv.mono{font-family:var(--mono);font-size:20px}
+.d-tile .tv small{font-family:var(--font);font-size:12px;color:var(--ink2);font-weight:600}
+.d-tile .ts{font-size:12px;color:var(--ink2);margin-top:3px}
+@media (max-width: 900px){ .d-big{font-size:56px;margin-top:6px} .d-count{padding-bottom:2px} .dash{gap:9px} }
+@media (min-width: 901px){
+  .d-week{grid-column:1 / span 2;grid-row:3}
+  .d-tiles{grid-column:3;grid-row:3}
+}
 @media print{.toolbar,.pills{display:none} body{background:var(--paper)}}
 </style>
 </head>
@@ -713,7 +738,7 @@ body.sheet-open{overflow:hidden}
 <header class="hero">
   <div class="wrap">
     <div class="eyerow"><div class="eyebrow"><span class="dot"></span>Training Block · Ryan</div>
-      <div class="eyerow-r"><button class="theme-btn" id="themeBtn" aria-label="Ganti tampilan terang/gelap" title="Tampilan">🌗</button>
+      <div class="eyerow-r"><button class="theme-btn lang-btn" id="langBtn" aria-label="Language / Bahasa" title="Language / Bahasa">EN</button><button class="theme-btn" id="themeBtn" aria-label="Ganti tampilan terang/gelap" title="Tampilan">🌗</button>
       <div class="inst"><button class="install-btn" id="installBtn" hidden>📲 Install app</button>
         <div class="ios-tip" id="iosTip" hidden>Di Safari: tap tombol <b>Share</b> <span aria-hidden="true">⬆️</span>, lalu pilih <b>Add to Home Screen</b>.</div></div></div></div>
     <div class="dash">
@@ -723,7 +748,9 @@ body.sheet-open{overflow:hidden}
         <div class="d-sub">Jakarta Running Festival · Full Marathon<br>Minggu, 24 Oktober 2027 · target ≤ 4:30</div>
       </div>
       <button class="d-card d-next" id="dNext"></button>
+      <div class="d-card d-week" id="dWeek"></div>
       <button class="d-card d-journey" id="dJourney"></button>
+      <div class="d-tiles"><button class="d-card d-tile" id="dBlock"></button><button class="d-card d-tile" id="dBody"></button></div>
       <button class="d-card d-race" id="dRace"></button>
     </div>
 
@@ -814,14 +841,49 @@ body.sheet-open{overflow:hidden}
 
 <script>
 const DATA = __DATA__;
+const LANG = document.documentElement.getAttribute("lang") === "id" ? "id" : "en";
+const L = (id, en) => LANG === "en" ? en : id;
+(function translateData(){
+  if (LANG !== "en" || !DATA.tr) return;
+  const T = DATA.tr, SKIP = new Set(["date","start","end","label","block","kind","mode","color","type","variant","updated"]);
+  (function walk(o){
+    if (Array.isArray(o)) { o.forEach((v, i) => { if (typeof v === "string") { if (T[v]) o[i] = T[v]; } else if (v && typeof v === "object") walk(v); }); return; }
+    for (const k in o) { if (k === "tr" || SKIP.has(k)) continue; const v = o[k];
+      if (typeof v === "string") { if (T[v]) o[k] = T[v]; } else if (v && typeof v === "object") walk(v); }
+  })(DATA);
+})();
+
+// ---------- TERJEMAHAN UI (EN) ----------
+const UI_EN = __UI_EN__;
+const UI_PAT = (UI_EN.__patterns || []).map(([re, to]) => [new RegExp("^" + re + "$"), to]);
+function trText(s){
+  const k = s.trim(); if (!k) return null;
+  let r = UI_EN[k];
+  if (r === undefined) { for (const [re, to] of UI_PAT) { if (re.test(k)) { r = k.replace(re, to); break; } } }
+  return r === undefined || r === k ? null : s.replace(k, r);
+}
+function trAttrs(n){ for (const a of ["title", "aria-label", "placeholder"]) { const v = n.getAttribute && n.getAttribute(a); if (v) { const r = trText(v); if (r !== null) n.setAttribute(a, r); } } }
+function trTree(root){
+  if (LANG !== "en" || !root) return;
+  if (root.nodeType === 3) { const r = trText(root.nodeValue); if (r !== null) root.nodeValue = r; return; }
+  if (root.nodeType !== 1 || root.tagName === "SCRIPT" || root.tagName === "STYLE") return;
+  trAttrs(root);
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, {acceptNode: n => (n.nodeType === 1 && (n.tagName === "SCRIPT" || n.tagName === "STYLE")) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT});
+  let n; while ((n = w.nextNode())) { if (n.nodeType === 3) { const r = trText(n.nodeValue); if (r !== null) n.nodeValue = r; } else trAttrs(n); }
+}
+if (LANG === "en") {
+  trTree(document.body);
+  new MutationObserver(ms => { for (const m of ms) { if (m.type === "characterData") trTree(m.target); else m.addedNodes.forEach(trTree); } })
+    .observe(document.body, {childList: true, subtree: true, characterData: true});
+}
 const B = DATA.blocks;
-const MON = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
-const DAYS = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"];
+const MON = LANG === "en" ? ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] : ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+const DAYS = LANG === "en" ? ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"] : ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"];
 const KIND = {easy:"Easy",recovery:"Recovery",long:"Long Run",quality:"Kualitas",race:"Race / Time Trial",gym:"Gym"};
 const SHORT = {easy:"E",recovery:"Rec",long:"LR",quality:"Q",race:"Race"};
 const pd = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
 const fd = (s, y) => { const d = pd(s); return d.getDate()+" "+MON[d.getMonth()]+(y?" "+d.getFullYear():""); };
-const fmt = n => (Math.round(n*10)/10).toLocaleString("id-ID",{minimumFractionDigits:n%1?1:0, maximumFractionDigits:1});
+const fmt = n => (Math.round(n*10)/10).toLocaleString(LANG === "en" ? "en-US" : "id-ID",{minimumFractionDigits:n%1?1:0, maximumFractionDigits:1});
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 const weeks = DATA.weeks;
@@ -1147,8 +1209,12 @@ document.addEventListener("keydown", e => { if (e.key === "Escape" && !sheet.hid
   s.addEventListener("touchend", e => { if (y0 === null) return; const dy = e.changedTouches[0].clientY - y0; s.style.transform = ""; if (dy > 90) closeSheet(); y0 = null; });
 })();
 
+// ---------- BAHASA ----------
+function setLang(l){ try { localStorage.setItem("jrf-lang", l); } catch(e) {} location.reload(); }
+(function(){ const b = document.getElementById("langBtn"); b.textContent = LANG.toUpperCase(); b.addEventListener("click", e => { e.stopPropagation(); setLang(LANG === "en" ? "id" : "en"); }); })();
+
 // ---------- TEMA TERANG / GELAP ----------
-const THEME_LABEL = {auto: "Otomatis (ikut HP/laptop)", light: "Terang", dark: "Gelap"}, THEME_ICON = {auto: "🌗", light: "☀️", dark: "🌙"};
+const THEME_LABEL = LANG === "en" ? {auto: "Auto (follow device)", light: "Light", dark: "Dark"} : {auto: "Otomatis (ikut HP/laptop)", light: "Terang", dark: "Gelap"}, THEME_ICON = {auto: "🌗", light: "☀️", dark: "🌙"};
 const mqDark = window.matchMedia("(prefers-color-scheme: dark)");
 function themeMode(){ return document.documentElement.getAttribute("data-theme-mode") || "auto"; }
 function applyTheme(mode){
@@ -1156,9 +1222,9 @@ function applyTheme(mode){
   document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
   document.documentElement.setAttribute("data-theme-mode", mode);
   const meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.setAttribute("content", dark ? "#0f1115" : "#ff5a1f");
-  const b = document.getElementById("themeBtn"); if (b) { b.textContent = THEME_ICON[mode]; b.title = "Tampilan: " + THEME_LABEL[mode]; }
+  const b = document.getElementById("themeBtn"); if (b) { b.textContent = THEME_ICON[mode]; b.title = L("Tampilan: ", "Theme: ") + THEME_LABEL[mode]; }
 }
-function setTheme(mode){ try { localStorage.setItem("jrf-theme", mode); } catch(e) {} applyTheme(mode); if (typeof toast === "function") toast("Tampilan: " + THEME_LABEL[mode]); }
+function setTheme(mode){ try { localStorage.setItem("jrf-theme", mode); } catch(e) {} applyTheme(mode); if (typeof toast === "function") toast(L("Tampilan: ", "Theme: ") + THEME_LABEL[mode]); }
 function cycleTheme(){ const order = ["auto", "light", "dark"]; setTheme(order[(order.indexOf(themeMode()) + 1) % 3]); }
 (mqDark.addEventListener ? mqDark.addEventListener("change", () => { if (themeMode() === "auto") applyTheme("auto"); }) : mqDark.addListener(() => { if (themeMode() === "auto") applyTheme("auto"); }));
 document.getElementById("themeBtn").addEventListener("click", e => { e.stopPropagation(); cycleTheme(); });
@@ -1381,12 +1447,14 @@ function renderMore(){
   let html = `<div class="vhead"><h2>More</h2><p>Penjelasan detail & pengaturan</p></div><div class="more-list">` + items.map(([id, ic, tt, st]) =>
     `<button class="more-item" data-page="${id}"><span class="mi">${ic}</span><span><div class="mt">${tt}</div><div class="ms2" style="font-size:12px;color:var(--ink3)">${st}</div></span><span class="mc">›</span></button>`).join("");
   if (window.__canInstall && window.__canInstall()) html += `<button class="more-item" data-act="install"><span class="mi">📲</span><span><div class="mt">Install app</div><div style="font-size:12px;color:var(--ink3)">Pasang di layar utama, buka seperti aplikasi</div></span><span class="mc">›</span></button>`;
-  html += `<button class="more-item" data-act="theme"><span class="mi">${THEME_ICON[themeMode()]}</span><span><div class="mt">Tampilan</div><div style="font-size:12px;color:var(--ink3)">${THEME_LABEL[themeMode()]} · tap untuk ganti</div></span><span class="mc">›</span></button>`;
+  html += `<button class="more-item" data-act="lang"><span class="mi">🌐</span><span><div class="mt">${LANG === "en" ? "Language" : "Bahasa"}</div><div style="font-size:12px;color:var(--ink3)">${LANG === "en" ? "English · tap for Bahasa Indonesia" : "Bahasa Indonesia · tap untuk English"}</div></span><span class="mc">›</span></button>`;
+  html += `<button class="more-item" data-act="theme"><span class="mi">${THEME_ICON[themeMode()]}</span><span><div class="mt">Tampilan</div><div style="font-size:12px;color:var(--ink3)">${THEME_LABEL[themeMode()]} · ${L("tap untuk ganti", "tap to change")}</div></span><span class="mc">›</span></button>`;
   html += `<button class="more-item" data-act="about"><span class="mi">ℹ️</span><span><div class="mt">Tentang program ini</div><div style="font-size:12px;color:var(--ink3)">Dipersonalisasi untuk @ryanepwijaya, disusun dengan AI</div></span><span class="mc">›</span></button></div>`;
   html += `<p class="more-foot">Program lari JRF 2027 · disusun 28 Okt 2026 dari data Coros & Strava. Nutrisi di luar program. Gerakan gym diambil dari log latihan Ryan.</p>`;
   const el = document.getElementById("v-more"); el.innerHTML = html;
   el.querySelectorAll("[data-page]").forEach(b => b.addEventListener("click", () => navigate("more/" + b.dataset.page)));
   const inst = el.querySelector('[data-act="install"]'); if (inst) inst.addEventListener("click", () => window.__install());
+  el.querySelector('[data-act="lang"]').addEventListener("click", () => setLang(LANG === "en" ? "id" : "en"));
   el.querySelector('[data-act="theme"]').addEventListener("click", () => { cycleTheme(); renderMore(); });
   el.querySelector('[data-act="about"]').addEventListener("click", () => { const m = document.getElementById("disclaimer"); m.classList.remove("hide"); document.body.classList.add("dm-open"); });
 }
@@ -1465,6 +1533,29 @@ function renderDash(){
     <div class="jlabels">${labels}</div>
     <div class="jcap"><span><b>●</b> JAKIM 13 Jun</span><span>🏁 JRF 24 Okt</span></div>`;
   jb.onclick = () => { if (isMobile()) { navigate("program"); window.scrollTo(0, 0); } else document.getElementById("toolbar").scrollIntoView({behavior: "smooth"}); };
+  // minggu ini (strip 7 hari)
+  const wk = cur || weeks.find(w => w.days.filter(d => d.type === "run").length >= 3) || weeks[0];
+  const wEl = document.getElementById("dWeek");
+  wEl.innerHTML = `<div class="d-lbl"><span>${cur ? L("Minggu ini", "This week") : L("Minggu pertama", "First week")} · ${wk.label}</span><span>${fmt(wk.total)} km</span></div>
+    <div class="wstrip">${wk.days.map(d => {
+      const k = d.session ? (d.type === "gym" ? "gym" : d.session.kind) : "";
+      const val = d.type === "run" ? fmt(d.session.km) : d.type === "gym" ? "🏋️" : d.type === "holiday" ? "🎌" : d.type === "none" ? "" : "—";
+      const cls = ["wd", k ? "k-" + k : "", d.session ? "tap" : "", d.date === isoToday ? "today" : "", d.date < isoToday ? "past" : ""].join(" ");
+      return `<button class="${cls}" ${d.session ? `data-w="${wk.label}" data-dow="${d.dow}"` : "tabindex=-1"}><span class="wn">${DAYS[d.dow].slice(0,3)}</span><span class="wb"></span><span class="wv${d.type === "run" ? "" : " dim"}">${val}</span></button>`;
+    }).join("")}</div>`;
+  wEl.querySelectorAll(".wd.tap").forEach(b => b.addEventListener("click", () => openSession(b.dataset.w, +b.dataset.dow)));
+  // tiles: blok sekarang + berat badan
+  const bw = cur || weeks.find(w => w.days.some(d => d.date >= "2027-01-01"));
+  const tb = document.getElementById("dBlock");
+  tb.innerHTML = `<div class="d-lbl"><span>${cur ? L("Blok sekarang", "Current block") : L("Blok pertama", "First block")}</span><span class="go">›</span></div>
+    <div class="tv" style="color:${B[bw.block].color}">${PH(B[bw.block].phase)}${B[bw.block].no} · ${esc(B[bw.block].name)}</div><div class="ts">${esc(bw.stage)} · ${bw.label}</div>`;
+  tb.onclick = () => selectBlock(bw.block, true);
+  const E = (BODY.entries || []).slice().sort((x, y) => x.date < y.date ? -1 : 1), tgt = BODY.target_kg || 63, lastE = E[E.length - 1];
+  const tw = document.getElementById("dBody");
+  tw.innerHTML = `<div class="d-lbl"><span>${L("Berat badan", "Body weight")}</span><span class="go">›</span></div>
+    ${lastE ? `<div class="tv mono">${fmt(lastE.weight)}<small> kg</small></div><div class="ts">target ${tgt} kg · ${E.length > 1 ? (E[0].weight - lastE.weight >= 0 ? "−" : "+") + fmt(Math.abs(E[0].weight - lastE.weight)) + " kg" : fd(lastE.date)}</div>`
+            : `<div class="tv mono">—<small> kg</small></div><div class="ts">target ${tgt} kg · ${L("belum ada data", "no data yet")}</div>`}`;
+  tw.onclick = () => { if (isMobile()) navigate("progress"); else togglePanel("p-progress"); };
   // race berikutnya
   const hmtt = runs.find(x => /HM Time Trial/i.test(x.d.session.title));
   const races = [
