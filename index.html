@@ -1361,7 +1361,7 @@ function dayHTML(w, d){
   const hol = d.holiday ? `<div class="hol">🇮🇩 ${esc(d.holiday)}</div>` : "";
   if (d.type === "none") return `<div class="day none">${dn}${date}<div class="ttl" style="color:var(--ink3)">2026</div></div>`;
   if (d.type === "gym") { const g = d.session, sel = openSess[w.label] === d.dow;
-    return `<div class="day run k-gym${sel?" sel":""}" data-w="${w.label}" data-dow="${d.dow}">${dn}${date}<span class="kind">Gym${(st => st ? ` · <span class="done-dot">${st.txt}</span>` : "")(statusOf(d))}</span><div class="ttl">🏋️ ${esc(g.title)}</div><div class="km">${g.sets ? g.sets+"<small> set</small>" : "<small>tanpa beban</small>"}</div></div>`; }
+    return `<div class="day run k-gym${sel?" sel":""}" data-w="${w.label}" data-dow="${d.dow}">${dn}${date}<span class="kind">Gym${(st => st ? ` · <span class="done-dot">${st.txt}</span>` : "")(statusOf(d))}</span><div class="ttl">${esc(g.title)}</div><div class="km">${g.sets ? g.sets+"<small> set</small>" : "<small>tanpa beban</small>"}</div></div>`; }
   if (d.type === "off") return `<div class="day off">${dn}${date}${hol}<div class="ttl">😴 Off / istirahat</div></div>`;
   if (d.type === "holiday") return `<div class="day holiday">${dn}${date}<div class="ttl" style="font-weight:800">🇮🇩 ${esc(d.holiday)}</div><div class="hol" style="color:var(--ink2);font-weight:600">Libur → isi sendiri</div></div>`;
   const s = d.session, sel = openSess[w.label] === d.dow;
@@ -1380,7 +1380,7 @@ function chipsHTML(w){
     else if (d.type === "holiday") c += `<span class="chip h">${DAYS[d.dow].slice(0,3)} libur</span>`;
   });
   const ng = w.days.filter(d => d.type === "gym").length;
-  if (ng) c += `<span class="chip k-gym">🏋️ ${ng}×</span>`;
+  if (ng) c += `<span class="chip k-gym">Gym <b>${ng}×</b></span>`;
   const wa = weekActual(w); if (wa !== null) c += `<span class="chip act">Aktual <b>${fmt(wa)}</b>/${fmt(w.total)}</span>`;
   if (w.days.some(d => d.ramadan)) c += `<span class="chip ram">🌙</span>`;
   return c;
@@ -1815,7 +1815,7 @@ function renderDash(){
     nb.innerHTML = `<div class="d-lbl"><span><b>${lbl}</b> · ${LONGDAY(pd(next.d.date))}</span><span class="go">›</span></div>
       <div class="dt">${esc(s.title)}</div>
       <div class="dmeta"><span class="dkm">${fmt(s.km)} km</span><span class="mode ${s.target.mode}">${s.target.mode}</span><span>${esc(s.target.range)}</span></div>
-      ${todayX && todayX.d.type === "gym" && next.d.date !== isoToday ? `<div class="dx">Hari ini: 🏋️ ${esc(todayX.d.session.title)}</div>` : ""}`;
+      ${todayX && todayX.d.type === "gym" && next.d.date !== isoToday ? `<div class="dx">Hari ini: ${esc(todayX.d.session.title)}</div>` : ""}`;
     nb.onclick = () => openSession(next.w.label, next.d.dow);
   } else { nb.className = "d-card d-next"; nb.innerHTML = `<div class="d-lbl"><span>Program</span></div><div class="dt">Selesai 🎉 Semoga JRF-nya lancar!</div>`; nb.onclick = null; }
   // perjalanan program
