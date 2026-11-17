@@ -470,6 +470,49 @@ body.sheet-open{overflow:hidden}
   .sheet-back{bottom:calc(66px + env(safe-area-inset-bottom))}
   .sheet{padding-bottom:14px;max-height:calc(100% - 40px);box-shadow:0 -10px 40px rgba(20,22,28,.25), 0 1px 0 var(--line)}
 }
+
+/* ===== VIEWS (HP: tiap menu = halaman) ===== */
+.view{display:none}
+.prog-head{display:none}
+.vhead{padding:calc(14px + env(safe-area-inset-top)) 0 10px}
+.vhead h2{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.vhead p{margin:2px 0 0;color:var(--ink2);font-size:13px}
+.vhead .back{border:0;background:none;color:var(--accent);font-weight:800;font-size:15px;cursor:pointer;padding:6px 0}
+.vsec{margin-top:16px}
+.vsec > h3{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin:0 2px 8px}
+.vcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.today-empty{text-align:center;padding:22px 16px}
+.today-empty .big{font-size:40px}
+.today-empty h3{font-size:18px;font-weight:800;margin-top:6px}
+.today-empty p{margin:4px 0 0;color:var(--ink2);font-size:14px}
+.wk-sum{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.wk-sum .l b{font-family:var(--mono);font-size:15px}
+.wk-sum .l div{font-size:12px;color:var(--ink3);font-weight:600}
+.wk-sum .r{font-family:var(--mono);font-size:22px;font-weight:700}
+.wk-sum .r small{font-family:var(--font);font-size:12px;color:var(--ink2)}
+.vbtn{border:0;background:var(--ink);color:#fff;font-weight:800;font-size:14px;padding:11px 16px;border-radius:12px;cursor:pointer;width:100%;margin-top:10px}
+#v-today .days{padding:0}
+#v-today .det-h .x{display:none}
+#v-today .details{padding:0}
+.ms-list{display:flex;flex-direction:column;gap:6px}
+.ms{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 14px;cursor:pointer;width:100%;text-align:left;font:inherit;color:var(--ink)}
+.ms .md{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ink2);width:58px;flex:none}
+.ms .mt{font-weight:700;font-size:14px;line-height:1.25}
+.ms .mw{font-size:11px;color:var(--ink3);font-weight:600}
+.ms.done{opacity:.55}
+.ms.main{border-color:var(--ink);box-shadow:inset 3px 0 0 var(--ink)}
+.ms.jk{box-shadow:inset 3px 0 0 #db2777}
+#v-moredetail .panel{display:block!important;margin-top:0}
+#v-moredetail .panel .x{display:none}
+@media (max-width: 900px){
+  body:not([data-view="home"]) .hero{display:none}
+  body:not([data-view="program"]) .toolbar, body:not([data-view="program"]) #weeks{display:none}
+  body:not([data-view="home"]):not([data-view="more"]) footer{display:none}
+  body[data-view="today"] #v-today, body[data-view="race"] #v-race, body[data-view="more"] #v-more, body[data-view="moredetail"] #v-moredetail{display:block}
+  body[data-view="program"] .prog-head{display:block}
+  body[data-view="program"] .toolbar{margin-top:0}
+  #weeks{margin-top:12px}
+}
 @media print{.toolbar,.pills{display:none} body{background:#fff}}
 </style>
 </head>
@@ -584,6 +627,7 @@ body.sheet-open{overflow:hidden}
   </div>
 </header>
 
+<div class="wrap prog-head"><div class="vhead"><h2>Program</h2><p>Pilih blok, buka minggu, tap sesi untuk detail</p></div></div>
 <div class="toolbar" id="toolbar">
   <div class="wrap">
     <div class="tabs" id="tabs"></div>
@@ -594,6 +638,11 @@ body.sheet-open{overflow:hidden}
 <main class="wrap">
   <div class="weeks" id="weeks"></div>
 </main>
+
+<section class="view wrap" id="v-today"></section>
+<section class="view wrap" id="v-race"></section>
+<section class="view wrap" id="v-more"></section>
+<section class="view wrap" id="v-moredetail"><div class="vhead"><button class="back" id="moreBack">‹ More</button></div><div id="moreSlot"></div></section>
 
 <div class="sheet-back" id="sheet" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-label="Detail sesi">
@@ -858,7 +907,7 @@ function blockHead(id){
 }
 
 function pickerHTML(){
-  return `<div class="picker"><h3>Pilih blok untuk melihat menunya</h3><p>Semua minggu tertutup. Klik blok di peta, di tab atas, atau di bawah ini.</p>
+  return `<div class="picker"><h3>Pilih blok untuk melihat menunya</h3><p>${isMobile() ? "Tap tab di atas atau salah satu kartu di bawah ini." : "Semua minggu tertutup. Klik blok di peta, di tab atas, atau di bawah ini."}</p>
     <div class="pick-grid">${blockOrder.map(id => { const i = bInfo(id);
       return `<div class="pick" data-pick="${id}" style="--bc:${B[id].color}"><div class="pn">FASE ${PH(B[id].phase)} · BLOK ${B[id].no}</div><div class="pt">${esc(B[id].name)}</div>
         <div class="pm">${fd(bS(i))} – ${fd(i.last.end)} · ${i.ws.length} mgg · ${fmt(i.km)} km</div></div>`; }).join("")}</div></div>`;
@@ -896,17 +945,18 @@ function selectBlock(id, scroll){
   if (id !== selBlock) { openWeeks.clear(); for (const k in openSess) delete openSess[k]; }
   selBlock = id;
   render();
-  if (scroll) document.getElementById("toolbar").scrollIntoView({behavior:"smooth"});
+  if (scroll) { if (isMobile()) { navigate("program"); window.scrollTo(0, 0); } else document.getElementById("toolbar").scrollIntoView({behavior:"smooth"}); }
 }
 
 function jump(label){
+  if (isMobile()) navigate("program");
   const w = weeks.find(x => x.label === label);
   if (selBlock !== "all" && selBlock !== w.block) { selBlock = w.block; openWeeks.clear(); }
   openWeeks.add(label);
   render();
   const el = document.getElementById("w-"+label); if (el) el.scrollIntoView({behavior:"smooth", block:"start"});
 }
-if (cur) { const g = document.getElementById("goNow"); g.style.display = ""; g.onclick = () => jump(cur.label); }
+if (cur) { const g = document.getElementById("goNow"); g.style.display = ""; g.onclick = () => { if (isMobile()) navigate("today"); else jump(cur.label); }; }
 
 // ---------- MOBILE: BOTTOM SHEET ----------
 function isMobile(){ return window.matchMedia("(max-width: 900px)").matches; }
@@ -934,13 +984,13 @@ function showSheet(html){
 }
 function openPanelSheet(id){
   showSheet(`<div class="sheet-h"><button class="back" data-back>‹ More</button><button class="x" data-sheetclose aria-label="Tutup">✕</button></div>`);
-  sheetBody.querySelector("[data-back]").addEventListener("click", () => moreSheet());
+  sheetBody.querySelector("[data-back]").addEventListener("click", () => navigate("more"));
   const el = document.getElementById(id);
   movedPanel = {el, parent: el.parentNode, next: el.nextSibling};
   el.classList.add("in-sheet", "show"); sheetBody.appendChild(el);
   if (id === "p-chart") drawChart();
 }
-function closeSheet(){ sheet.hidden = true; document.body.classList.remove("sheet-open"); restorePanel(); syncNav(); }
+function closeSheet(){ sheet.hidden = true; document.body.classList.remove("sheet-open"); restorePanel(); }
 sheet.addEventListener("click", e => { if (e.target === sheet) closeSheet(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !sheet.hidden) closeSheet(); });
 (function(){ // geser ke bawah untuk menutup
@@ -952,45 +1002,109 @@ document.addEventListener("keydown", e => { if (e.key === "Escape" && !sheet.hid
 document.getElementById("tlHint").textContent = window.matchMedia("(hover:hover)").matches
   ? "Klik blok untuk membuka minggu-minggunya · hover untuk info" : "Tap nomor blok untuk membuka minggu-minggunya";
 
-// ---------- BOTTOM NAV ----------
+// ---------- BOTTOM NAV + HALAMAN (HP) ----------
 const bnav = document.getElementById("bnav");
+const VIEWS = ["home", "program", "today", "race", "more", "moredetail"];
+let curView = "home", movedPage = null;
+const scrollMem = {};
 function toast(msg){ const el = document.getElementById("toast"); el.textContent = msg; el.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove("show"), 2600); }
 function setNav(k){ bnav.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.nav === k)); }
-function syncNav(){ const tb = document.getElementById("toolbar"); setNav(window.scrollY + 120 < tb.offsetTop ? "home" : "program"); }
-window.addEventListener("scroll", () => { if (sheet.hidden) syncNav(); }, {passive:true});
-function sheetHead(title){ return `<div class="sheet-h"><h3>${title}</h3><button class="x" data-sheetclose aria-label="Tutup">✕</button></div>`; }
+const isoToday = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+const LONGDAY = d => `${DAYS[(d.getDay()+6)%7]}, ${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}`;
 
-function goToday(){
-  const todayIso = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
-  if (!cur) {
-    const first = weeks.find(w => w.days.some(d => d.type === "run"));
-    if (today < pd(weeks[0].end)) { toast("Program mulai 1 Jan 2027 — ini minggu pertamamu"); jump(first.label); }
-    else { toast("Program sudah selesai 🎉"); jump(weeks[weeks.length-1].label); }
-    return;
+function restorePage(){
+  if (!movedPage) return;
+  const {el, parent, next} = movedPage; el.classList.remove("show"); parent.insertBefore(el, next); movedPage = null;
+}
+function applyView(hash){
+  let [v, sub] = (hash || "home").split("/");
+  if (!VIEWS.includes(v)) v = "home";
+  if (v === "more" && sub) v = "moredetail";
+  scrollMem[curView] = window.scrollY;
+  closeSheet(); restorePage();
+  curView = v; document.body.dataset.view = v;
+  setNav(v === "moredetail" ? "more" : v);
+  if (v === "today") renderToday();
+  if (v === "race") renderRace();
+  if (v === "more") renderMore();
+  if (v === "moredetail") {
+    const el = document.getElementById(sub);
+    if (el && el.classList.contains("panel")) {
+      movedPage = {el, parent: el.parentNode, next: el.nextSibling};
+      el.classList.add("show"); document.getElementById("moreSlot").appendChild(el);
+      if (sub === "p-chart") drawChart();
+    }
   }
-  jump(cur.label);
-  const d = cur.days.find(x => x.date === todayIso);
-  if (d && d.session) setTimeout(() => openSheet(cur.label, d.dow), 450);
-  else toast(d && d.type === "holiday" ? `Hari ini libur: ${d.holiday}` : "Hari ini tidak ada sesi terjadwal 😴");
+  window.scrollTo(0, (v === "home" || v === "program") ? (scrollMem[v] || 0) : 0);
+}
+function navigate(v){
+  const cur = (location.hash || "#home").slice(1);
+  if (cur === v && document.body.dataset.view) { if (v.split("/")[0] === curView || (v.startsWith("more/") && curView === "moredetail")) return; }
+  history.pushState(null, "", "#" + v);
+  applyView(v);
+}
+window.addEventListener("popstate", () => applyView(location.hash.slice(1)));
+document.getElementById("moreBack").addEventListener("click", () => { if (history.length > 1 && /#more\//.test(location.hash)) history.back(); else navigate("more"); });
+
+function bindDays(root){
+  root.querySelectorAll(".day.run").forEach(d => d.addEventListener("click", () => openSheet(d.dataset.w, +d.dataset.dow)));
 }
 
-function raceSheet(){
+function renderToday(){
+  const el = document.getElementById("v-today");
+  let html = `<div class="vhead"><h2>Hari ini</h2><p>${LONGDAY(today)}</p></div>`;
+  let w = cur, note = "";
+  if (!cur) {
+    const startsIn = Math.round((pd("2027-01-01") - today) / 86400000);
+    if (startsIn > 0) {
+      w = weeks[0];
+      html += `<div class="vcard today-empty"><div class="big">⏳</div><h3>Program mulai 1 Januari 2027</h3><p>${startsIn} hari lagi. Sementara itu, ini minggu pertamamu.</p></div>`;
+    } else {
+      html += `<div class="vcard today-empty"><div class="big">🎉</div><h3>Program sudah selesai</h3><p>Semoga JRF 2027-nya lancar!</p></div>`;
+      el.innerHTML = html; return;
+    }
+  } else {
+    const d = cur.days.find(x => x.date === isoToday);
+    html += `<div class="vsec"><h3>Sesi hari ini</h3>`;
+    if (d && d.session) html += detailHTML(cur, d);
+    else if (d && d.type === "holiday") html += `<div class="vcard today-empty"><div class="big">🎌</div><h3>Libur: ${esc(d.holiday)}</h3><p>Isi sendiri dengan easy run kalau mau.</p></div>`;
+    else html += `<div class="vcard today-empty"><div class="big">😴</div><h3>Hari istirahat</h3><p>Tidak ada sesi terjadwal. Pulihkan badan.</p></div>`;
+    html += `</div>`;
+  }
+  html += `<div class="vsec"><h3>${cur ? "Minggu ini" : "Minggu pertama"}</h3>
+    <div class="vcard" style="margin-bottom:8px"><div class="wk-sum"><div class="l"><b>${w.label}</b> · ${fd(w.start)} – ${fd(w.end)}<div>${BL(w.block)} · ${esc(B[w.block].name)} · ${esc(w.stage)}</div></div><div class="r">${fmt(w.total)}<small> km</small></div></div></div>
+    <div class="days">${w.days.filter(d => d.type !== "none").map(d => dayHTML(w, d)).join("")}</div>
+    <button class="vbtn" id="todayOpen">Buka di Program →</button></div>`;
+  el.innerHTML = html;
+  bindDays(el);
+  el.querySelectorAll(".day.run").forEach(x => { if (x.closest(".days") && w.days.find(d => d.dow === +x.dataset.dow)?.date === isoToday) x.classList.add("sel"); });
+  document.getElementById("todayOpen").onclick = () => jump(w.label);
+}
+
+function renderRace(){
+  const el = document.getElementById("v-race");
   const jkLeft = Math.round((pd(JK_DATE) - today) / 86400000);
-  showSheet(sheetHead("Race") + `<div class="race-sheet">
-    <div class="race-main"><div><div class="re">🏁 Main Race</div><h3>Jakarta Running Festival 2027</h3>
-      <div class="rs">Full Marathon 42,2 km · Minggu, 24 Oktober 2027 · Target <b>≤ 4:30</b></div></div>
-      <div class="rc">${daysLeft > 0 ? daysLeft + "<small>hari lagi</small>" : "Selesai ✅"}</div>
-      <button class="rbtn" data-go="B20">Lihat race week →</button></div>
-    <div class="race-tune"><div class="re">Tune-up Race</div><h4>Jakarta International Marathon 2027</h4>
-      <div class="rs">Half Marathon · Minggu, 13 Juni 2027</div>
-      <div class="rt"><span class="rc2">${jkLeft > 0 ? jkLeft + " hari lagi" : "Selesai ✅"}</span><button class="link-btn" data-go="B01">Lihat persiapan →</button></div></div>
-  </div>`);
-  sheetBody.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => {
-    const l = b.dataset.go; closeSheet(); jump(l); setTimeout(() => openSheet(l, 6), 450);
+  const ms = [];
+  weeks.forEach(w => w.days.forEach(d => {
+    const s = d.session; if (!s || d.type !== "run") return;
+    if (s.kind === "race" || /Time Trial|Dress Rehearsal/i.test(s.title)) ms.push({w, d, s});
   }));
+  el.innerHTML = `<div class="vhead"><h2>Race</h2><p>Race utama, tune-up, dan benchmark sepanjang program</p></div>
+    <div class="race-main" style="flex-direction:column;align-items:flex-start"><div><div class="re">🏁 Main Race</div><h3>Jakarta Running Festival 2027</h3>
+      <div class="rs">Full Marathon 42,2 km · Minggu, 24 Oktober 2027 · Target <b>≤ 4:30</b></div></div>
+      <div class="rc" style="text-align:left">${daysLeft > 0 ? daysLeft + "<small> hari lagi</small>" : "Selesai ✅"}</div></div>
+    <div class="race-tune" style="margin-top:10px"><div class="re">Tune-up Race</div><h4>Jakarta International Marathon 2027</h4>
+      <div class="rs">Half Marathon · Minggu, 13 Juni 2027</div>
+      <div class="rt"><span class="rc2">${jkLeft > 0 ? jkLeft + " hari lagi" : "Selesai ✅"}</span></div></div>
+    <div class="vsec"><h3>Race & benchmark</h3><div class="ms-list">${ms.map(({w, d, s}) => {
+      const done = pd(d.date) < today, main = d.date === "2027-10-24", jk = d.date === JK_DATE;
+      return `<button class="ms${done ? " done" : ""}${main ? " main" : ""}${jk ? " jk" : ""}" data-w="${w.label}" data-dow="${d.dow}">
+        <span class="md">${fd(d.date)}</span><span><div class="mt">${esc(s.title)}</div><div class="mw">${w.label} · ${fmt(s.km)} km</div></span><span class="mc" style="margin-left:auto;color:var(--ink3)">›</span></button>`;
+    }).join("")}</div></div>`;
+  el.querySelectorAll(".ms").forEach(b => b.addEventListener("click", () => openSheet(b.dataset.w, +b.dataset.dow)));
 }
 
-function moreSheet(){
+function renderMore(){
   const items = [
     ["p-blocks", "🧭", "Penjelasan Blok", "6 blok, periode, dan fokus tiap blok"],
     ["p-chart", "📊", "Volume Mingguan", "Grafik km per minggu dari Jan–Okt"],
@@ -998,27 +1112,26 @@ function moreSheet(){
     ["p-rules", "📌", "Aturan Main", "Prinsip yang berlaku di seluruh program"],
     ["p-hols", "🎌", "Libur 2027", "Libur nasional & cuti bersama yang dikosongkan"],
   ];
-  let html = sheetHead("More") + `<div class="more-list">` + items.map(([id, ic, tt, st]) =>
-    `<button class="more-item" data-panel-open="${id}"><span class="mi">${ic}</span><span><div class="mt">${tt}</div><div class="ms">${st}</div></span><span class="mc">›</span></button>`).join("");
-  if (window.__canInstall && window.__canInstall()) html += `<button class="more-item" data-act="install"><span class="mi">📲</span><span><div class="mt">Install app</div><div class="ms">Pasang di layar utama, buka seperti aplikasi</div></span><span class="mc">›</span></button>`;
-  html += `<button class="more-item" data-act="about"><span class="mi">ℹ️</span><span><div class="mt">Tentang program ini</div><div class="ms">Disclaimer: dipersonalisasi untuk @ryanepwijaya, disusun dengan AI</div></span><span class="mc">›</span></button></div>`;
-  showSheet(html);
-  sheetBody.querySelectorAll("[data-panel-open]").forEach(b => b.addEventListener("click", () => openPanelSheet(b.dataset.panelOpen)));
-  const inst = sheetBody.querySelector('[data-act="install"]'); if (inst) inst.addEventListener("click", () => window.__install());
-  sheetBody.querySelector('[data-act="about"]').addEventListener("click", () => {
-    closeSheet(); const m = document.getElementById("disclaimer"); m.classList.remove("hide"); document.body.classList.add("dm-open");
-  });
+  let html = `<div class="vhead"><h2>More</h2><p>Penjelasan detail & pengaturan</p></div><div class="more-list">` + items.map(([id, ic, tt, st]) =>
+    `<button class="more-item" data-page="${id}"><span class="mi">${ic}</span><span><div class="mt">${tt}</div><div class="ms2" style="font-size:12px;color:var(--ink3)">${st}</div></span><span class="mc">›</span></button>`).join("");
+  if (window.__canInstall && window.__canInstall()) html += `<button class="more-item" data-act="install"><span class="mi">📲</span><span><div class="mt">Install app</div><div style="font-size:12px;color:var(--ink3)">Pasang di layar utama, buka seperti aplikasi</div></span><span class="mc">›</span></button>`;
+  html += `<button class="more-item" data-act="about"><span class="mi">ℹ️</span><span><div class="mt">Tentang program ini</div><div style="font-size:12px;color:var(--ink3)">Dipersonalisasi untuk @ryanepwijaya, disusun dengan AI</div></span><span class="mc">›</span></button></div>`;
+  const el = document.getElementById("v-more"); el.innerHTML = html;
+  el.querySelectorAll("[data-page]").forEach(b => b.addEventListener("click", () => navigate("more/" + b.dataset.page)));
+  const inst = el.querySelector('[data-act="install"]'); if (inst) inst.addEventListener("click", () => window.__install());
+  el.querySelector('[data-act="about"]').addEventListener("click", () => { const m = document.getElementById("disclaimer"); m.classList.remove("hide"); document.body.classList.add("dm-open"); });
 }
 
 bnav.addEventListener("click", e => {
   const b = e.target.closest("button[data-nav]"); if (!b) return;
   const k = b.dataset.nav;
-  if (k === "home") { closeSheet(); window.scrollTo({top: 0, behavior: "smooth"}); setNav("home"); }
-  else if (k === "program") { closeSheet(); document.getElementById("toolbar").scrollIntoView({behavior: "smooth"}); setNav("program"); }
-  else if (k === "today") { closeSheet(); goToday(); }
-  else if (k === "race") { setNav("race"); raceSheet(); }
-  else if (k === "more") { setNav("more"); moreSheet(); }
+  if (k === curView || (k === "more" && curView === "moredetail")) {
+    if (k === "more" && curView === "moredetail") navigate("more"); else window.scrollTo({top: 0, behavior: "smooth"});
+    return;
+  }
+  navigate(k);
 });
+document.body.dataset.view = "home";
 
 // ---------- PWA: install & service worker ----------
 (function(){
@@ -1047,7 +1160,7 @@ bnav.addEventListener("click", e => {
   const left = Math.round((pd(JK_DATE) - today) / 86400000);
   document.getElementById("jkCount").textContent = left > 0 ? `${left} hari lagi` : (left === 0 ? "Race day!" : "Selesai ✅");
   document.getElementById("jrfCount").innerHTML = daysLeft > 0 ? `${daysLeft}<small>hari lagi</small>` : (daysLeft === 0 ? "Race day! 🏁" : "<small>Selesai ✅</small>");
-  document.getElementById("jkGo").onclick = () => { if (isMobile()) { jump(JK_WEEK); setTimeout(() => openSheet(JK_WEEK, 6), 450); } else { openSess[JK_WEEK] = 6; jump(JK_WEEK); } };
+  document.getElementById("jkGo").onclick = () => { if (isMobile()) { jump(JK_WEEK); openSheet(JK_WEEK, 6); } else { openSess[JK_WEEK] = 6; jump(JK_WEEK); } };
   const jw = weeks.find(w => w.label === JK_WEEK), seg = document.querySelector(`.tl-seg[data-seg="${jw.block}"]`);
   const pin = document.createElement("div"); pin.className = "jk-pin";
   pin.style.left = ((6.5/7) / bWeeks(jw.block).length * 100) + "%";
@@ -1059,6 +1172,7 @@ bnav.addEventListener("click", e => {
 })();
 
 render(); fitLabels();
+if (isMobile()) applyView(location.hash.slice(1) || "home");
 window.addEventListener("resize", () => { clearTimeout(window.__rt); window.__rt = setTimeout(() => { fitLabels(); hidePop(); if (document.getElementById("p-chart").classList.contains("show")) drawChart(); }, 150); });
 document.fonts && document.fonts.ready.then(fitLabels);
 
