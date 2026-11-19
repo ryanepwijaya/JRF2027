@@ -740,6 +740,21 @@ body.sheet-open{overflow:hidden}
 .pin-pad button.ghost{background:transparent;box-shadow:none;font-size:20px;color:var(--ink2)}
 .pin-pad button:disabled{opacity:.4}
 .pin-x{appearance:none;border:0;background:transparent;color:var(--ink3);font:inherit;font-size:14px;font-weight:600;margin-top:14px;cursor:pointer;padding:6px 10px}
+
+/* ===== Efisiensi aerobik ===== */
+.ef-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ef-big{font-family:var(--mono);font-weight:800;font-size:22px}
+.ef-big small{font-family:var(--font);font-size:12px;font-weight:600;color:var(--ink2)}
+.ef-delta{font-size:12.5px;font-weight:700;color:var(--ink2)}
+.ef svg{width:100%;height:auto;display:block;margin-top:8px;overflow:visible}
+.ef .gl{stroke:var(--line);stroke-width:1}
+.ef .tk{fill:var(--ink3);font-size:9px;font-family:var(--mono)}
+.ef .ln{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.ef .pt{fill:var(--accent);stroke:var(--paper);stroke-width:2}
+.ef .pt.on{r:6}
+.ef .hit{fill:transparent;cursor:pointer}
+.ef-read{font-size:12px;color:var(--ink2);min-height:18px;margin-top:6px}
+.ef-note{font-size:11px;color:var(--ink3);margin-top:6px;line-height:1.45}
 </style>
 </head>
 <body>
@@ -1801,6 +1816,54 @@ function bmResult(a, s){
   // time trial / dress rehearsal tanpa data segmen: tampilkan total sesi, diberi label jelas
   return `${fmt(a.km)}<small style="font-size:11px"> km</small>${sub(L("total sesi, termasuk WU/CD", "whole session incl. WU/CD"))}`;
 }
+
+// Efisiensi aerobik: pace easy/long/recovery dinormalisasi ke HR acuan (efficiency factor)
+const EF_REF = 145;
+function efWeeks(){
+  const kindOn = {};
+  weeks.forEach(w => w.days.forEach(d => { if (d.type === "run" && d.session) kindOn[d.date] = {k: d.session.kind, w: w.label}; }));
+  const agg = {};
+  ACT.forEach(a => {
+    const m = kindOn[a.date];
+    if (a.type !== "run" || !m || !["easy", "long", "recovery"].includes(m.k) || !a.hr || !a.km || !a.dur) return;
+    const g = agg[m.w] || (agg[m.w] = {w: m.w, m: 0, min: 0, hrMin: 0, n: 0});
+    g.m += a.km * 1000; g.min += a.dur / 60; g.hrMin += a.hr * a.dur / 60; g.n++;
+  });
+  return weeks.map(w => agg[w.label]).filter(Boolean).map(g => {
+    const hr = g.hrMin / g.min, ef = (g.m / g.min) / hr;
+    return {w: g.w, hr: Math.round(hr), n: g.n, sec: 60000 / (ef * EF_REF)};
+  });
+}
+function efCard(){
+  const E = efWeeks();
+  if (E.length < 2) return `<div class="pg-card ef"><div class="ef-note">${L(`Muncul setelah ada minimal 2 minggu data easy/long run dengan HR. Menunjukkan pace setara pada HR ${EF_REF} bpm — kalau turun, aerobikmu membaik.`, `Appears once there are at least 2 weeks of easy/long runs with HR. Shows the equivalent pace at ${EF_REF} bpm — if it drops, your aerobic fitness is improving.`)}</div></div>`;
+  const W = 300, H = 110, T = 14, B = 18, Lx = 34, R = 10;
+  const secs = E.map(e => e.sec), lo = Math.min(...secs), hi = Math.max(...secs), pad = Math.max(5, (hi - lo) * .15);
+  const y0 = lo - pad, y1 = hi + pad;
+  const X = i => Lx + i * (W - Lx - R) / (E.length - 1), Y = v => T + (v - y0) / (y1 - y0) * (H - T - B);
+  const step = (y1 - y0) > 80 ? 30 : (y1 - y0) > 40 ? 15 : 10;
+  let grid = "";
+  for (let v = Math.ceil(y0 / step) * step; v <= y1; v += step) grid += `<line class="gl" x1="${Lx}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}"/><text class="tk" x="${Lx - 5}" y="${Y(v) + 3}" text-anchor="end">${fmtPace(v).replace("/km", "")}</text>`;
+  const first = E[0], last = E[E.length - 1], dl = Math.round(last.sec - first.sec);
+  const pts = E.map((e, i) => `${X(i)},${Y(e.sec)}`).join(" ");
+  const dots = E.map((e, i) => `<circle class="pt" cx="${X(i)}" cy="${Y(e.sec)}" r="4" data-i="${i}"/><circle class="hit" cx="${X(i)}" cy="${Y(e.sec)}" r="13" data-i="${i}"/>`).join("");
+  const xl = `<text class="tk" x="${X(0)}" y="${H - 3}" text-anchor="start">${first.w}</text><text class="tk" x="${X(E.length - 1)}" y="${H - 3}" text-anchor="end">${last.w}</text>`;
+  const trend = dl < -2 ? L(`${Math.abs(dl)} dtk/km lebih cepat sejak ${first.w}`, `${Math.abs(dl)} s/km faster since ${first.w}`)
+              : dl > 2 ? L(`${dl} dtk/km lebih lambat sejak ${first.w}`, `${dl} s/km slower since ${first.w}`)
+              : L(`stabil sejak ${first.w}`, `steady since ${first.w}`);
+  return `<div class="pg-card ef" data-ef='${JSON.stringify(E.map(e => [e.w, Math.round(e.sec), e.hr, e.n]))}'>
+    <div class="ef-head"><div class="ef-big">${fmtPace(last.sec)}<small> @${EF_REF} bpm</small></div><div class="ef-delta">${dl < -2 ? "▲ " : dl > 2 ? "▼ " : ""}${trend}</div></div>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${L("Pace setara per minggu", "Equivalent pace per week")}">${grid}<polyline class="ln" points="${pts}"/>${dots}${xl}</svg>
+    <div class="ef-read">${L("Tap titik untuk detail minggu itu.", "Tap a point for that week's details.")}</div>
+    <div class="ef-note">${L(`Pace easy, long & recovery run yang disetarakan ke HR ${EF_REF} bpm (estimasi dari kecepatan ÷ HR rata-rata). Garis naik = makin cepat di detak jantung yang sama. Sumbu: lebih cepat di atas.`, `Easy, long & recovery pace normalised to ${EF_REF} bpm (estimated from speed ÷ average HR). Line going up = faster at the same heart rate. Axis: faster is up.`)}</div></div>`;
+}
+document.addEventListener("pointerover", efPick); document.addEventListener("click", efPick);
+function efPick(e){
+  const h = e.target.closest && e.target.closest(".ef .hit"); if (!h) return;
+  const card = h.closest(".ef"), D = JSON.parse(card.dataset.ef), [w, sec, hr, n] = D[+h.dataset.i];
+  card.querySelectorAll(".pt").forEach(p => p.classList.toggle("on", p.dataset.i === h.dataset.i));
+  card.querySelector(".ef-read").textContent = `${w}: ${fmtPace(sec)} @${EF_REF} bpm · ${L("HR rata-rata", "avg HR")} ${hr} · ${n} ${L("sesi", n > 1 ? "runs" : "run")}`;
+}
 function renderProgress(el, page){
   const upd = DATA.actuals && DATA.actuals.updated;
   let html = page ? `<div class="vhead"><h2>Progres</h2><p>${upd ? `Data Coros/Strava s.d. ${fd(upd, true)} · diperbarui mingguan` : "Realisasi dari Coros/Strava · diperbarui mingguan"}</p></div>`
@@ -1834,6 +1897,7 @@ function renderProgress(el, page){
     const a = weekActual(w) || 0;
     return `<button class="pw-row" data-l="${w.label}"><span class="hl">${w.label}</span><span class="ht"><span class="plan" style="width:${w.total/max*100}%;background:${B[w.block].color}"></span><span class="act" style="width:${a/max*100}%;background:${B[w.block].color}"></span></span><span class="hk">${fmt(a)}<small>/${fmt(w.total)}</small></span></button>`;
   }).join("")}<div style="font-size:11px;color:var(--ink3);margin-top:6px">Batang samar = rencana · batang solid = aktual · terbaru di atas</div></div></div>`;
+  html += `<div class="vsec"><h3>${L("Efisiensi aerobik", "Aerobic efficiency")}</h3>${efCard()}</div>`;
   // benchmark
   const bms = [];
   weeks.forEach(w => w.days.forEach(d => { const s = d.session; if (s && d.type === "run" && (s.kind === "race" || /Time Trial|Dress Rehearsal/i.test(s.title))) bms.push({w, d, s}); }));
