@@ -1667,7 +1667,8 @@ function actualOn(date){
   if (!rs.length) return null;
   const km = rs.reduce((x, a) => x + (a.km || 0), 0), dur = rs.reduce((x, a) => x + (a.dur || 0), 0);
   const hrW = rs.reduce((x, a) => x + (a.hr || 0) * (a.dur || 0), 0);
-  return {km: Math.round(km*100)/100, dur, pace: km ? dur / km : null, hr: dur && hrW ? Math.round(hrW / dur) : null, n: rs.length};
+  const tt = (rs.find(a => a.tt && a.tt.km && a.tt.dur) || {}).tt || null;
+  return {km: Math.round(km*100)/100, dur, pace: km ? dur / km : null, hr: dur && hrW ? Math.round(hrW / dur) : null, n: rs.length, tt};
 }
 const gymOn = date => ACT.filter(a => a.date === date && a.type === "gym");
 function hrRange(s){ if (!s || !s.target || s.target.mode !== "HR") return null; const m = s.target.range.match(/(\d{2,3})\D+(\d{2,3})/); if (m) return [+m[1], +m[2]]; const u = s.target.range.match(/≤\s*(\d{2,3})/); return u ? [0, +u[1]] : null; }
@@ -1793,6 +1794,13 @@ function openPin(){
 }
 document.addEventListener("click", e => { if (e.target.closest("[data-sync]")) openPin(); });
 
+function bmResult(a, s){
+  const sub = t => `<br><span style="font-size:11px;color:var(--ink3)">${t}</span>`;
+  if (a.tt) return `${fmtDur(a.tt.dur)}${sub(`${fmt(a.tt.km)} km · ${fmtPace(a.tt.dur / a.tt.km)}`)}`;
+  if (s.kind === "race") return `${fmtDur(a.dur)}${sub(fmtPace(a.pace))}`;
+  // time trial / dress rehearsal tanpa data segmen: tampilkan total sesi, diberi label jelas
+  return `${fmt(a.km)}<small style="font-size:11px"> km</small>${sub(L("total sesi, termasuk WU/CD", "whole session incl. WU/CD"))}`;
+}
 function renderProgress(el, page){
   const upd = DATA.actuals && DATA.actuals.updated;
   let html = page ? `<div class="vhead"><h2>Progres</h2><p>${upd ? `Data Coros/Strava s.d. ${fd(upd, true)} · diperbarui mingguan` : "Realisasi dari Coros/Strava · diperbarui mingguan"}</p></div>`
@@ -1830,7 +1838,7 @@ function renderProgress(el, page){
   const bms = [];
   weeks.forEach(w => w.days.forEach(d => { const s = d.session; if (s && d.type === "run" && (s.kind === "race" || /Time Trial|Dress Rehearsal/i.test(s.title))) bms.push({w, d, s}); }));
   html += `<div class="vsec"><h3>Benchmark</h3><div class="pg-card">${bms.map(({w, d, s}) => { const a = actualOn(d.date);
-    return `<div class="bm-row"><div><div class="bt">${esc(s.title.replace(/^🏁\s*/, ""))}</div><div class="bd">${fd(d.date, true)} · ${w.label}</div></div><div class="br">${a ? `${fmtDur(a.dur)}<br><span style="font-size:11px;color:var(--ink3)">${fmtPace(a.pace)}</span>` : `<span class="st wait">${pd(d.date) < today ? "–" : "Belum"}</span>`}</div></div>`; }).join("")}</div></div>`;
+    return `<div class="bm-row"><div><div class="bt">${esc(s.title.replace(/^🏁\s*/, ""))}</div><div class="bd">${fd(d.date, true)} · ${w.label}</div></div><div class="br">${a ? bmResult(a, s) : `<span class="st wait">${pd(d.date) < today ? "–" : "Belum"}</span>`}</div></div>`; }).join("")}</div></div>`;
   el.innerHTML = html;
   el.querySelectorAll(".pw-row").forEach(b => b.addEventListener("click", () => jump(b.dataset.l)));
 }

@@ -27,7 +27,7 @@ Target finish ≤ 4:30 (COT 5 jam, cadangan 30 menit untuk sholat, WS & darurat)
 
 Data realisasi **tidak diinput manual di web**. Setiap minggu Claude menarik data dari Coros/Strava, mencocokkan dengan program, lalu memperbarui:
 
-- `data/actuals.json` → `updated` (tanggal data terakhir) + `activities`: `{date, type: "run"|"gym", km, dur (detik), hr}`
+- `data/actuals.json` → `updated` (tanggal data terakhir) + `activities`: `{date, type: "run"|"gym", km, dur (detik), hr}`; untuk sesi Time Trial / race tambahkan `tt: {km, dur}` = hasil segmen utamanya (dari data lap), supaya benchmark tidak memakai total sesi yang termasuk WU/CD
 - `data/body.json` → `entries`: `{date, weight, bodyfat?, smm?, source}` (InBody / timbangan / Coros)
 
 Yang dipublikasikan hanya tanggal, jenis, jarak, durasi, pace, dan HR rata-rata. **Tanpa** peta rute, jam mulai, nama, atau deskripsi aktivitas.
