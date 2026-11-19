@@ -32,3 +32,11 @@ Data realisasi **tidak diinput manual di web**. Setiap minggu Claude menarik dat
 
 Yang dipublikasikan hanya tanggal, jenis, jarak, durasi, pace, dan HR rata-rata. **Tanpa** peta rute, jam mulai, nama, atau deskripsi aktivitas.
 Lalu `python3 build.py` → commit → push.
+
+### Tombol "Sinkronkan" (menu Progres)
+
+Tombol → PIN 6 digit → `api/sync.js` (fungsi Vercel) cek PIN → menjalankan routine Claude **"JRF 2027 · Sinkronkan realisasi"** lewat API → sesi Claude di cloud menarik Strava & Coros 30 hari terakhir, mengisi tanggal yang belum terisi (yang sudah ada dilewati), `build.py`, commit, push → Vercel deploy ulang (±3–5 menit).
+
+Env Vercel: `SYNC_PIN`, `ROUTINE_ID` (trig_…), `ROUTINE_TOKEN` (dibuat di claude.ai/code/routines → routine → Add trigger → API → Generate token).
+Pengaman: salah PIN 5× → terkunci 15 menit; jeda 3 menit antar-sinkron; routine maks 30×/jam. Berat badan/InBody tetap manual.
+

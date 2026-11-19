@@ -712,6 +712,34 @@ body.sheet-open{overflow:hidden}
   .d-tiles{grid-column:3;grid-row:3}
 }
 @media print{.toolbar,.pills{display:none} body{background:var(--paper)}}
+
+/* ===== Sinkronkan + PIN ===== */
+.sync{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:0 0 14px}
+.sync-btn{appearance:none;border:0;background:var(--accent);color:#fff;font:inherit;font-weight:800;font-size:14px;padding:10px 14px;border-radius:12px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.sync-btn:active{transform:scale(.97)}
+.sync-btn svg{width:16px;height:16px}
+.sync-st{flex:1;min-width:160px;font-size:12.5px;color:var(--ink2);line-height:1.4}
+.sync-st a{color:var(--accent);font-weight:700;text-decoration:none}
+.pin-ov{position:fixed;inset:0;z-index:300;background:rgba(10,12,16,.55);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center}
+@media (min-width:600px){.pin-ov{align-items:center}}
+.pin-box{width:100%;max-width:360px;background:var(--paper);color:var(--ink);border-radius:22px 22px 0 0;padding:22px 22px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(0,0,0,.3);animation:shup .2s ease;text-align:center}
+@media (min-width:600px){.pin-box{border-radius:22px}}
+.pin-box h3{margin:0 0 4px;font-size:18px}
+.pin-box .pin-sub{margin:0;color:var(--ink3);font-size:13px}
+.pin-dots{display:flex;justify-content:center;gap:14px;margin:20px 0 8px}
+.pin-dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink3);transition:background .12s,border-color .12s}
+.pin-dots i.on{background:var(--accent);border-color:var(--accent)}
+.pin-dots.bad{animation:pinshake .35s}
+.pin-dots.bad i{border-color:var(--race)}
+@keyframes pinshake{0%,100%{transform:none}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.pin-msg{min-height:20px;font-size:13px;font-weight:600;color:var(--race);margin-bottom:10px}
+.pin-msg.ok{color:var(--ink2)}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:280px;margin:0 auto}
+.pin-pad button{appearance:none;border:0;font:inherit;font-family:var(--mono);font-size:24px;font-weight:700;height:62px;border-radius:50%;width:62px;justify-self:center;background:var(--soft);color:var(--ink);cursor:pointer;touch-action:manipulation;box-shadow:inset 0 0 0 1px var(--line)}
+.pin-pad button:active{background:var(--line)}
+.pin-pad button.ghost{background:transparent;box-shadow:none;font-size:20px;color:var(--ink2)}
+.pin-pad button:disabled{opacity:.4}
+.pin-x{appearance:none;border:0;background:transparent;color:var(--ink3);font:inherit;font-size:14px;font-weight:600;margin-top:14px;cursor:pointer;padding:6px 10px}
 </style>
 </head>
 <body>
@@ -1400,10 +1428,84 @@ function weightCard(){
     ${comp.length ? `<div class="bw-comp">${comp.map(c => `<span>${c}</span>`).join("")}</div>` : ""}</div>`;
 }
 
+
+// ===== Sinkronkan (PIN → /api/sync → routine Claude) =====
+const SYNC_KEY = "jrf-sync";
+const syncIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M3 21v-5h5"/></svg>';
+function syncState(){ try { return JSON.parse(localStorage.getItem(SYNC_KEY) || "null"); } catch(e){ return null; } }
+function syncBar(){
+  const st = syncState(), now = Date.now();
+  let msg = L("Tarik data Strava & Coros 30 hari terakhir. Butuh PIN.", "Pull the last 30 days from Strava & Coros. PIN required.");
+  if (st && now - st.t < 20*60*1000) {
+    const hm = new Date(st.t).toLocaleTimeString(LANG === "en" ? "en-GB" : "id-ID", {hour: "2-digit", minute: "2-digit"});
+    msg = `⏳ ${L("Sinkron diminta pukul", "Sync requested at")} ${hm}. ${L("Data muncul ±3–5 menit; buka ulang halaman nanti.", "Data appears in ~3–5 min; reopen the page later.")}${st.url ? ` <a href="${esc(st.url)}" target="_blank" rel="noopener">${L("Lihat proses", "View run")} ›</a>` : ""}`;
+  }
+  return `<div class="sync"><button class="sync-btn" type="button" data-sync>${syncIcon}${L("Sinkronkan", "Sync")}</button><div class="sync-st">${msg}</div></div>`;
+}
+function openPin(){
+  if (document.querySelector(".pin-ov")) return;
+  let pin = "", busy = false;
+  const ov = document.createElement("div");
+  ov.className = "pin-ov";
+  ov.innerHTML = `<div class="pin-box" role="dialog" aria-modal="true" aria-label="PIN">
+    <h3>${L("Masukkan PIN", "Enter PIN")}</h3><p class="pin-sub">${L("Sinkronkan data Strava & Coros", "Sync Strava & Coros data")}</p>
+    <div class="pin-dots">${"<i></i>".repeat(6)}</div><div class="pin-msg"></div>
+    <div class="pin-pad">${[1,2,3,4,5,6,7,8,9].map(n => `<button type="button" data-k="${n}">${n}</button>`).join("")}<span></span><button type="button" data-k="0">0</button><button type="button" class="ghost" data-k="del" aria-label="${L("Hapus", "Delete")}">⌫</button></div>
+    <button type="button" class="pin-x">${L("Batal", "Cancel")}</button></div>`;
+  document.body.appendChild(ov);
+  const dots = ov.querySelector(".pin-dots"), msgEl = ov.querySelector(".pin-msg");
+  const paint = () => dots.querySelectorAll("i").forEach((d, i) => d.classList.toggle("on", i < pin.length));
+  const say = (t, ok) => { msgEl.textContent = t; msgEl.classList.toggle("ok", !!ok); };
+  const close = () => { ov.remove(); document.removeEventListener("keydown", onKey); };
+  const fail = t => { dots.classList.remove("bad"); void dots.offsetWidth; dots.classList.add("bad"); pin = ""; paint(); say(t); if (navigator.vibrate) navigator.vibrate(120); };
+  const mins = s => Math.max(1, Math.ceil(s / 60));
+  async function submit(){
+    busy = true; say(L("Memeriksa…", "Checking…"), true);
+    ov.querySelectorAll(".pin-pad button").forEach(b => b.disabled = true);
+    try {
+      const r = await fetch("/api/sync", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({pin})});
+      const j = await r.json().catch(() => ({}));
+      if (r.ok && j.ok) {
+        try { localStorage.setItem(SYNC_KEY, JSON.stringify({t: Date.now(), url: j.session_url || null})); } catch(e){}
+        close(); toast(L("Sinkron dimulai — data muncul ±3–5 menit", "Sync started — data appears in ~3–5 min"));
+        document.querySelectorAll(".sync").forEach(el => el.outerHTML = syncBar());
+        return;
+      }
+      if (j.error === "pin") fail(L(`PIN salah · sisa ${j.left} percobaan`, `Wrong PIN · ${j.left} tries left`));
+      else if (j.error === "locked") fail(L(`Terlalu banyak salah. Coba lagi ${mins(j.retry)} menit lagi.`, `Too many attempts. Try again in ${mins(j.retry)} min.`));
+      else if (j.error === "busy") fail(L(`Baru saja disinkronkan. Tunggu ${mins(j.retry)} menit.`, `Just synced. Wait ${mins(j.retry)} min.`));
+      else if (j.error === "setup") fail(L("Belum siap: token routine belum dipasang di Vercel.", "Not ready: routine token not set in Vercel yet."));
+      else if (j.error === "routine" && j.status === 429) fail(L("Batas pemakaian per jam tercapai. Coba lagi nanti.", "Hourly limit reached. Try again later."));
+      else fail(L("Gagal menghubungi Claude. Coba lagi nanti.", "Couldn't reach Claude. Try again later."));
+    } catch(e) { fail(L("Tidak ada koneksi internet.", "No internet connection.")); }
+    finally { busy = false; ov.querySelectorAll(".pin-pad button").forEach(b => b.disabled = false); }
+  }
+  function press(k){
+    if (busy) return;
+    if (k === "del") { pin = pin.slice(0, -1); paint(); return; }
+    if (pin.length >= 6) return;
+    if (msgEl.textContent) say("");
+    pin += k; paint();
+    if (pin.length === 6) setTimeout(submit, 120);
+  }
+  function onKey(e){
+    if (e.key === "Escape") return close();
+    if (/^\d$/.test(e.key)) press(e.key);
+    else if (e.key === "Backspace") press("del");
+  }
+  ov.addEventListener("click", e => {
+    if (e.target === ov || e.target.closest(".pin-x")) return close();
+    const b = e.target.closest("[data-k]"); if (b) press(b.dataset.k);
+  });
+  document.addEventListener("keydown", onKey);
+}
+document.addEventListener("click", e => { if (e.target.closest("[data-sync]")) openPin(); });
+
 function renderProgress(el, page){
   const upd = DATA.actuals && DATA.actuals.updated;
   let html = page ? `<div class="vhead"><h2>Progres</h2><p>${upd ? `Data Coros/Strava s.d. ${fd(upd, true)} · diperbarui mingguan` : "Realisasi dari Coros/Strava · diperbarui mingguan"}</p></div>`
                   : `<h3>Progres</h3><p class="ph-sub">${upd ? `Data Coros/Strava s.d. ${fd(upd, true)} · diperbarui mingguan` : "Realisasi dari Coros/Strava · diperbarui mingguan"}</p>`;
+  html += syncBar();
   const done = weeks.filter(w => w.days.some(d => hasData(d.date)));
   if (!upd || !done.length) {
     html += `<div class="pg-empty"><div class="big">📈</div><h4>Log dimulai 1 Januari 2027</h4><p>Setiap minggu, data lari & gym dari Coros/Strava ditarik dan dicocokkan dengan program. Hasilnya muncul di sini dan di tiap sesi pada halaman Program.</p></div>`;
