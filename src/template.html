@@ -755,6 +755,14 @@ body.sheet-open{overflow:hidden}
 .ef .hit{fill:transparent;cursor:pointer}
 .ef-read{font-size:12px;color:var(--ink2);min-height:18px;margin-top:6px}
 .ef-note{font-size:11px;color:var(--ink3);margin-top:6px;line-height:1.45}
+
+/* ===== Fase nutrisi ===== */
+.chip.fuel{--kc:var(--ink2);--kbg:transparent;--kb:var(--line)}
+.chip.fuel i,.wk-fuel i,.tfuel i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--fc);margin-right:6px;flex:none}
+.wk-fuel{display:flex;align-items:baseline;gap:0;font-size:12.5px;line-height:1.45;color:var(--ink2);background:var(--soft);border:1px solid var(--line);border-left:3px solid var(--fc);border-radius:10px;padding:8px 12px;margin:0 16px 10px}
+.wk-fuel b{color:var(--ink)}
+.bfuel{font-size:12px;color:var(--ink2);margin-top:6px}
+.tfuel{display:flex;align-items:center;margin-top:4px}
 </style>
 </head>
 <body>
@@ -952,6 +960,8 @@ const daysLeft = Math.round((pd("2027-10-24") - today) / 86400000);
 
 const blockOrder = [];
 weeks.forEach(w => { if (!blockOrder.includes(w.block)) blockOrder.push(w.block); });
+const FUEL = DATA.fuel || {};
+const fuelChip = w => { const f = FUEL[w.fuel]; return f ? `<span class="chip fuel" style="--fc:${f.color}"><i></i>${L("Nutrisi", "Nutrition")} <b>${esc(f.name)}</b></span>` : ""; };
 const bWeeks = id => weeks.filter(w => w.block === id);
 const bS = i => i.first.start < "2027-01-01" ? "2027-01-01" : i.first.start;
 const bInfo = id => { const ws = bWeeks(id); return {ws, km: ws.reduce((a,w)=>a+w.total,0), first: ws[0], last: ws[ws.length-1]}; };
@@ -986,7 +996,7 @@ document.getElementById("blocks").innerHTML = blockOrder.map(id => {
   const i = bInfo(id);
   return `<div class="blk" data-blk="${id}"><div class="t"><span class="sw" style="background:${B[id].color}"></span>${BL(id)} · ${esc(B[id].name)}</div>
     <div class="m">${i.first.label} – ${i.last.label} · ${fd(bS(i))} – ${fd(i.last.end)} · ${i.ws.length} mgg · ${fmt(i.km)} km</div>
-    <div class="d">${esc(B[id].desc)}</div></div>`;
+    <div class="d">${esc(B[id].desc)}</div>${B[id].fuel ? `<div class="bfuel"><b>${L("Nutrisi", "Nutrition")}:</b> ${esc(B[id].fuel)}</div>` : ""}</div>`;
 }).join("");
 document.querySelectorAll(".blk").forEach(el => el.addEventListener("click", () => { togglePanel(null); selectBlock(el.dataset.blk, true); }));
 
@@ -1132,6 +1142,7 @@ function chipsHTML(w){
   });
   const ng = w.days.filter(d => d.type === "gym").length;
   if (ng) c += `<span class="chip k-gym">Gym <b>${ng}×</b></span>`;
+  c += fuelChip(w);
   const wa = weekActual(w); if (wa !== null) c += `<span class="chip act">Aktual <b>${fmt(wa)}</b>/${fmt(w.total)}</span>`;
   if (w.days.some(d => d.ramadan)) c += `<span class="chip ram">🌙</span>`;
   return c;
@@ -1151,6 +1162,7 @@ function weekHTML(w){
     </div>
     ${isOpen ? `<div class="wk-body">
       ${w.note ? `<div class="wk-note"><b>Catatan:</b> ${esc(w.note)}</div>` : ""}
+      ${FUEL[w.fuel] ? `<div class="wk-fuel" style="--fc:${FUEL[w.fuel].color}"><i></i><span><b>${L("Nutrisi", "Nutrition")} · ${esc(FUEL[w.fuel].name)}.</b> ${esc(FUEL[w.fuel].desc)}</span></div>` : ""}
       ${selDay ? "" : `<div class="hint">👆 ${isMobile() ? "Tap" : "Klik"} sesi untuk lihat detail: lari (WU / Main / CD) atau gym (gerakan & set)</div>`}
       <div class="days">${w.days.map(d => dayHTML(w, d)).join("")}</div>
       ${selDay ? detailHTML(w, selDay) : ""}
@@ -1734,7 +1746,7 @@ function renderDash(){
   const bw = cur || weeks.find(w => w.days.some(d => d.date >= "2027-01-01"));
   const tb = document.getElementById("dBlock");
   tb.innerHTML = `<div class="d-lbl"><span>${cur ? L("Blok sekarang", "Current block") : L("Blok pertama", "First block")}</span><span class="go">›</span></div>
-    <div class="tv" style="color:${B[bw.block].color}">${PH(B[bw.block].phase)}${B[bw.block].no} · ${esc(B[bw.block].name)}</div><div class="ts">${esc(bw.stage)} · ${bw.label}</div>`;
+    <div class="tv" style="color:${B[bw.block].color}">${PH(B[bw.block].phase)}${B[bw.block].no} · ${esc(B[bw.block].name)}</div><div class="ts">${esc(bw.stage)} · ${bw.label}</div>${FUEL[bw.fuel] ? `<div class="ts tfuel" style="--fc:${FUEL[bw.fuel].color}"><i></i>${L("Nutrisi", "Nutrition")}: ${esc(FUEL[bw.fuel].name)}</div>` : ""}`;
   tb.onclick = () => selectBlock(bw.block, true);
   const E = (BODY.entries || []).slice().sort((x, y) => x.date < y.date ? -1 : 1), tgt = BODY.target_kg || 63, lastE = E[E.length - 1];
   const tw = document.getElementById("dBody");

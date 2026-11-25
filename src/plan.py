@@ -421,17 +421,17 @@ REMAP = {"pembuka":"b1","base_maint":"b1","ramadan":"b1","lebaran":"b1",
          "rebuild":"b2","aerobic":"b2","prejakim":"b2",
          "jakim":"b3","base":"b3","build":"b4","peak":"b5","taper":"b6"}
 BLOCKS = {
-  "b1": dict(no=1, name="Base & Diet", phase=1, color="#0ea5e9",
+  "b1": dict(fuel="Defisit · minggu Ramadhan: puasa saja, tanpa defisit tambahan", no=1, name="Base & Diet", phase=1, color="#0ea5e9",
              desc="1 Jan – 14 Mar. Jaga base pasca-Bormar sambil fokus diet & gym: 3 lari/minggu, long run steady 12–16 km. Di dalamnya ada Ramadhan deload (± 20 km/minggu, lari setelah tarawih) dan minggu Lebaran."),
-  "b2": dict(no=2, name="Aerobic Rebuild", phase=1, color="#22c55e",
+  "b2": dict(fuel="Defisit · minggu menjelang JAKIM: jaga", no=2, name="Aerobic Rebuild", phase=1, color="#22c55e",
              desc="15 Mar – 6 Jun. Bangun lagi base aerobik pasca-Lebaran: long run naik 12 → 21 km, kualitas threshold/interval ringan, ditutup pertajaman HM pace menuju JAKIM."),
-  "b3": dict(no=3, name="Base Building", phase=2, color="#ec4899",
+  "b3": dict(fuel="Defisit ringan · minggu JAKIM: jaga", no=3, name="Base Building", phase=2, color="#ec4899",
              desc="7 Jun – 25 Jul. Dibuka JAKIM HM sebagai tes awal (hasilnya menentukan MP), 1 minggu pemulihan, lalu volume naik 40 → 55 km dan long run 20 → 25 km. Kenalan dengan MP."),
-  "b4": dict(no=4, name="Build", phase=2, color="#6366f1",
+  "b4": dict(fuel="Isi bahan bakar · stop defisit", no=4, name="Build", phase=2, color="#6366f1",
              desc="26 Jul – 5 Sep. Marathon specific: MP kontinu, cruise interval, Yasso, long run 26 → 30 km. Ditutup HM Time Trial sebagai cek realistis target 4:30."),
-  "b5": dict(no=5, name="Peak", phase=2, color="#e11d48",
+  "b5": dict(fuel="Isi bahan bakar", no=5, name="Peak", phase=2, color="#e11d48",
              desc="6 Sep – 3 Okt. Minggu terberat: long run 30–33 km, MP 10 km. Dress rehearsal full race kit di minggu ke-17."),
-  "b6": dict(no=6, name="Taper & Race", phase=2, color="#ca8a04",
+  "b6": dict(fuel="Isi bahan bakar · carb-load menjelang race", no=6, name="Taper & Race", phase=2, color="#ca8a04",
              desc="4 – 24 Okt. Volume turun bertahap, intensitas MP dijaga. Puncaknya JRF Full Marathon, Minggu 24 Okt 2027."),
 }
 
@@ -560,6 +560,24 @@ for n, wk in enumerate(P2, 1):
 assert start == D(2027,10,25), start
 assert len(P1) == 23 and len(P2) == 20
 
+
+# Fase nutrisi (penanda saja, bukan menu)
+FUEL = {
+  "defisit": dict(name="Defisit", color="#f59e0b", desc="Defisit kalori sedang, target turun ± 0,5 kg/minggu. Protein tinggi; karbo secukupnya, utamakan di hari lari."),
+  "puasa":   dict(name="Puasa", color="#8b5cf6", desc="Ramadhan: puasanya sudah cukup, jangan tambah defisit. Protein cukup saat sahur & berbuka."),
+  "jaga":    dict(name="Jaga", color="#94a3b8", desc="Makan sesuai kebutuhan, tanpa defisit (Lebaran / minggu race tune-up)."),
+  "ringan":  dict(name="Defisit ringan", color="#eab308", desc="Defisit kecil saja atau makan sesuai kebutuhan. Volume mulai naik, latihan jadi prioritas."),
+  "fuel":    dict(name="Isi bahan bakar", color="#22c55e", desc="Stop defisit. Karbo cukup, terutama sebelum & sesudah long run dan sesi quality."),
+  "carb":    dict(name="Carb-load", color="#16a34a", desc="Tanpa defisit. 2–3 hari sebelum race perbanyak karbo; kurangi serat dan jangan coba makanan baru."),
+}
+def fuel_of(w):
+    if w["label"] in ("A22", "B01"): return "jaga"           # minggu menjelang & minggu JAKIM
+    if w["stage"] == "Ramadhan Deload": return "puasa"
+    if w["stage"] == "Lebaran": return "jaga"
+    if w["label"] == "B20": return "carb"
+    return {"b1": "defisit", "b2": "defisit", "b3": "ringan"}.get(w["block"], "fuel")
+for w in weeks: w["fuel"] = fuel_of(w)
+
 ZONES = [
   dict(name="Recovery", mode="HR", f1="≤ 135 bpm", f2="≤ 135 bpm", use="Recovery run Minggu (Fase B), WU & CD", color="#94a3b8"),
   dict(name="Easy (Z2)", mode="HR", f1="135–148 bpm", f2="135–148 bpm", use="Easy run Selasa. Pace referensi ± 7:15–7:45 /km (akan makin cepat seiring BB turun)", color="#22c55e"),
@@ -572,7 +590,7 @@ ZONES = [
   dict(name="Strides", mode="Feel", f1="± 85–90% effort", f2="± 85–90% effort", use="100 m akselerasi rileks, bukan sprint", color="#eab308"),
 ]
 
-data = dict(weeks=weeks, blocks=BLOCKS, zones=ZONES,
+data = dict(weeks=weeks, blocks=BLOCKS, zones=ZONES, fuel=FUEL,
             holidays=[dict(date=k.isoformat(), name=v) for k, v in sorted(HOLIDAYS.items())],
             ramadan=[RAMADAN[0].isoformat(), RAMADAN[1].isoformat()])
 
