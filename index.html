@@ -1488,9 +1488,11 @@ function render(){
   el.querySelectorAll("[data-toggle]").forEach(h => h.addEventListener("click", () => {
     const l = h.dataset.toggle;
     const opening = !openWeeks.has(l);
-    if (!opening) { openWeeks.delete(l); delete openSess[l]; } else openWeeks.add(l);
+    // satu minggu terbuka sekaligus: buka yang dipilih, tutup yang lain
+    if (!opening) { openWeeks.delete(l); delete openSess[l]; }
+    else { openWeeks.clear(); for (const k in openSess) if (k !== l) delete openSess[k]; openWeeks.add(l); }
     render();
-    if (opening && isMobile()) { const wEl = document.getElementById("w-"+l); const top = wEl.getBoundingClientRect().top; if (top < 60 || top > window.innerHeight * 0.5) wEl.scrollIntoView({behavior:"smooth", block:"start"}); }
+    if (opening) { const wEl = document.getElementById("w-"+l); const top = wEl.getBoundingClientRect().top; if (top < 60 || top > window.innerHeight * 0.5) wEl.scrollIntoView({behavior:"smooth", block:"start"}); }
   }));
   el.querySelectorAll(".day.run").forEach(d => d.addEventListener("click", () => {
     const l = d.dataset.w, dow = +d.dataset.dow;
@@ -1514,8 +1516,8 @@ function selectBlock(id, scroll){
 function jump(label){
   if (isMobile()) navigate("program");
   const w = weeks.find(x => x.label === label);
-  if (selBlock !== "all" && selBlock !== w.block) { selBlock = w.block; openWeeks.clear(); }
-  openWeeks.add(label);
+  if (selBlock !== "all" && selBlock !== w.block) selBlock = w.block;
+  openWeeks.clear(); openWeeks.add(label);
   render();
   const el = document.getElementById("w-"+label); if (el) el.scrollIntoView({behavior:"smooth", block:"start"});
 }
