@@ -21,7 +21,6 @@
  "Besok": "Tomorrow",
  "Sesi berikutnya": "Next session",
  "Perjalanan program": "Program journey",
- "Mulai 1 Jan": "Starts 1 Jan",
  "Selesai": "Done",
  "Race berikutnya": "Next race",
  "selesai": "done",
@@ -95,7 +94,6 @@
  "Total program": "Total program",
  "Fase A · Diet & Base": "Phase A · Diet & Base",
  "Fase B · Blok Intensif": "Phase B · Intensive Block",
- "Blok 1–2 · 1 Jan – 6 Jun · 3 lari/mgg": "Blocks 1–2 · 1 Jan – 6 Jun · 3 runs/wk",
  "Blok 3–6 · 7 Jun – 24 Okt · 4 lari/mgg": "Blocks 3–6 · 7 Jun – 24 Oct · 4 runs/wk",
  "Minggu terberat · LR terjauh": "Peak week · longest LR",
  "🎯 Target JRF": "🎯 JRF target",
@@ -142,7 +140,6 @@
  "Minggu ini": "This week",
  "Minggu pertama": "First week",
  "Buka di Program →": "Open in Program →",
- "Program mulai 1 Januari 2027": "Program starts 1 January 2027",
  "Program sudah selesai": "The program is complete",
  "Semoga JRF 2027-nya lancar!": "Hope JRF 2027 goes great!",
  "Hari istirahat": "Rest day",
@@ -168,7 +165,6 @@
  "📲 Install app": "📲 Install app",
  "Language": "Language",
  "Realisasi dari Coros/Strava · diperbarui mingguan": "Actuals from Coros/Strava · updated weekly",
- "Log dimulai 1 Januari 2027": "Logging starts 1 January 2027",
  "Setiap minggu, data lari & gym dari Coros/Strava ditarik dan dicocokkan dengan program. Hasilnya muncul di sini dan di tiap sesi pada halaman Program.": "Every week, run & gym data from Coros/Strava is pulled and matched to the program. Results show up here and on each session in Program.",
  "Berat badan": "Body weight",
  "Belum ada data. Diisi dari hasil InBody / timbangan saat update mingguan.": "No data yet. Filled from InBody / scale results during the weekly update.",
@@ -289,5 +285,9 @@
    "Gym · (.+)",
    "Gym · $1"
   ]
- ]
+ ],
+ "Mulai 1 Des": "Starts 1 Dec",
+ "Blok 0–2 · 1 Des – 6 Jun · 3 lari/mgg": "Blocks 0–2 · 1 Dec – 6 Jun · 3 runs/wk",
+ "Program mulai 1 Desember 2026": "Program starts 1 December 2026",
+ "Log dimulai 1 Desember 2026": "Logging starts 1 December 2026"
 }

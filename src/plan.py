@@ -6,6 +6,8 @@ D = dt.date
 
 # ---------------- Libur nasional & cuti bersama 2027 (SKB 3 Menteri, 15 Sep 2026) ----------------
 HOLIDAYS = {
+    D(2026,12,24): "Cuti Bersama Natal",
+    D(2026,12,25): "Hari Raya Natal",
     D(2027,1,1): "Tahun Baru Masehi",
     D(2027,1,5): "Isra Mikraj",
     D(2027,2,5): "Cuti Bersama Imlek",
@@ -95,10 +97,52 @@ P1 = []
 def p1(block, tue=None, thu=None, sat=None, note=""):
     P1.append(dict(block=block, tue=tue, thu=thu, sat=sat, note=note))
 
+
+# ---------------- BLOK 0: Post-Bormar Reset (1–27 Des 2026) ----------------
+P0 = []
+def p0(block, tue=None, thu=None, sat=None, note=""):
+    P0.append(dict(block=block, tue=tue, thu=thu, sat=sat, note=note))
+
+p0("pasca",
+   tue=easy("Easy Pemulihan — Balik ke Jalan", 3.0, "Lari pertama pasca-Bormar. Pelan, rileks, dengarkan kaki. Jalan sebentar kalau perlu, tidak apa-apa.",
+            notes="Habis lembur? Treadmill di gym juga oke."),
+   thu=easy("Easy Santai + Cek Kaki", 3.0, "Easy rata. Perhatikan betis, lutut, dan telapak: kalau ada nyeri tajam (bukan pegal), stop dan istirahatkan.",
+            hr="135–145 bpm"),
+   sat=longrun("Long Run Santai Pertama Pasca-Bormar", 8, "Steady paling santai, HR di batas bawah. Anggap jalan-jalan pagi sambil lari.", LR1_HR,
+               "Minggu ini volume sengaja kecil: tubuh masih memulihkan diri dari marathon."),
+   note="16 hari pasca-Bormar. Semua sesi easy, tanpa kecepatan. Mulai Senin depan baru ada strides.")
+p0("pasca",
+   tue=easy("Easy Konstan Malam", 4.0, "Easy rata dari awal sampai akhir. Cocok dijalankan pulang kantor.",
+            notes="Kalau pulang larut, treadmill incline 1% juga dihitung."),
+   thu=quality("Easy + Strides Pertama", W(1.0, "Jog pelan HR ≤ 135."), 4.0,
+        "Easy run dengan strides pendek untuk membangunkan lagi kaki cepat.",
+        ["3,4 km easy (HR 135–148)", "4 × 100 m strides (± 80% effort, rileks)", "Recovery: jalan/jog 100 m tiap strides"],
+        W(1.0, "Jog santai HR ≤ 135."), HR_T(EZ_HR, "Strides dirasakan, bukan dikejar angka pace.")),
+   sat=longrun("Long Run Steady — Rute Sudirman Pagi", 10, "Steady konstan, jalur lurus dan rata.", LR1_HR),
+   note="Masih pemulihan, mulai ada strides. Kaki pegal itu normal; nyeri tajam tidak.")
+p0("reset",
+   tue=easy("Easy Progresif Ringan", 4.0, "Mulai di HR 135, naik pelan sampai HR 145 di km terakhir.",
+            ["Km 1–2: HR 135–140", "Km 3–4: HR 141–147"]),
+   thu=quality("Fartlek Ringan 6 × 300 m", WU_Q, 3.6, "Quality ringan pertama: potongan cepat pendek, bukan tes.",
+        ["6 × (300 m cepat @ 5:50–6:05 /km + 300 m easy)", "Bagian easy tetap jalan terus"],
+        CD_Q, PACE_T("5:50–6:05 /km (bagian cepat)", "Harus terasa bisa ditambah 2 rep lagi. HR ≤ 172.")),
+   sat=longrun("Long Run Steady — Loop Senayan", 12, "Steady konstan, loop Senayan. Bawa minum.", LR1_HR),
+   note="Pemulihan selesai, mulai bangun ulang base. Quality pertama dibuat ringan.")
+p0("reset",
+   tue=easy("Easy + Drills Lari", 5.0, "Drills di km pertama main set, lalu easy biasa.",
+            ["2 × 30 m A-skip, B-skip, high knees, butt kicks (jalan balik sebagai recovery)", "Sisanya easy HR 135–148"]),
+   sat=longrun("Long Run Steady — Rute Bebas Libur Natal", 12, "Steady santai, pilih rute baru supaya tidak bosan.", LR1_HR),
+   note="Kamis cuti bersama dan Jumat Natal dikosongkan (sesuai aturan libur). Kalau mau, isi easy sendiri.")
+
 # W0 (1–3 Jan)
-p1("pembuka", sat=longrun("Long Run Pembuka 2027", 12,
-   "Steady santai, rute favorit. Anggap ini 'cek kondisi' setelah Bormar dan libur akhir tahun.", LR1_HR),
-   note="Minggu pembuka (hanya 1–3 Jan). Fokus mulai kebiasaan, bukan volume.")
+p1("pembuka",
+   tue=easy("Easy Penutup Tahun", 4.0, "Easy rata, santai. Refleksi setahun lari sambil jalan.",
+            notes="Kalau lembur akhir tahun, treadmill juga oke."),
+   thu=easy("Easy Malam Tahun Baru + Pickup", 4.0, "Easy dengan 4 pickup pendek di km terakhir supaya kaki tetap ringan.",
+            ["3,4 km easy (HR 135–148)", "4 × 100 m pickup ringan, jog 100 m di antaranya"]),
+   sat=longrun("Long Run Pembuka 2027", 12,
+   "Steady santai, rute favorit. Long run pertama di tahun 2027.", LR1_HR),
+   note="Minggu pergantian tahun. Jumat 1 Jan libur Tahun Baru.")
 
 # --- Base Maintenance W1–W5
 p1("base_maint",
@@ -413,14 +457,17 @@ p2("taper",
 
 # ---------------- Rakit kalender ----------------
 STAGE = {
+  "pasca":"Post-Bormar Recovery", "reset":"Base Reset",
   "pembuka":"Pembuka", "base_maint":"Base Maintenance", "ramadan":"Ramadhan Deload", "lebaran":"Lebaran",
   "rebuild":"Rebuild", "aerobic":"Aerobic Build", "prejakim":"Pre-JAKIM", "jakim":"JAKIM & Recovery",
   "base":"Base Building", "build":"Build", "peak":"Peak", "taper":"Taper & Race",
 }
-REMAP = {"pembuka":"b1","base_maint":"b1","ramadan":"b1","lebaran":"b1",
+REMAP = {"pasca":"b0","reset":"b0","pembuka":"b1","base_maint":"b1","ramadan":"b1","lebaran":"b1",
          "rebuild":"b2","aerobic":"b2","prejakim":"b2",
          "jakim":"b3","base":"b3","build":"b4","peak":"b5","taper":"b6"}
 BLOCKS = {
+  "b0": dict(fuel="Defisit · diet dimulai, lari dibangun pelan", no=0, name="Post-Bormar Reset", phase=1, color="#14b8a6",
+             desc="1 – 27 Des. Pemulihan pasca-Bormar (15 Nov) lalu bangun ulang kebiasaan: 3 lari/minggu, easy dulu, strides di minggu ke-2, quality ringan pertama di minggu ke-3. Long run 8 → 12 km. Diet mulai jalan."),
   "b1": dict(fuel="Defisit · minggu Ramadhan: puasa saja, tanpa defisit tambahan", no=1, name="Base & Diet", phase=1, color="#0ea5e9",
              desc="1 Jan – 14 Mar. Jaga base pasca-Bormar sambil fokus diet & gym: 3 lari/minggu, long run steady 12–16 km. Di dalamnya ada Ramadhan deload (± 20 km/minggu, lari setelah tarawih) dan minggu Lebaran."),
   "b2": dict(fuel="Defisit · minggu menjelang JAKIM: jaga", no=2, name="Aerobic Rebuild", phase=1, color="#22c55e",
@@ -471,6 +518,9 @@ GYM_NOTES = {
   "peak":    {0:"Blok Peak: volume dipangkas, beban tetap. Kaki harus segar untuk Kamis & long run.",
               2:"Volume dipangkas, beban tetap.",
               4:"Ringan. Besok long run terpanjang."},
+  "pasca":   {0:"Pasca-marathon: beban ± 50–60%, jangan sampai gagal. Otot kaki masih pulih.",
+              2:"Mulai lagi pelan: beban ± 70%, sisakan 3 rep.",
+              4:"Ringan, fokus core & mobilitas."},
   "light":   {0:"Ringan: beban ± 60%, fokus gerak. Ada race/benchmark dekat.",
               2:"Ringan: beban ± 60%.",
               4:"Ringan: fokus core & mobilitas."},
@@ -483,10 +533,12 @@ def gym_sets(base, mode, dow):
     if mode == "f2": return 3 if dow == 0 else (base if dow == 4 else max(3, base - 1))
     if mode == "peak": return 2 if dow == 0 else max(2, base - 1)
     if mode == "light": return 2
+    if mode == "pasca": return 2 if dow == 0 else max(2, base - 1)
     return base
 
 # override per minggu-blok (label, dow) -> mode
 GYM_OVERRIDE = {
+  ("P1",2):"pasca", ("P1",4):"pasca", ("P2",0):"pasca", ("P2",2):"pasca", ("P2",4):"pasca",   # pasca-Bormar
   ("B01",0):"light", ("B01",2):"f2", ("B01",4):"light",      # minggu JAKIM
   ("B02",0):"skip",                                         # sehari setelah JAKIM HM
   ("B13",0):"light", ("B13",4):"light",                     # minggu HM Time Trial
@@ -519,7 +571,7 @@ def build_week(start, wk, phase, label, num):
         hol = HOLIDAYS.get(d)
         ram = RAMADAN[0] <= d <= RAMADAN[1]
         entry = dict(date=d.isoformat(), dow=i, holiday=hol, ramadan=ram)
-        if phase == 1 and d < D(2027,1,1):
+        if phase == 1 and d < PROGRAM_START:
             entry["type"] = "none"
         elif i in (0,2,4):
             if hol:
@@ -547,9 +599,14 @@ def build_week(start, wk, phase, label, num):
     return dict(phase=phase, label=label, num=num, block=REMAP[wk["block"]], stage=STAGE[wk["block"]], start=start.isoformat(),
                 end=(start + dt.timedelta(days=6)).isoformat(), total=r1(total), note=wk.get("note",""), days=days)
 
+PROGRAM_START = D(2026,12,1)
 weeks = []
-# Fase 1: W0 mulai Senin 28 Des 2026 (hanya 1–3 Jan aktif)
-start = D(2026,12,28)
+# Blok 0: mulai Senin 30 Nov 2026 (aktif dari Selasa 1 Des)
+start = D(2026,11,30)
+for n, wk in enumerate(P0, 1):
+    weeks.append(build_week(start, wk, 1, f"P{n}", n))
+    start += dt.timedelta(days=7)
+assert start == D(2026,12,28), start
 for n, wk in enumerate(P1):
     weeks.append(build_week(start, wk, 1, f"A{n:02d}", n))
     start += dt.timedelta(days=7)
@@ -575,7 +632,7 @@ def fuel_of(w):
     if w["stage"] == "Ramadhan Deload": return "puasa"
     if w["stage"] == "Lebaran": return "jaga"
     if w["label"] == "B20": return "carb"
-    return {"b1": "defisit", "b2": "defisit", "b3": "ringan"}.get(w["block"], "fuel")
+    return {"b0": "defisit", "b1": "defisit", "b2": "defisit", "b3": "ringan"}.get(w["block"], "fuel")
 for w in weeks: w["fuel"] = fuel_of(w)
 
 ZONES = [
@@ -590,7 +647,7 @@ ZONES = [
   dict(name="Strides", mode="Feel", f1="± 85–90% effort", f2="± 85–90% effort", use="100 m akselerasi rileks, bukan sprint", color="#eab308"),
 ]
 
-data = dict(weeks=weeks, blocks=BLOCKS, zones=ZONES, fuel=FUEL,
+data = dict(start=PROGRAM_START.isoformat(), weeks=weeks, blocks=BLOCKS, zones=ZONES, fuel=FUEL,
             holidays=[dict(date=k.isoformat(), name=v) for k, v in sorted(HOLIDAYS.items())],
             ramadan=[RAMADAN[0].isoformat(), RAMADAN[1].isoformat()])
 

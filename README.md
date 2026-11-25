@@ -3,7 +3,8 @@
 Program lari menuju **Jakarta Running Festival 2027 – Full Marathon** (Minggu, 24 Oktober 2027).
 Target finish ≤ 4:30 (COT 5 jam, cadangan 30 menit untuk sholat, WS & darurat).
 
-- **Fase 1 · Diet & Base** — 1 Jan – 6 Jun 2027 (lari Sel/Kam/Sab, Minggu off)
+- **Blok 0 · Post-Bormar Reset** — 1 – 27 Des 2026 (pemulihan pasca-Bormar, lalu bangun ulang)
+- **Fase 1 · Diet & Base** — 28 Des 2026 – 6 Jun 2027 (lari Sel/Kam/Sab, Minggu off)
 - **Fase 2 · Blok Intensif 20 minggu** — 7 Jun – 24 Okt 2027 (lari Sel/Kam/Sab/Min)
 - 6 blok: Base & Diet → Aerobic Rebuild → Base Building → Build → Peak → Taper & Race
 - Libur nasional & cuti bersama 2027 (SKB 3 Menteri) dikosongkan; Ramadhan ± 8 Feb – 9 Mar = deload

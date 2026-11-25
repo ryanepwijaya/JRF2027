@@ -963,7 +963,8 @@ weeks.forEach(w => { if (!blockOrder.includes(w.block)) blockOrder.push(w.block)
 const FUEL = DATA.fuel || {};
 const fuelChip = w => { const f = FUEL[w.fuel]; return f ? `<span class="chip fuel" style="--fc:${f.color}"><i></i>${L("Nutrisi", "Nutrition")} <b>${esc(f.name)}</b></span>` : ""; };
 const bWeeks = id => weeks.filter(w => w.block === id);
-const bS = i => i.first.start < "2027-01-01" ? "2027-01-01" : i.first.start;
+const START = DATA.start || "2026-12-01";
+const bS = i => i.first.start < START ? START : i.first.start;
 const bInfo = id => { const ws = bWeeks(id); return {ws, km: ws.reduce((a,w)=>a+w.total,0), first: ws[0], last: ws[ws.length-1]}; };
 
 // state: semua tertutup secara default
@@ -974,7 +975,7 @@ const openSess = {};
 // ---------- RINGKASAN PROGRAM (di Penjelasan Blok) ----------
 document.getElementById("blkSum").innerHTML = `<div class="pg-grid" style="margin-bottom:10px">${[
   {k:"Total program", v: fmt(sumP(1)+sumP(2)), u:"km", s: weeks.length+" minggu · 6 blok"},
-  {k:"Fase A · Diet & Base", v: fmt(sumP(1)), u:"km", s:"Blok 1–2 · 1 Jan – 6 Jun · 3 lari/mgg"},
+  {k:"Fase A · Diet & Base", v: fmt(sumP(1)), u:"km", s:"Blok 0–2 · 1 Des – 6 Jun · 3 lari/mgg"},
   {k:"Fase B · Blok Intensif", v: fmt(sumP(2)), u:"km", s:"Blok 3–6 · 7 Jun – 24 Okt · 4 lari/mgg"},
   {k:"Minggu terberat · LR terjauh", v: fmt(peak.total), u:"km", s: peak.label + " · long run terjauh " + fmt(longest.km) + " km"},
 ].map(x => `<div class="pg-card"><div class="k">${x.k}</div><div class="v">${x.v}<small> ${x.u}</small></div><div class="s">${x.s}</div></div>`).join("")}</div>
@@ -1120,7 +1121,7 @@ function dayHTML(w, d){
   const dn = `<div class="dn"><span class="dfull">${DAYS[d.dow]}</span><span class="dshort">${DAYS[d.dow].slice(0,3)}</span>${d.ramadan?'<span title="Ramadhan">🌙</span>':""}</div>`;
   const date = `<span class="dd">${fd(d.date)}</span>`;
   const hol = d.holiday ? `<div class="hol">🇮🇩 ${esc(d.holiday)}</div>` : "";
-  if (d.type === "none") return `<div class="day none">${dn}${date}<div class="ttl" style="color:var(--ink3)">2026</div></div>`;
+  if (d.type === "none") return `<div class="day none">${dn}${date}<div class="ttl" style="color:var(--ink3)">${L("Sebelum program", "Before program")}</div></div>`;
   if (d.type === "gym") { const g = d.session, sel = openSess[w.label] === d.dow;
     return `<div class="day run k-gym${sel?" sel":""}" data-w="${w.label}" data-dow="${d.dow}">${dn}${date}<span class="kind">Gym${(st => st ? ` · <span class="done-dot">${st.txt}</span>` : "")(statusOf(d))}</span><div class="ttl">${esc(g.title)}</div><div class="km">${g.sets ? g.sets+"<small> set</small>" : "<small>tanpa beban</small>"}</div></div>`; }
   if (d.type === "off") return `<div class="day off">${dn}${date}${hol}<div class="ttl">😴 Off / istirahat</div></div>`;
@@ -1345,10 +1346,10 @@ function renderToday(){
   let html = `<div class="vhead"><h2>Hari ini</h2><p>${LONGDAY(today)}</p></div>`;
   let w = cur, note = "";
   if (!cur) {
-    const startsIn = Math.round((pd("2027-01-01") - today) / 86400000);
+    const startsIn = Math.round((pd(START) - today) / 86400000);
     if (startsIn > 0) {
       w = weeks[0];
-      html += `<div class="vcard today-empty"><div class="big">⏳</div><h3>Program mulai 1 Januari 2027</h3><p>${startsIn} hari lagi. Sementara itu, ini minggu pertamamu.</p></div>`;
+      html += `<div class="vcard today-empty"><div class="big">⏳</div><h3>Program mulai 1 Desember 2026</h3><p>${startsIn} hari lagi. Sementara itu, ini minggu pertamamu.</p></div>`;
     } else {
       html += `<div class="vcard today-empty"><div class="big">🎉</div><h3>Program sudah selesai</h3><p>Semoga JRF 2027-nya lancar!</p></div>`;
       el.innerHTML = html; return;
@@ -1591,7 +1592,7 @@ function renderProgress(el, page){
   html += syncBar();
   const done = weeks.filter(w => w.days.some(d => hasData(d.date)));
   if (!upd || !done.length) {
-    html += `<div class="pg-empty"><div class="big">📈</div><h4>Log dimulai 1 Januari 2027</h4><p>Setiap minggu, data lari & gym dari Coros/Strava ditarik dan dicocokkan dengan program. Hasilnya muncul di sini dan di tiap sesi pada halaman Program.</p></div>`;
+    html += `<div class="pg-empty"><div class="big">📈</div><h4>Log dimulai 1 Desember 2026</h4><p>Setiap minggu, data lari & gym dari Coros/Strava ditarik dan dicocokkan dengan program. Hasilnya muncul di sini dan di tiap sesi pada halaman Program.</p></div>`;
     html += `<div class="vsec"><h3>Berat badan</h3>${weightCard()}</div>`;
     el.innerHTML = html; return;
   }
@@ -1703,7 +1704,7 @@ function renderDash(){
   const isoTmr = `${tmr.getFullYear()}-${String(tmr.getMonth()+1).padStart(2,"0")}-${String(tmr.getDate()).padStart(2,"0")}`;
   const nb = document.getElementById("dNext");
   if (next) {
-    const s = next.d.session, startsIn = Math.round((pd("2027-01-01") - today) / 86400000);
+    const s = next.d.session, startsIn = Math.round((pd(START) - today) / 86400000);
     const lbl = next.d.date === isoToday ? "Hari ini" : next.d.date === isoTmr ? "Besok" : startsIn > 0 ? `Sesi pertama · ${startsIn} hari lagi` : "Sesi berikutnya";
     nb.className = `d-card d-next k-${s.kind}`;
     nb.innerHTML = `<div class="d-lbl"><span><b>${lbl}</b> · ${LONGDAY(pd(next.d.date))}</span><span class="go">›</span></div>
@@ -1714,7 +1715,7 @@ function renderDash(){
   } else { nb.className = "d-card d-next"; nb.innerHTML = `<div class="d-lbl"><span>Program</span></div><div class="dt">Selesai 🎉 Semoga JRF-nya lancar!</div>`; nb.onclick = null; }
   // perjalanan program
   const N = weeks.length, ci = cur ? weeks.indexOf(cur) : -1;
-  const pos = ci >= 0 ? (ci + ((today.getDay() + 6) % 7 + 1) / 7) / N : (today < pd(weeks[0].start) || today < pd("2027-01-01") ? 0 : 1);
+  const pos = ci >= 0 ? (ci + ((today.getDay() + 6) % 7 + 1) / 7) / N : (today < pd(weeks[0].start) || today < pd(START) ? 0 : 1);
   let i0 = 0, segs = "", labels = "";
   blockOrder.forEach(id => {
     const len = bWeeks(id).length, fill = Math.max(0, Math.min(1, (pos * N - i0) / len));
@@ -1723,7 +1724,7 @@ function renderDash(){
     i0 += len;
   });
   const jkPos = (weeks.findIndex(w => w.label === JK_WEEK) + 6.5/7) / N * 100;
-  const right = ci >= 0 ? `${cur.label} · ${Math.round(pos * 100)}%` : (pos === 0 ? "Mulai 1 Jan" : "Selesai");
+  const right = ci >= 0 ? `${cur.label} · ${Math.round(pos * 100)}%` : (pos === 0 ? "Mulai 1 Des" : "Selesai");
   const jb = document.getElementById("dJourney");
   jb.innerHTML = `<div class="d-lbl"><span>Perjalanan program</span><span>${right} <span class="go">›</span></span></div>
     <div class="jbar">${segs}<span class="jdot" style="left:${jkPos}%"></span>${pos > 0 && pos < 1 ? `<span class="jmark" style="left:${pos*100}%"></span>` : ""}</div>
@@ -1743,7 +1744,7 @@ function renderDash(){
     ${wk.days.some(d => d.type === "gym") ? `<div class="wleg">${L("Gym", "Gym")}: <b>L</b> Lower · <b>U</b> Upper · <b>SC</b> Shoulder & Core${wk.days.some(d => d.type === "gym" && d.session.mode === "skip") ? " · <b>M</b> Mobility" : ""}</div>` : ""}`;
   wEl.querySelectorAll(".wd.tap").forEach(b => b.addEventListener("click", () => openSession(b.dataset.w, +b.dataset.dow)));
   // tiles: blok sekarang + berat badan
-  const bw = cur || weeks.find(w => w.days.some(d => d.date >= "2027-01-01"));
+  const bw = cur || weeks.find(w => w.days.some(d => d.date >= START));
   const tb = document.getElementById("dBlock");
   tb.innerHTML = `<div class="d-lbl"><span>${cur ? L("Blok sekarang", "Current block") : L("Blok pertama", "First block")}</span><span class="go">›</span></div>
     <div class="tv" style="color:${B[bw.block].color}">${PH(B[bw.block].phase)}${B[bw.block].no} · ${esc(B[bw.block].name)}</div><div class="ts">${esc(bw.stage)} · ${bw.label}</div>${FUEL[bw.fuel] ? `<div class="ts tfuel" style="--fc:${FUEL[bw.fuel].color}"><i></i>${L("Nutrisi", "Nutrition")}: ${esc(FUEL[bw.fuel].name)}</div>` : ""}`;
