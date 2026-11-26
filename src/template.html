@@ -763,6 +763,26 @@ body.sheet-open{overflow:hidden}
 .wk-fuel b{color:var(--ink)}
 .bfuel{font-size:12px;color:var(--ink2);margin-top:6px}
 .tfuel{display:flex;align-items:center;margin-top:4px}
+
+/* ===== Cuaca latihan ===== */
+.d-wx[hidden],.wx-sec[hidden]{display:none!important}
+.d-wx{cursor:default}
+.wx-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px}
+.wx-h b{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);font-weight:800}
+.wx-h span{font-size:11px;color:var(--ink3)}
+.wx-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wx-w{border:1px solid var(--line);border-radius:14px;padding:10px 12px;position:relative;background:var(--soft)}
+.wx-w.best{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.wx-w .lb{font-size:11.5px;font-weight:800;color:var(--ink2)}
+.wx-w .lb small{font-weight:600;color:var(--ink3);white-space:nowrap}
+.wx-w .tp{display:flex;align-items:center;gap:6px;margin:4px 0 2px;font-family:var(--mono);font-size:24px;font-weight:800;color:var(--ink)}
+.wx-w .tp i{font-style:normal;font-size:20px}
+.wx-w .mt{font-size:11.5px;color:var(--ink2);line-height:1.45}
+.wx-w .lv{display:inline-block;margin-top:6px;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--ink2)}
+.wx-w .bt{position:absolute;top:-9px;right:10px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--accent);color:#fff;padding:2px 8px;border-radius:999px}
+.wx-tip{font-size:12px;color:var(--ink2);margin-top:10px;line-height:1.45}
+.wx-src{font-size:10.5px;color:var(--ink3);margin-top:6px}
+.wx-src a{color:inherit}
 </style>
 </head>
 <body>
@@ -805,6 +825,7 @@ body.sheet-open{overflow:hidden}
         <div class="d-sub">Jakarta Running Festival · Full Marathon<br>Minggu, 24 Oktober 2027 · target ≤ 4:30</div>
       </div>
       <button class="d-card d-next" id="dNext"></button>
+      <div class="d-card d-wx" id="dWx" hidden></div>
       <div class="d-card d-week" id="dWeek"></div>
       <button class="d-card d-journey" id="dJourney"></button>
       <div class="d-tiles"><button class="d-card d-tile" id="dBlock"></button><button class="d-card d-tile" id="dBody"></button></div>
@@ -1364,12 +1385,14 @@ function renderToday(){
     else html += `<div class="vcard today-empty"><div class="big">😴</div><h3>Hari istirahat</h3><p>Tidak ada sesi terjadwal. Pulihkan badan.</p></div>`;
     html += `</div>`;
   }
+  html += `<div class="vsec wx-sec" hidden><h3>${L("Cuaca latihan", "Training weather")}</h3><div class="vcard wx-box"></div></div>`;
   html += `<div class="vsec"><h3>${cur ? "Minggu ini" : "Minggu pertama"}</h3>
     <div class="vcard" style="margin-bottom:8px"><div class="wk-sum"><div class="l"><b>${w.label}</b> · ${fd(w.start)} – ${fd(w.end)}<div>${BL(w.block)} · ${esc(B[w.block].name)} · ${esc(w.stage)}</div></div><div class="r">${fmt(w.total)}<small> km</small></div></div></div>
     <div class="days">${w.days.filter(d => d.type !== "none").map(d => dayHTML(w, d)).join("")}</div>
     <button class="vbtn" id="todayOpen">Buka di Program →</button></div>`;
   el.innerHTML = html;
   bindDays(el);
+  loadWx();
   el.querySelectorAll(".day.run").forEach(x => { if (x.closest(".days") && w.days.find(d => d.dow === +x.dataset.dow)?.date === isoToday) x.classList.add("sel"); });
   document.getElementById("todayOpen").onclick = () => jump(w.label);
 }
@@ -1694,6 +1717,74 @@ function gymCode(s){
   const f = (s.focus || "").toLowerCase();
   return f.includes("lower") ? "L" : f.includes("upper") ? "U" : f.includes("shoulder") ? "SC" : "G";
 }
+
+// ===== Cuaca latihan (Open-Meteo, tanpa API key) =====
+const WX = {lat: -6.2088, lon: 106.8456, place: "Jakarta", key: "jrf-wx"};
+const WX_WIN = [{id: "pagi", h: [5, 6, 7], lab: ["Pagi", "Morning"], rng: "05–07"}, {id: "sore", h: [16, 17, 18], lab: ["Sore", "Evening"], rng: "16–18"}];
+const wxIcon = c => c === 0 ? "☀️" : c <= 2 ? "🌤️" : c === 3 ? "☁️" : c <= 48 ? "🌫️" : c <= 57 ? "🌦️" : c <= 67 ? "🌧️" : c <= 82 ? "🌧️" : "⛈️";
+async function wxData(){
+  try { const c = JSON.parse(localStorage.getItem(WX.key) || "null"); if (c && Date.now() - c.t < 30*60*1000) return c.d; } catch(e){}
+  const u = `https://api.open-meteo.com/v1/forecast?latitude=${WX.lat}&longitude=${WX.lon}&hourly=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation_probability,precipitation,weather_code,uv_index&timezone=Asia%2FJakarta&forecast_days=2`;
+  const r = await fetch(u); if (!r.ok) throw new Error("wx " + r.status);
+  const d = await r.json();
+  try { localStorage.setItem(WX.key, JSON.stringify({t: Date.now(), d})); } catch(e){}
+  return d;
+}
+function wxWindows(d){
+  const H = d.hourly, idx = {}; H.time.forEach((t, i) => idx[t] = i);
+  const now = new Date(), out = [];
+  for (let day = 0; day < 2 && out.length < 2; day++) {
+    const dt = new Date(now); dt.setDate(dt.getDate() + day);
+    const ymd = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
+    for (const w of WX_WIN) {
+      if (out.length >= 2) break;
+      const last = w.h[w.h.length - 1];
+      if (day === 0 && now.getHours() > last) continue;
+      const ii = w.h.map(h => idx[`${ymd}T${String(h).padStart(2,"0")}:00`]).filter(i => i !== undefined);
+      if (!ii.length) continue;
+      const avg = k => ii.reduce((a, i) => a + H[k][i], 0) / ii.length, max = k => Math.max(...ii.map(i => H[k][i] ?? 0));
+      out.push({w, day, temp: avg("temperature_2m"), feels: max("apparent_temperature"), rh: avg("relative_humidity_2m"),
+                pop: max("precipitation_probability"), mm: ii.reduce((a, i) => a + (H.precipitation[i] || 0), 0), uv: max("uv_index"), code: max("weather_code")});
+    }
+  }
+  return out;
+}
+function wxLevel(x){
+  if (x.pop >= 60 || x.mm >= 1) return [L("Potensi hujan", "Likely rain"), 3];
+  if (x.feels >= 36) return [L("Sangat panas", "Very hot"), 3];
+  if (x.feels >= 32) return [L("Panas", "Hot"), 2];
+  if (x.feels >= 28) return [L("Hangat", "Warm"), 1];
+  return [L("Nyaman", "Comfortable"), 0];
+}
+function wxHTML(list){
+  if (!list.length) return "";
+  const score = x => x.feels + (x.pop >= 60 || x.mm >= 1 ? 8 : x.pop >= 30 ? 2 : 0) + (x.uv >= 6 ? 1 : 0);
+  const wet = x => x.pop >= 60 || x.mm >= 1;
+  let best = -1;
+  if (list.length === 2 && !(wet(list[0]) && wet(list[1]))) best = score(list[0]) <= score(list[1]) ? 0 : 1;
+  const name = x => x.day === 0 ? L(`${x.w.lab[0]} ini`, `This ${x.w.lab[1].toLowerCase()}`) : L(`Besok ${x.w.lab[0].toLowerCase()}`, `Tomorrow ${x.w.lab[1].toLowerCase()}`);
+  const cells = list.map((x, i) => `<div class="wx-w${i === best ? " best" : ""}">${i === best ? `<span class="bt">${L("Lebih enak", "Better")}</span>` : ""}
+    <div class="lb">${name(x)} <small>${x.w.rng}</small></div>
+    <div class="tp"><i>${wxIcon(x.code)}</i>${Math.round(x.temp)}°</div>
+    <div class="mt">${L("Terasa", "Feels")} ${Math.round(x.feels)}° · RH ${Math.round(x.rh)}%<br>${L("Hujan", "Rain")} ${Math.round(x.pop)}%${x.uv >= 3 ? ` · UV ${Math.round(x.uv)}` : ""}</div>
+    <span class="lv">${wxLevel(x)[0]}</span></div>`).join("");
+  const top = best >= 0 ? list[best] : list[0];
+  let tip;
+  if (list.every(wet)) tip = L("Dua-duanya berpotensi hujan. Treadmill bisa jadi pilihan, atau lari di sela hujan dengan HR tetap jadi patokan.", "Both windows look wet. Consider the treadmill, or run between showers and stick to HR.");
+  else if (top.feels >= 32) tip = L("Tetap panas: HR biasanya naik 5–10 bpm. Patuhi batas HR, pace boleh lebih lambat, bawa minum.", "Still hot: HR usually runs 5–10 bpm higher. Respect the HR cap, let pace slow, carry water.");
+  else if (top.feels >= 28) tip = L("Hangat dan lembap seperti biasa di Jakarta. Pace ikut HR, minum sebelum berangkat.", "Typical warm, humid Jakarta. Let HR set the pace and drink before you go.");
+  else tip = L("Kondisi enak untuk lari. Pertahankan HR sesuai target, jangan terbawa kecepatan.", "Good running weather. Hold your HR target; don't get carried away by pace.");
+  return `<div class="wx-h"><b>${L("Cuaca latihan", "Training weather")}</b><span>${WX.place}</span></div><div class="wx-grid">${cells}</div>
+    <div class="wx-tip">${tip}</div><div class="wx-src">${L("Prakiraan per jam dari", "Hourly forecast from")} <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a></div>`;
+}
+async function loadWx(){
+  try {
+    const html = wxHTML(wxWindows(await wxData()));
+    const home = document.getElementById("dWx");
+    if (home) { home.innerHTML = html; home.hidden = !html; }
+    document.querySelectorAll(".wx-sec").forEach(sec => { sec.querySelector(".wx-box").innerHTML = html.replace(/<div class="wx-h">.*?<\/div>/, ""); sec.hidden = !html; });
+  } catch(e) { /* offline / API error: kartu tetap tersembunyi */ }
+}
 function renderDash(){
   // countdown
   document.getElementById("dCount").innerHTML = daysLeft > 0 ? `${daysLeft}<small>hari lagi</small>` : (daysLeft === 0 ? "Race day! 🏁" : "Selesai 🎉");
@@ -1772,7 +1863,7 @@ function renderDash(){
   const rx = runs.find(x => x.d.date === nr.date);
   rb.onclick = () => rx && openSession(rx.w.label, rx.d.dow);
 }
-renderDash();
+renderDash(); loadWx();
 
 render(); fitLabels();
 if (isMobile()) applyView(location.hash.slice(1) || "home");
