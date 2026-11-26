@@ -186,6 +186,10 @@
  "FASE B →": "PHASE B →",
  "__patterns": [
   [
+   "(\\d+) blok, periode, dan fokus tiap blok",
+   "$1 blocks, periods and the focus of each"
+  ],
+  [
    "Selesai 🎉 Semoga (.+)-nya lancar!",
    "Done 🎉 Hope $1 goes great!"
   ],
@@ -322,5 +326,6 @@
  "Blok 0–2 · 1 Des – 6 Jun · 3 lari/mgg": "Blocks 0–2 · 1 Dec – 6 Jun · 3 runs/wk",
  "Program mulai 1 Desember 2026": "Program starts 1 December 2026",
  "Log dimulai 1 Desember 2026": "Logging starts 1 December 2026",
- "· disusun 28 Okt 2026 dari data Coros & Strava (Jan–Okt 2026). Nutrisi di luar program ini. Gerakan gym diambil dari log latihan Ryan.": "· built 28 Oct 2026 from Coros & Strava data (Jan–Oct 2026). Nutrition is outside this program. Gym exercises come from Ryan's training log."
+ "· disusun 28 Okt 2026 dari data Coros & Strava (Jan–Okt 2026). Nutrisi di luar program ini. Gerakan gym diambil dari log latihan Ryan.": "· built 28 Oct 2026 from Coros & Strava data (Jan–Oct 2026). Nutrition is outside this program. Gym exercises come from Ryan's training log.",
+ "Grafik km per minggu dari Des–Okt": "Weekly km chart from Dec to Oct"
 }

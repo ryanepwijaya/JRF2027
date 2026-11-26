@@ -794,6 +794,60 @@ body.sheet-open{overflow:hidden}
 .d-races .rcnt small{display:block;font-family:var(--font);font-size:11px;font-weight:600;color:var(--ink3)}
 .d-races .rrow.main .rn,.d-races .rrow.main .rcnt{color:var(--accent)}
 .d-races .rempty{font-size:14px;color:var(--ink2);padding:6px 0 0}
+
+/* ===== Nav: Today di tengah, besar ===== */
+@media (max-width: 900px){
+  .bnav{overflow:visible}
+  .bnav button.nav-main{position:relative;color:var(--ink2)}
+  .bnav button.nav-main .nm-c{width:58px;height:58px;margin-top:-28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(255,90,31,.38),0 0 0 4px var(--bg)}
+  .bnav button.nav-main .nm-c svg{width:28px;height:28px;stroke-width:2.1}
+  .bnav button.nav-main.on{color:var(--accent)}
+  .bnav button.nav-main:active{background:none}
+  .bnav button.nav-main:active .nm-c{transform:scale(.95)}
+  .desk-only{display:none!important}
+}
+/* ===== Dashboard: KPI ===== */
+.d-kpi{cursor:default}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.kpi{border:0;background:var(--soft);border-radius:12px;padding:10px 12px;text-align:left;font:inherit;color:var(--ink);cursor:pointer;min-width:0}
+.kpi .k{font-size:11px;font-weight:700;color:var(--ink3)}
+.kpi .v{font-family:var(--mono);font-size:21px;font-weight:700;margin-top:3px;white-space:nowrap}
+.kpi .v small{font-family:var(--font);font-size:12px;color:var(--ink2);font-weight:600}
+.kpi .s{font-size:11px;color:var(--ink2);margin-top:2px}
+.kpi .pg-bar{margin-top:6px}
+.jblk{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--line2);font-size:12.5px;color:var(--ink2)}
+.jblk b{font-weight:800}
+.jblk .tfuel{margin:0}
+@media (min-width: 901px){
+  .kpi-grid{grid-template-columns:repeat(4,1fr)}
+  .dash{grid-template-columns:1fr 1fr 1fr}
+  .d-races{grid-column:1;grid-row:1 / span 2}
+  .d-next{grid-column:2 / span 2;grid-row:1}
+  .d-kpi{grid-column:2 / span 2;grid-row:2}
+  .d-journey{grid-column:1 / span 2;grid-row:3}
+  .d-wx{grid-column:3;grid-row:3 / span 2}
+  .d-week{grid-column:1 / span 2;grid-row:4}
+}
+/* ===== Today ===== */
+.t-next{margin-top:10px}
+.t-sync{margin-top:16px}
+/* ===== Progres: tab ===== */
+.ptabs{display:flex;gap:4px;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:4px;margin:4px 0 12px;position:sticky;top:calc(6px + env(safe-area-inset-top));z-index:5}
+.ptabs button{flex:1;border:0;background:none;font:inherit;font-size:13px;font-weight:800;color:var(--ink2);padding:8px 4px;border-radius:9px;cursor:pointer}
+.ptabs button.on{background:var(--paper);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.gym-row{display:grid;grid-template-columns:44px 1fr 64px;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line2)}
+.gym-row:first-child{border-top:0}
+.gym-row .gc{font-family:var(--mono);font-weight:800;color:#7c3aed}
+[data-theme="dark"] .gym-row .gc{color:#a78bfa}
+.gym-row .gn{font-size:13px;font-weight:700}
+.gym-row .gk{font-family:var(--mono);font-size:13px;font-weight:700;text-align:right}
+.gym-row .gk small{font-family:var(--font);color:var(--ink3);font-weight:600}
+.gym-row .pg-bar{margin-top:5px}
+.gym-row .pg-bar i{background:#8b5cf6}
+.gwk{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:6px;margin-top:4px}
+.gwk div{text-align:center;font-size:10px;color:var(--ink3);font-family:var(--mono)}
+.gwk i{display:block;height:22px;border-radius:6px;background:var(--line2);margin-bottom:3px}
+.gwk i.f1{background:rgba(139,92,246,.35)}.gwk i.f2{background:rgba(139,92,246,.65)}.gwk i.f3{background:#8b5cf6}
 </style>
 </head>
 <body>
@@ -831,11 +885,11 @@ body.sheet-open{overflow:hidden}
         <div class="ios-tip" id="iosTip" hidden>Di Safari: tap tombol <b>Share</b> <span aria-hidden="true">⬆️</span>, lalu pilih <b>Add to Home Screen</b>.</div></div></div></div>
     <div class="dash">
       <div class="d-card d-races" id="dRace"></div>
-      <button class="d-card d-next" id="dNext"></button>
-      <div class="d-card d-wx" id="dWx" hidden></div>
-      <div class="d-card d-week" id="dWeek"></div>
+      <button class="d-card d-next desk-only" id="dNext"></button>
+      <div class="d-card d-kpi" id="dKpi"></div>
+      <div class="d-card d-wx desk-only" id="dWx" hidden></div>
+      <div class="d-card d-week desk-only" id="dWeek"></div>
       <button class="d-card d-journey" id="dJourney"></button>
-      <div class="d-tiles"><button class="d-card d-tile" id="dBlock"></button><button class="d-card d-tile" id="dBody"></button></div>
     </div>
 
     <div class="pills" id="pills">
@@ -913,9 +967,9 @@ body.sheet-open{overflow:hidden}
 </div>
 
 <nav class="bnav" id="bnav" aria-label="Menu utama">
-  <button data-nav="home" class="on"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg><span>Beranda</span></button>
+  <button data-nav="home"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="9" rx="2"/><rect x="13.5" y="3.5" width="7" height="5" rx="2"/><rect x="13.5" y="11.5" width="7" height="9" rx="2"/><rect x="3.5" y="15.5" width="7" height="5" rx="2"/></svg><span>Dashboard</span></button>
   <button data-nav="program"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M7.5 9.5h9M7.5 13h9M7.5 16.5h5"/></svg><span>Program</span></button>
-  <button data-nav="today"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><circle cx="12" cy="14.5" r="2.2" fill="currentColor" stroke="none"/></svg><span>Hari ini</span></button>
+  <button data-nav="today" class="nav-main on"><span class="nm-c"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><circle cx="12" cy="14.5" r="2.2" fill="currentColor" stroke="none"/></svg></span><span>Hari ini</span></button>
   <button data-nav="progress"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5h16"/><path d="M6.5 16v-4M11 16V8.5M15.5 16v-6M20 16V5"/></svg><span>Progres</span></button>
   <button data-nav="more"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>More</span></button>
 </nav>
@@ -1331,7 +1385,7 @@ applyTheme(themeMode());
 // ---------- BOTTOM NAV + HALAMAN (HP) ----------
 const bnav = document.getElementById("bnav");
 const VIEWS = ["home", "program", "today", "progress", "more", "moredetail"];
-let curView = "home", movedPage = null;
+let curView = "today", movedPage = null, progTab = "lari";
 const scrollMem = {};
 function toast(msg){ const el = document.getElementById("toast"); el.textContent = msg; el.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove("show"), 2600); }
 function setNav(k){ bnav.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.nav === k)); }
@@ -1343,9 +1397,10 @@ function restorePage(){
   const {el, parent, next} = movedPage; el.classList.remove("show"); parent.insertBefore(el, next); movedPage = null;
 }
 function applyView(hash){
-  let [v, sub] = (hash || "home").split("/");
+  let [v, sub] = (hash || "today").split("/");
   if (v === "race") { v = "more"; sub = "p-race"; }
-  if (!VIEWS.includes(v)) v = "home";
+  if (!VIEWS.includes(v)) v = "today";
+  if (v === "progress" && sub) progTab = sub;
   if (v === "more" && sub) v = "moredetail";
   scrollMem[curView] = window.scrollY;
   closeSheet(); restorePage();
@@ -1365,7 +1420,7 @@ function applyView(hash){
   window.scrollTo(0, (v === "home" || v === "program") ? (scrollMem[v] || 0) : 0);
 }
 function navigate(v){
-  const cur = (location.hash || "#home").slice(1);
+  const cur = (location.hash || "#today").slice(1);
   if (cur === v && document.body.dataset.view) { if (v.split("/")[0] === curView || (v.startsWith("more/") && curView === "moredetail")) return; }
   history.pushState(null, "", "#" + v);
   applyView(v);
@@ -1377,37 +1432,42 @@ function bindDays(root){
   root.querySelectorAll(".day.run").forEach(d => d.addEventListener("click", () => openSheet(d.dataset.w, +d.dataset.dow)));
 }
 
+function nextSessionCard(after){
+  // sesi lari berikutnya setelah tanggal `after` (eksklusif)
+  for (const w of weeks) for (const d of w.days) if (d.type === "run" && d.session && d.date > after) {
+    const s = d.session, n = Math.round((pd(d.date) - today) / 86400000);
+    const when = n === 1 ? L("Besok", "Tomorrow") : `${n} ${L("hari lagi", "days")}`;
+    return `<button class="d-card d-next k-${s.kind} t-next" data-w="${w.label}" data-dow="${d.dow}"><div class="d-lbl"><span><b>${L("Lari berikutnya", "Next run")}</b> · ${when} · ${LONGDAY(pd(d.date))}</span><span class="go">›</span></div>
+      <div class="dt">${esc(s.title)}</div><div class="dmeta"><span class="dkm">${fmt(s.km)} km</span><span class="mode ${s.target.mode}">${s.target.mode}</span><span>${esc(s.target.range)}</span></div></button>`;
+  }
+  return "";
+}
 function renderToday(){
   const el = document.getElementById("v-today");
   let html = `<div class="vhead"><h2>Hari ini</h2><p>${LONGDAY(today)}</p></div>`;
-  let w = cur, note = "";
-  if (!cur) {
-    const startsIn = Math.round((pd(START) - today) / 86400000);
-    if (startsIn > 0) {
-      w = weeks[0];
-      html += `<div class="vcard today-empty"><div class="big">⏳</div><h3>Program mulai 1 Desember 2026</h3><p>${startsIn} hari lagi. Sementara itu, ini minggu pertamamu.</p></div>`;
-    } else {
-      html += `<div class="vcard today-empty"><div class="big">🎉</div><h3>Program sudah selesai</h3><p>Semoga ${esc(MAIN.short)} ${rYear(MAIN)}-nya lancar!</p></div>`;
-      el.innerHTML = html; return;
-    }
-  } else {
-    const d = cur.days.find(x => x.date === isoToday);
-    html += `<div class="vsec"><h3>Sesi hari ini</h3>`;
-    if (d && d.session) html += detailHTML(cur, d);
-    else if (d && d.type === "holiday") html += `<div class="vcard today-empty"><div class="big">🇮🇩</div><h3>Libur: ${esc(d.holiday)}</h3><p>Isi sendiri dengan easy run kalau mau.</p></div>`;
-    else html += `<div class="vcard today-empty"><div class="big">😴</div><h3>Hari istirahat</h3><p>Tidak ada sesi terjadwal. Pulihkan badan.</p></div>`;
-    html += `</div>`;
+  const startsIn = Math.round((pd(START) - today) / 86400000);
+  if (!cur && startsIn <= 0) {
+    html += `<div class="vcard today-empty"><div class="big">🎉</div><h3>Program sudah selesai</h3><p>Semoga ${esc(MAIN.short)} ${rYear(MAIN)}-nya lancar!</p></div>`;
+    el.innerHTML = html; return;
   }
+  html += `<div class="vsec"><h3>${L("Sesi hari ini", "Today's session")}</h3>`;
+  const d = cur ? cur.days.find(x => x.date === isoToday) : null;
+  if (startsIn > 0) html += `<div class="vcard today-empty"><div class="big">⏳</div><h3>Program mulai 1 Desember 2026</h3><p>${startsIn} hari lagi.</p></div>`;
+  else if (d && d.session) html += detailHTML(cur, d);
+  else if (d && d.type === "holiday") html += `<div class="vcard today-empty"><div class="big">🇮🇩</div><h3>Libur: ${esc(d.holiday)}</h3><p>Isi sendiri dengan easy run kalau mau.</p></div>`;
+  else html += `<div class="vcard today-empty"><div class="big">😴</div><h3>Hari istirahat</h3><p>Tidak ada sesi terjadwal. Pulihkan badan.</p></div>`;
+  if (!(d && d.type === "run")) html += nextSessionCard(isoToday);
+  html += `</div>`;
   html += `<div class="vsec wx-sec" hidden><h3>${L("Cuaca latihan", "Training weather")}</h3><div class="vcard wx-box"></div></div>`;
-  html += `<div class="vsec"><h3>${cur ? "Minggu ini" : "Minggu pertama"}</h3>
-    <div class="vcard" style="margin-bottom:8px"><div class="wk-sum"><div class="l"><b>${w.label}</b> · ${fd(w.start)} – ${fd(w.end)}<div>${BL(w.block)} · ${esc(B[w.block].name)} · ${esc(w.stage)}</div></div><div class="r">${fmt(w.total)}<small> km</small></div></div></div>
-    <div class="days">${w.days.filter(d => d.type !== "none").map(d => dayHTML(w, d)).join("")}</div>
-    <button class="vbtn" id="todayOpen">Buka di Program →</button></div>`;
+  const wk = stripWeek();
+  html += `<div class="vsec"><div class="d-card d-week" id="tWeek" style="cursor:default">${weekStripHTML(wk)}</div>
+    <button class="vbtn" id="todayOpen">${L("Buka minggu ini di Program", "Open this week in Program")} →</button></div>`;
+  html += `<div class="t-sync">${syncBar()}</div>`;
   el.innerHTML = html;
-  bindDays(el);
+  bindStrip(el.querySelector("#tWeek"));
+  el.querySelectorAll(".t-next").forEach(b => b.addEventListener("click", () => openSession(b.dataset.w, +b.dataset.dow)));
   loadWx();
-  el.querySelectorAll(".day.run").forEach(x => { if (x.closest(".days") && w.days.find(d => d.dow === +x.dataset.dow)?.date === isoToday) x.classList.add("sel"); });
-  document.getElementById("todayOpen").onclick = () => jump(w.label);
+  document.getElementById("todayOpen").onclick = () => jump(wk.label);
 }
 
 function fillPanel(id){
@@ -1623,54 +1683,84 @@ function efPick(e){
   card.querySelectorAll(".pt").forEach(p => p.classList.toggle("on", p.dataset.i === h.dataset.i));
   card.querySelector(".ef-read").textContent = `${w}: ${fmtPace(sec)} @${EF_REF} bpm · ${L("HR rata-rata", "avg HR")} ${hr} · ${n} ${L("sesi", n > 1 ? "runs" : "run")}`;
 }
+const PTABS = [["lari", ["Lari", "Running"]], ["gym", ["Gym", "Gym"]], ["tubuh", ["Tubuh", "Body"]], ["bench", ["Benchmark", "Benchmarks"]]];
 function renderProgress(el, page){
+  if (!PTABS.some(t => t[0] === progTab)) progTab = "lari";
   const upd = DATA.actuals && DATA.actuals.updated;
-  let html = page ? `<div class="vhead"><h2>Progres</h2><p>${upd ? `Data Coros/Strava s.d. ${fd(upd, true)} · diperbarui mingguan` : "Realisasi dari Coros/Strava · diperbarui mingguan"}</p></div>`
-                  : `<h3>Progres</h3><p class="ph-sub">${upd ? `Data Coros/Strava s.d. ${fd(upd, true)} · diperbarui mingguan` : "Realisasi dari Coros/Strava · diperbarui mingguan"}</p>`;
-  html += syncBar();
+  const sub = upd ? `Data Coros/Strava s.d. ${fd(upd, true)}` : L("Realisasi dari Coros/Strava", "Actuals from Coros/Strava");
+  let html = page ? `<div class="vhead"><h2>Progres</h2><p>${sub}</p></div>` : `<h3>Progres</h3><p class="ph-sub">${sub}</p>${syncBar()}`;
+  html += `<div class="ptabs">${PTABS.map(([id, lb]) => `<button data-tab="${id}" class="${id === progTab ? "on" : ""}">${L(lb[0], lb[1])}</button>`).join("")}</div>`;
   const done = weeks.filter(w => w.days.some(d => hasData(d.date)));
-  if (!upd || !done.length) {
-    html += `<div class="pg-empty"><div class="big">📈</div><h4>Log dimulai 1 Desember 2026</h4><p>Setiap minggu, data lari & gym dari Coros/Strava ditarik dan dicocokkan dengan program. Hasilnya muncul di sini dan di tiap sesi pada halaman Program.</p></div>`;
-    html += `<div class="vsec"><h3>Berat badan</h3>${weightCard()}</div>`;
-    el.innerHTML = html; return;
-  }
-  // ringkasan s.d. update
-  let planKm = 0, actKm = 0, nPlan = 0, nDone = 0, nZone = 0, nZoneOk = 0, nGymPlan = 0, nGym = 0, longest = 0;
-  done.forEach(w => w.days.forEach(d => {
-    if (!hasData(d.date)) return;
-    if (d.type === "run") { planKm += d.session.km; nPlan++; const st = statusOf(d); if (st && st.a) { if (st.cls !== "miss") nDone++; if (hrRange(d.session) && st.a.hr) { nZone++; if (!st.hot) nZoneOk++; } } }
-    if (d.type === "gym") { nGymPlan++; if (gymOn(d.date).length) nGym++; }
-  }));
-  ACT.forEach(a => { if (a.type === "run") { actKm += a.km || 0; longest = Math.max(longest, a.km || 0); } });
+  const noData = !upd || !done.length;
+  const empty = (ic, t) => `<div class="pg-empty"><div class="big">${ic}</div><h4>Log dimulai 1 Desember 2026</h4><p>${t}</p></div>`;
   const pc = (x, y) => y ? Math.round(x / y * 100) : 0;
-  html += `<div class="pg-grid">
-    <div class="pg-card"><div class="k">km aktual / rencana</div><div class="v">${fmt(Math.round(actKm))}<small> / ${fmt(Math.round(planKm))} km</small></div><div class="pg-bar"><i style="width:${Math.min(100, pc(actKm, planKm))}%"></i></div></div>
-    <div class="pg-card"><div class="k">Sesi lari dijalankan</div><div class="v">${pc(nDone, nPlan)}<small>%</small></div><div class="s">${nDone} dari ${nPlan} sesi</div></div>
-    <div class="pg-card"><div class="k">Easy/long dalam zona HR</div><div class="v">${nZone ? pc(nZoneOk, nZone) : "–"}<small>${nZone ? "%" : ""}</small></div><div class="s">${nZoneOk} dari ${nZone} sesi</div></div>
-    <div class="pg-card"><div class="k">Gym · long run terjauh</div><div class="v">${nGym}<small>/${nGymPlan} gym</small></div><div class="s">Long run terjauh ${fmt(longest)} km</div></div>
-  </div>`;
-  html += `<div class="vsec"><h3>Berat badan</h3>${weightCard()}</div>`;
-  // rencana vs aktual per minggu
-  const max = Math.max(...done.map(w => Math.max(w.total, weekActual(w) || 0)));
-  html += `<div class="vsec"><h3>Rencana vs aktual per minggu</h3><div class="pg-card">${done.slice().reverse().map(w => {
-    const a = weekActual(w) || 0;
-    return `<button class="pw-row" data-l="${w.label}"><span class="hl">${w.label}</span><span class="ht"><span class="plan" style="width:${w.total/max*100}%;background:${B[w.block].color}"></span><span class="act" style="width:${a/max*100}%;background:${B[w.block].color}"></span></span><span class="hk">${fmt(a)}<small>/${fmt(w.total)}</small></span></button>`;
-  }).join("")}<div style="font-size:11px;color:var(--ink3);margin-top:6px">Batang samar = rencana · batang solid = aktual · terbaru di atas</div></div></div>`;
-  html += `<div class="vsec"><h3>${L("Efisiensi aerobik", "Aerobic efficiency")}</h3>${efCard()}</div>`;
-  // benchmark
-  const bms = [];
-  weeks.forEach(w => w.days.forEach(d => { const s = d.session; if (s && d.type === "run" && (s.kind === "race" || /Time Trial|Dress Rehearsal/i.test(s.title))) bms.push({w, d, s}); }));
-  html += `<div class="vsec"><h3>Benchmark</h3><div class="pg-card">${bms.map(({w, d, s}) => { const a = actualOn(d.date);
-    return `<div class="bm-row"><div><div class="bt">${esc(s.title.replace(/^🏁\s*/, ""))}</div><div class="bd">${fd(d.date, true)} · ${w.label}</div></div><div class="br">${a ? bmResult(a, s) : `<span class="st wait">${pd(d.date) < today ? "–" : "Belum"}</span>`}</div></div>`; }).join("")}</div></div>`;
+
+  if (progTab === "lari") {
+    if (noData) html += empty("📈", L("Setelah sinkron, di sini muncul km aktual vs rencana, disiplin HR, efisiensi aerobik, dan progres long run.", "After syncing, this shows actual vs planned km, HR discipline, aerobic efficiency and long-run progress."));
+    else {
+      let planKm = 0, actKm = 0, nPlan = 0, nDone = 0, nZone = 0, nZoneOk = 0, nHot = 0, longest = 0, planLongest = 0;
+      done.forEach(w => w.days.forEach(d => {
+        if (!hasData(d.date) || d.type !== "run") return;
+        planKm += d.session.km; nPlan++; if (d.session.kind === "long") planLongest = Math.max(planLongest, d.session.km);
+        const st = statusOf(d); if (st && st.a) { if (st.cls !== "miss") nDone++; if (hrRange(d.session) && st.a.hr) { nZone++; if (st.hot) nHot++; else nZoneOk++; } }
+      }));
+      ACT.forEach(a => { if (a.type === "run") { actKm += a.km || 0; longest = Math.max(longest, a.km || 0); } });
+      const maxLR = Math.max(...weeks.flatMap(w => w.days.filter(d => d.type === "run" && d.session.kind === "long").map(d => d.session.km)));
+      html += `<div class="pg-grid">
+        <div class="pg-card"><div class="k">${L("km aktual / rencana", "Actual / planned km")}</div><div class="v">${fmt(Math.round(actKm))}<small> / ${fmt(Math.round(planKm))} km</small></div><div class="pg-bar"><i style="width:${Math.min(100, pc(actKm, planKm))}%"></i></div></div>
+        <div class="pg-card"><div class="k">${L("Sesi lari dijalankan", "Runs completed")}</div><div class="v">${pc(nDone, nPlan)}<small>%</small></div><div class="s">${nDone} ${L("dari", "of")} ${nPlan} ${L("sesi", "sessions")}</div></div>
+        <div class="pg-card"><div class="k">${L("Easy/long dalam zona HR", "Easy/long within HR zone")}</div><div class="v">${nZone ? pc(nZoneOk, nZone) : "–"}<small>${nZone ? "%" : ""}</small></div><div class="s">${nHot ? `🔥 ${nHot} ${L("sesi HR kelewatan", nHot > 1 ? "sessions over HR" : "session over HR")}` : `${nZoneOk} ${L("dari", "of")} ${nZone} ${L("sesi", "sessions")}`}</div></div>
+        <div class="pg-card"><div class="k">${L("Long run terjauh", "Longest long run")}</div><div class="v">${fmt(longest)}<small> / ${fmt(maxLR)} km</small></div><div class="pg-bar"><i style="width:${Math.min(100, pc(longest, maxLR))}%"></i></div><div class="s">${L("rencana s.d. sekarang", "planned so far")} ${fmt(planLongest)} km</div></div>
+      </div>`;
+      const max = Math.max(...done.map(w => Math.max(w.total, weekActual(w) || 0)));
+      html += `<div class="vsec"><h3>${L("Rencana vs aktual per minggu", "Planned vs actual per week")}</h3><div class="pg-card">${done.slice().reverse().map(w => {
+        const a = weekActual(w) || 0;
+        return `<button class="pw-row" data-l="${w.label}"><span class="hl">${w.label}</span><span class="ht"><span class="plan" style="width:${w.total/max*100}%;background:${B[w.block].color}"></span><span class="act" style="width:${a/max*100}%;background:${B[w.block].color}"></span></span><span class="hk">${fmt(a)}<small>/${fmt(w.total)}</small></span></button>`;
+      }).join("")}<div style="font-size:11px;color:var(--ink3);margin-top:6px">${L("Batang samar = rencana · batang solid = aktual · terbaru di atas", "Faded bar = plan · solid bar = actual · newest on top")}</div></div></div>`;
+      html += `<div class="vsec"><h3>${L("Efisiensi aerobik", "Aerobic efficiency")}</h3>${efCard()}</div>`;
+    }
+  }
+
+  if (progTab === "gym") {
+    if (noData) html += empty("🏋️", L("Setelah sinkron, di sini muncul konsistensi gym per jenis sesi (L, U, SC) dan per minggu.", "After syncing, this shows gym consistency per session type (L, U, SC) and per week."));
+    else {
+      const T = {L: [0, 0], U: [0, 0], SC: [0, 0]}, perW = [];
+      done.forEach(w => { let pl = 0, dn = 0; w.days.forEach(d => {
+        if (!hasData(d.date) || d.type !== "gym" || d.session.mode === "skip") return;
+        const c = gymCode(d.session), ok = gymOn(d.date).length > 0; if (T[c]) { T[c][1]++; if (ok) T[c][0]++; } pl++; if (ok) dn++;
+      }); perW.push({w, pl, dn}); });
+      const tot = Object.values(T).reduce((a, [d, p]) => [a[0] + d, a[1] + p], [0, 0]);
+      const NAMES = {L: "Lower Body", U: "Upper Body", SC: "Shoulder & Core"};
+      html += `<div class="pg-grid" style="grid-template-columns:1fr 1fr"><div class="pg-card"><div class="k">${L("Sesi gym dijalankan", "Gym sessions done")}</div><div class="v">${pc(tot[0], tot[1])}<small>%</small></div><div class="s">${tot[0]} ${L("dari", "of")} ${tot[1]} ${L("sesi", "sessions")}</div></div>
+        <div class="pg-card"><div class="k">${L("Minggu gym lengkap", "Full gym weeks")}</div><div class="v">${perW.filter(x => x.pl && x.dn >= x.pl).length}<small> / ${perW.filter(x => x.pl).length}</small></div><div class="s">${L("semua sesi gym minggu itu terlaksana", "every gym session that week done")}</div></div></div>`;
+      html += `<div class="vsec"><h3>${L("Per jenis sesi", "By session type")}</h3><div class="pg-card">${Object.entries(T).map(([c, [d, p]]) => `<div class="gym-row"><span class="gc">${c}</span><span><div class="gn">${NAMES[c]}</div><div class="pg-bar"><i style="width:${pc(d, p)}%"></i></div></span><span class="gk">${d}<small> / ${p}</small></span></div>`).join("")}</div></div>`;
+      html += `<div class="vsec"><h3>${L("Per minggu", "By week")}</h3><div class="pg-card"><div class="gwk">${perW.filter(x => x.pl).map(x => `<div><i class="f${Math.min(3, x.dn)}" title="${x.dn}/${x.pl}"></i>${x.w.label}</div>`).join("")}</div><div style="font-size:11px;color:var(--ink3);margin-top:8px">${L("Makin pekat = makin banyak sesi gym terlaksana (maks 3/minggu)", "Darker = more gym sessions done (max 3/week)")}</div></div></div>`;
+    }
+  }
+
+  if (progTab === "tubuh") html += weightCard();
+
+  if (progTab === "bench") {
+    const bms = [];
+    weeks.forEach(w => w.days.forEach(d => { const s = d.session; if (s && d.type === "run" && (s.kind === "race" || /Time Trial|Dress Rehearsal/i.test(s.title))) bms.push({w, d, s}); }));
+    html += `<div class="pg-card">${bms.map(({w, d, s}) => { const a = actualOn(d.date);
+      return `<div class="bm-row"><div><div class="bt">${esc(s.title.replace(/^🏁\s*/, ""))}</div><div class="bd">${fd(d.date, true)} · ${w.label}</div></div><div class="br">${a ? bmResult(a, s) : `<span class="st wait">${pd(d.date) < today ? "–" : "Belum"}</span>`}</div></div>`; }).join("")}</div>`;
+  }
+
   el.innerHTML = html;
   el.querySelectorAll(".pw-row").forEach(b => b.addEventListener("click", () => jump(b.dataset.l)));
+  el.querySelectorAll(".ptabs [data-tab]").forEach(b => b.addEventListener("click", () => {
+    progTab = b.dataset.tab;
+    if (page) history.replaceState(null, "", "#progress/" + progTab);
+    renderProgress(el, page);
+  }));
 }
 
 function renderMore(){
   const items = [
     ["p-race", "🏁", "Race & Benchmark", RACES.map(r => r.short).join(", ") + ", time trial & dress rehearsal"],
-    ["p-blocks", "🧭", "Penjelasan Blok", "6 blok, periode, dan fokus tiap blok"],
-    ["p-chart", "📊", "Volume Mingguan", "Grafik km per minggu dari Jan–Okt"],
+    ["p-blocks", "🧭", "Penjelasan Blok", `${blockOrder.length} blok, periode, dan fokus tiap blok`],
+    ["p-chart", "📊", "Volume Mingguan", "Grafik km per minggu dari Des–Okt"],
     ["p-zones", "🎯", "Panduan Zona", "Rentang HR & pace tiap jenis lari"],
     ["p-rules", "📌", "Aturan Main", "Prinsip yang berlaku di seluruh program"],
     ["p-hols", "🇮🇩", "Libur 2027", "Libur nasional & cuti bersama yang dikosongkan"],
@@ -1798,6 +1888,49 @@ async function loadWx(){
     document.querySelectorAll(".wx-sec").forEach(sec => { sec.querySelector(".wx-box").innerHTML = html.replace(/<div class="wx-h">.*?<\/div>/, ""); sec.hidden = !html; });
   } catch(e) { /* offline / API error: kartu tetap tersembunyi */ }
 }
+function weekStripHTML(wk){
+  return `<div class="d-lbl"><span>${cur ? L("Minggu ini", "This week") : L("Minggu pertama", "First week")} · ${wk.label}</span><span>${fmt(wk.total)} km</span></div>
+    <div class="wstrip">${wk.days.map(d => {
+      const k = d.session ? (d.type === "gym" ? "gym" : d.session.kind) : "";
+      const val = d.type === "run" ? fmt(d.session.km) : d.type === "gym" ? gymCode(d.session) : d.type === "holiday" ? "🇮🇩" : d.type === "none" ? "" : "—";
+      const cls = ["wd", k ? "k-" + k : "", d.session ? "tap" : "", d.date === isoToday ? "today" : "", d.date < isoToday ? "past" : ""].join(" ");
+      return `<button class="${cls}" ${d.session ? `data-w="${wk.label}" data-dow="${d.dow}"` : "tabindex=-1"}><span class="wn">${DAYS[d.dow].slice(0,3)}</span><span class="wb"></span><span class="wv${d.type === "run" ? "" : d.type === "gym" ? " gym" : " dim"}">${val}</span></button>`;
+    }).join("")}</div>
+    ${wk.days.some(d => d.type === "gym") ? `<div class="wleg">${L("Gym", "Gym")}: <b>L</b> Lower · <b>U</b> Upper · <b>SC</b> Shoulder & Core${wk.days.some(d => d.type === "gym" && d.session.mode === "skip") ? " · <b>M</b> Mobility" : ""}</div>` : ""}`;
+}
+function bindStrip(root){ root.querySelectorAll(".wd.tap").forEach(b => b.addEventListener("click", () => openSession(b.dataset.w, +b.dataset.dow))); }
+const stripWeek = () => cur || weeks.find(w => w.days.filter(d => d.type === "run").length >= 3) || weeks[0];
+function goProgress(tab){
+  progTab = tab;
+  if (isMobile()) navigate("progress/" + tab);
+  else { const pn = document.getElementById("p-progress"); if (!pn.classList.contains("show")) togglePanel("p-progress"); else renderProgress(pn, false); pn.scrollIntoView({behavior: "smooth"}); }
+}
+function kpiHTML(){
+  const pc = (x, y) => y ? Math.round(x / y * 100) : 0;
+  const any = !!(DATA.actuals && DATA.actuals.updated);
+  // minggu ini
+  const wk = stripWeek(), wa = weekActual(wk);
+  // kepatuhan 4 minggu
+  const from = new Date(today); from.setDate(from.getDate() - 27);
+  const isoFrom = `${from.getFullYear()}-${String(from.getMonth()+1).padStart(2,"0")}-${String(from.getDate()).padStart(2,"0")}`;
+  let nP = 0, nD = 0;
+  weeks.forEach(w => w.days.forEach(d => {
+    if (d.date < isoFrom || d.date > isoToday || !hasData(d.date) || !d.session) return;
+    if (d.type === "run") { nP++; const st = statusOf(d); if (st && st.a && st.cls !== "miss") nD++; }
+    if (d.type === "gym" && d.session.mode !== "skip") { nP++; if (gymOn(d.date).length) nD++; }
+  }));
+  // total program
+  const planAll = weeks.reduce((t, w) => t + w.total, 0), actAll = ACT.reduce((t, a) => t + (a.type === "run" ? a.km || 0 : 0), 0);
+  // berat badan
+  const E = (BODY.entries || []).slice().sort((x, y) => x.date < y.date ? -1 : 1), tgt = BODY.target_kg || 63, lastE = E[E.length - 1];
+  const tile = (go, k, v, sub, bar) => `<button class="kpi" data-go="${go}"><div class="k">${k}</div><div class="v">${v}</div>${bar != null ? `<div class="pg-bar"><i style="width:${Math.min(100, bar)}%"></i></div>` : ""}<div class="s">${sub}</div></button>`;
+  return `<div class="d-lbl"><span>${L("Ringkasan", "Summary")}</span><span class="go">›</span></div><div class="kpi-grid">
+    ${tile("lari", cur ? L("Minggu ini", "This week") : L("Minggu pertama", "First week"), `${wa != null ? fmt(wa) : "–"}<small> / ${fmt(wk.total)} km</small>`, wa != null ? `${pc(wa, wk.total)}% ${L("dari rencana", "of plan")}` : L("aktual muncul setelah sinkron", "actuals appear after sync"), wa != null ? pc(wa, wk.total) : null)}
+    ${tile("lari", L("Kepatuhan 4 minggu", "4-week adherence"), nP ? `${pc(nD, nP)}<small>%</small>` : "–", nP ? `${nD} ${L("dari", "of")} ${nP} ${L("sesi", "sessions")}` : L("mulai setelah sinkron", "starts after sync"), nP ? pc(nD, nP) : null)}
+    ${tile("lari", L("Total program", "Program total"), `${fmt(Math.round(actAll))}<small> / ${fmt(Math.round(planAll))} km</small>`, any ? `${pc(actAll, planAll)}% ${L("dari total rencana", "of total plan")}` : `${weeks.length} ${L("minggu", "weeks")} · ${blockOrder.length} ${L("blok", "blocks")}`, pc(actAll, planAll))}
+    ${tile("tubuh", L("Berat badan", "Body weight"), lastE ? `${fmt(lastE.weight)}<small> kg</small>` : `–<small> kg</small>`, lastE ? `${L("target", "target")} ${tgt} kg · ${L("sisa", "to go")} ${fmt(Math.max(0, lastE.weight - tgt))} kg` : `${L("target", "target")} ${tgt} kg · ${L("belum ada data", "no data yet")}`, null)}
+  </div>`;
+}
 function renderDash(){
   const fr = document.getElementById("footRace"); if (fr) fr.textContent = `Program lari ${MAIN.short} ${rYear(MAIN)}`;
   // countdown
@@ -1812,13 +1945,13 @@ function renderDash(){
   if (next) {
     const s = next.d.session, startsIn = Math.round((pd(START) - today) / 86400000);
     const lbl = next.d.date === isoToday ? "Hari ini" : next.d.date === isoTmr ? "Besok" : startsIn > 0 ? `Sesi pertama · ${startsIn} hari lagi` : "Sesi berikutnya";
-    nb.className = `d-card d-next k-${s.kind}`;
+    nb.className = `d-card d-next desk-only k-${s.kind}`;
     nb.innerHTML = `<div class="d-lbl"><span><b>${lbl}</b> · ${LONGDAY(pd(next.d.date))}</span><span class="go">›</span></div>
       <div class="dt">${esc(s.title)}</div>
       <div class="dmeta"><span class="dkm">${fmt(s.km)} km</span><span class="mode ${s.target.mode}">${s.target.mode}</span><span>${esc(s.target.range)}</span></div>
       ${todayX && todayX.d.type === "gym" && next.d.date !== isoToday ? `<div class="dx">Hari ini: ${esc(todayX.d.session.title)}</div>` : ""}`;
     nb.onclick = () => openSession(next.w.label, next.d.dow);
-  } else { nb.className = "d-card d-next"; nb.innerHTML = `<div class="d-lbl"><span>Program</span></div><div class="dt">Selesai 🎉 Semoga ${esc(MAIN.short)}-nya lancar!</div>`; nb.onclick = null; }
+  } else { nb.className = "d-card d-next desk-only"; nb.innerHTML = `<div class="d-lbl"><span>Program</span></div><div class="dt">Selesai 🎉 Semoga ${esc(MAIN.short)}-nya lancar!</div>`; nb.onclick = null; }
   // perjalanan program
   const N = weeks.length, ci = cur ? weeks.indexOf(cur) : -1;
   const pos = ci >= 0 ? (ci + ((today.getDay() + 6) % 7 + 1) / 7) / N : (today < pd(weeks[0].start) || today < pd(START) ? 0 : 1);
@@ -1837,30 +1970,18 @@ function renderDash(){
     <div class="jlabels">${labels}</div>
     <div class="jcap"><span>${TUNE ? `<b>●</b> ${esc(TUNE.short)} ${fd(TUNE.date)}` : ""}</span><span>🏁 ${esc(MAIN.short)} ${fd(MAIN.date)}</span></div>`;
   jb.onclick = () => { if (isMobile()) { navigate("program"); window.scrollTo(0, 0); } else document.getElementById("toolbar").scrollIntoView({behavior: "smooth"}); };
-  // minggu ini (strip 7 hari)
-  const wk = cur || weeks.find(w => w.days.filter(d => d.type === "run").length >= 3) || weeks[0];
+  // minggu ini (strip 7 hari, desktop)
+  const wk = stripWeek();
   const wEl = document.getElementById("dWeek");
-  wEl.innerHTML = `<div class="d-lbl"><span>${cur ? L("Minggu ini", "This week") : L("Minggu pertama", "First week")} · ${wk.label}</span><span>${fmt(wk.total)} km</span></div>
-    <div class="wstrip">${wk.days.map(d => {
-      const k = d.session ? (d.type === "gym" ? "gym" : d.session.kind) : "";
-      const val = d.type === "run" ? fmt(d.session.km) : d.type === "gym" ? gymCode(d.session) : d.type === "holiday" ? "🇮🇩" : d.type === "none" ? "" : "—";
-      const cls = ["wd", k ? "k-" + k : "", d.session ? "tap" : "", d.date === isoToday ? "today" : "", d.date < isoToday ? "past" : ""].join(" ");
-      return `<button class="${cls}" ${d.session ? `data-w="${wk.label}" data-dow="${d.dow}"` : "tabindex=-1"}><span class="wn">${DAYS[d.dow].slice(0,3)}</span><span class="wb"></span><span class="wv${d.type === "run" ? "" : d.type === "gym" ? " gym" : " dim"}">${val}</span></button>`;
-    }).join("")}</div>
-    ${wk.days.some(d => d.type === "gym") ? `<div class="wleg">${L("Gym", "Gym")}: <b>L</b> Lower · <b>U</b> Upper · <b>SC</b> Shoulder & Core${wk.days.some(d => d.type === "gym" && d.session.mode === "skip") ? " · <b>M</b> Mobility" : ""}</div>` : ""}`;
-  wEl.querySelectorAll(".wd.tap").forEach(b => b.addEventListener("click", () => openSession(b.dataset.w, +b.dataset.dow)));
-  // tiles: blok sekarang + berat badan
+  wEl.innerHTML = weekStripHTML(wk);
+  bindStrip(wEl);
+  // blok & nutrisi di kartu perjalanan
   const bw = cur || weeks.find(w => w.days.some(d => d.date >= START));
-  const tb = document.getElementById("dBlock");
-  tb.innerHTML = `<div class="d-lbl"><span>${cur ? L("Blok sekarang", "Current block") : L("Blok pertama", "First block")}</span><span class="go">›</span></div>
-    <div class="tv" style="color:${B[bw.block].color}">${PH(B[bw.block].phase)}${B[bw.block].no} · ${esc(B[bw.block].name)}</div><div class="ts">${esc(bw.stage)} · ${bw.label}</div>${FUEL[bw.fuel] ? `<div class="ts tfuel" style="--fc:${FUEL[bw.fuel].color}"><i></i>${L("Nutrisi", "Nutrition")}: ${esc(FUEL[bw.fuel].name)}</div>` : ""}`;
-  tb.onclick = () => selectBlock(bw.block, true);
-  const E = (BODY.entries || []).slice().sort((x, y) => x.date < y.date ? -1 : 1), tgt = BODY.target_kg || 63, lastE = E[E.length - 1];
-  const tw = document.getElementById("dBody");
-  tw.innerHTML = `<div class="d-lbl"><span>${L("Berat badan", "Body weight")}</span><span class="go">›</span></div>
-    ${lastE ? `<div class="tv mono">${fmt(lastE.weight)}<small> kg</small></div><div class="ts">target ${tgt} kg · ${E.length > 1 ? (E[0].weight - lastE.weight >= 0 ? "−" : "+") + fmt(Math.abs(E[0].weight - lastE.weight)) + " kg" : fd(lastE.date)}</div>`
-            : `<div class="tv mono">—<small> kg</small></div><div class="ts">target ${tgt} kg · ${L("belum ada data", "no data yet")}</div>`}`;
-  tw.onclick = () => { if (isMobile()) navigate("progress"); else togglePanel("p-progress"); };
+  jb.insertAdjacentHTML("beforeend", `<div class="jblk"><span>${cur ? L("Blok sekarang", "Current block") : L("Blok pertama", "First block")}: <b style="color:${B[bw.block].color}">${PH(B[bw.block].phase)}${B[bw.block].no} · ${esc(B[bw.block].name)}</b> · ${esc(bw.stage)}</span>${FUEL[bw.fuel] ? `<span class="tfuel" style="--fc:${FUEL[bw.fuel].color}"><i></i>${L("Nutrisi", "Nutrition")}: ${esc(FUEL[bw.fuel].name)}</span>` : ""}</div>`);
+  // KPI
+  const kp = document.getElementById("dKpi");
+  kp.innerHTML = kpiHTML();
+  kp.querySelectorAll("[data-go]").forEach(x => x.addEventListener("click", () => goProgress(x.dataset.go)));
   // race berikutnya
   const hmtt = runs.find(x => /HM Time Trial/i.test(x.d.session.title));
   const races = [
@@ -1879,7 +2000,7 @@ function renderDash(){
 renderDash(); loadWx();
 
 render(); fitLabels();
-if (isMobile()) applyView(location.hash.slice(1) || "home");
+if (isMobile()) applyView(location.hash.slice(1) || "today");
 window.addEventListener("resize", () => { clearTimeout(window.__rt); window.__rt = setTimeout(() => { fitLabels(); hidePop(); if (document.getElementById("p-chart").classList.contains("show")) drawChart(); }, 150); });
 document.fonts && document.fonts.ready.then(fitLabels);
 
