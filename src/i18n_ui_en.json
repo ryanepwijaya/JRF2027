@@ -103,7 +103,6 @@
  "Ke minggu ini": "Go to this week",
  "Pilih blok untuk melihat menunya": "Pick a block to see its sessions",
  "Semua minggu tertutup. Klik tab di atas atau salah satu kartu di bawah ini.": "All weeks are collapsed. Click a tab above or one of the cards below.",
- "Tap tab di atas atau salah satu kartu di bawah ini.": "Tap a tab above or one of the cards below.",
  "Catatan:": "Note:",
  "Aktual": "Actual",
  "● Minggu ini": "● This week",
@@ -327,5 +326,8 @@
  "Program mulai 1 Desember 2026": "Program starts 1 December 2026",
  "Log dimulai 1 Desember 2026": "Logging starts 1 December 2026",
  "· disusun 28 Okt 2026 dari data Coros & Strava (Jan–Okt 2026). Nutrisi di luar program ini. Gerakan gym diambil dari log latihan Ryan.": "· built 28 Oct 2026 from Coros & Strava data (Jan–Oct 2026). Nutrition is outside this program. Gym exercises come from Ryan's training log.",
- "Grafik km per minggu dari Des–Okt": "Weekly km chart from Dec to Oct"
+ "Grafik km per minggu dari Des–Okt": "Weekly km chart from Dec to Oct",
+ "Geser kiri/kanan untuk ganti blok · buka minggu, tap sesi untuk detail": "Swipe left/right to change block · open a week, tap a session for details",
+ "Pilih kartu di bawah, tab di bar bawah, atau geser kiri/kanan.": "Pick a card below, a tab in the bottom bar, or swipe left/right.",
+ "Geser kiri/kanan untuk lihat hari lain": "Swipe left/right to see other days"
 }
