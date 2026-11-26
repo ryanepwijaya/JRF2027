@@ -675,12 +675,9 @@ body.sheet-open{overflow:hidden}
 .more-foot{font-size:11px;color:var(--ink3);text-align:center;margin:16px 8px 0}
 @media (min-width: 901px){
   .dash{grid-template-columns:1.05fr 1fr 1fr;align-items:stretch;margin-top:14px}
-  .d-count{grid-column:1;grid-row:1 / span 2;align-self:center}
-  .d-next{grid-column:2;grid-row:1}
-  .d-race{grid-column:3;grid-row:1}
+  .d-races{grid-column:1;grid-row:1 / span 2}
+  .d-next{grid-column:2 / span 2;grid-row:1}
   .d-journey{grid-column:2 / span 2;grid-row:2}
-  .d-big{font-size:84px}
-  .hero h1.d-title{font-size:40px;white-space:nowrap}
 }
 @media (max-width: 900px){ footer{display:none!important} body[data-view="home"] .hero{min-height:calc(100dvh - 68px - env(safe-area-inset-bottom));border-bottom:0} }
 
@@ -783,6 +780,20 @@ body.sheet-open{overflow:hidden}
 .wx-tip{font-size:12px;color:var(--ink2);margin-top:10px;line-height:1.45}
 .wx-src{font-size:10.5px;color:var(--ink3);margin-top:6px}
 .wx-src a{color:inherit}
+
+/* Beranda: daftar race (maks 3) */
+.d-races{cursor:default}
+.d-races .rrow{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-top:1px solid var(--line);padding:11px 0;font:inherit;color:var(--ink);text-align:left;cursor:pointer}
+.d-races .d-lbl + .rrow{border-top:0;padding-top:6px}
+.d-races .rrow:last-child{padding-bottom:0}
+.d-races .ri{font-size:22px;flex:none;width:28px;text-align:center}
+.d-races .rt{min-width:0}
+.d-races .rn{font-weight:800;font-size:15px;line-height:1.25}
+.d-races .rd{font-size:12px;color:var(--ink2);margin-top:2px}
+.d-races .rcnt{margin-left:auto;font-family:var(--mono);font-weight:700;font-size:20px;text-align:right;white-space:nowrap}
+.d-races .rcnt small{display:block;font-family:var(--font);font-size:11px;font-weight:600;color:var(--ink3)}
+.d-races .rrow.main .rn,.d-races .rrow.main .rcnt{color:var(--accent)}
+.d-races .rempty{font-size:14px;color:var(--ink2);padding:6px 0 0}
 </style>
 </head>
 <body>
@@ -819,17 +830,12 @@ body.sheet-open{overflow:hidden}
       <div class="inst"><button class="install-btn" id="installBtn" hidden>📲 Install app</button>
         <div class="ios-tip" id="iosTip" hidden>Di Safari: tap tombol <b>Share</b> <span aria-hidden="true">⬆️</span>, lalu pilih <b>Add to Home Screen</b>.</div></div></div></div>
     <div class="dash">
-      <div class="d-count">
-        <h1 class="d-title" id="dTitle"></h1>
-        <div class="d-big" id="dCount"></div>
-        <div class="d-sub" id="dSub"></div>
-      </div>
+      <div class="d-card d-races" id="dRace"></div>
       <button class="d-card d-next" id="dNext"></button>
       <div class="d-card d-wx" id="dWx" hidden></div>
       <div class="d-card d-week" id="dWeek"></div>
       <button class="d-card d-journey" id="dJourney"></button>
       <div class="d-tiles"><button class="d-card d-tile" id="dBlock"></button><button class="d-card d-tile" id="dBody"></button></div>
-      <button class="d-card d-race" id="dRace"></button>
     </div>
 
     <div class="pills" id="pills">
@@ -1793,11 +1799,8 @@ async function loadWx(){
   } catch(e) { /* offline / API error: kartu tetap tersembunyi */ }
 }
 function renderDash(){
-  document.getElementById("dTitle").innerHTML = `Road to <span>${esc(TARGET.short)} ${rYear(TARGET)}</span>`;
-  document.getElementById("dSub").innerHTML = `${esc(TARGET.name)} · ${esc(TARGET.dist)}<br>${LONGDAY(pd(TARGET.date))}${TARGET.goal ? ` · target ${esc(TARGET.goal)}` : ""}`;
   const fr = document.getElementById("footRace"); if (fr) fr.textContent = `Program lari ${MAIN.short} ${rYear(MAIN)}`;
   // countdown
-  document.getElementById("dCount").innerHTML = daysLeft > 0 ? `${daysLeft}<small>hari lagi</small>` : (daysLeft === 0 ? "Race day! 🏁" : "Selesai 🎉");
   // sesi berikutnya
   const all = []; weeks.forEach(w => w.days.forEach(d => { if (d.session) all.push({w, d}); }));
   const runs = all.filter(x => x.d.type === "run");
@@ -1861,16 +1864,17 @@ function renderDash(){
   // race berikutnya
   const hmtt = runs.find(x => /HM Time Trial/i.test(x.d.session.title));
   const races = [
-    ...RACES.map(r => ({date: r.date, name: r.name, sub: `${r.dist} · ${r.priority === "A" ? L("race utama", "main race") : "tune-up"}`, ic: r.ic || "🏁"})),
+    ...RACES.map(r => ({date: r.date, name: r.name, main: r.priority === "A", sub: `${r.dist} · ${r.priority === "A" ? L("race utama", "main race") + (r.goal ? ` · target ${r.goal}` : "") : "tune-up"}`, ic: r.ic || "🏁"})),
     hmtt && {date: hmtt.d.date, name: "HM Time Trial", sub: L(`Benchmark target ${MAIN.short}`, `${MAIN.short} target benchmark`), ic: "⏱️"},
   ].filter(Boolean).sort((a, b) => a.date < b.date ? -1 : 1);
-  const nr = races.find(r => r.date >= isoToday) || races[races.length - 1];
-  const left = Math.round((pd(nr.date) - today) / 86400000);
+  const up = races.filter(r => r.date >= isoToday).slice(0, 3);
   const rb = document.getElementById("dRace");
-  rb.innerHTML = `<span class="ri">${nr.ic}</span><span><div class="d-lbl" style="margin-bottom:3px"><span>Race berikutnya</span></div><div class="rn">${nr.name}</div><div class="rd">${nr.sub} · ${fd(nr.date, true)}</div></span>
-    <span class="rcnt">${left > 0 ? left : "–"}<small>${left > 0 ? "hari lagi" : "selesai"}</small></span>`;
-  const rx = runs.find(x => x.d.date === nr.date);
-  rb.onclick = () => rx && openSession(rx.w.label, rx.d.dow);
+  const row = r => { const left = Math.round((pd(r.date) - today) / 86400000);
+    return `<button class="rrow${r.main ? " main" : ""}" data-date="${r.date}"><span class="ri">${r.ic}</span><span class="rt"><div class="rn">${esc(r.name)}</div><div class="rd">${esc(r.sub)} · ${fd(r.date, true)}</div></span>
+      <span class="rcnt">${left > 0 ? left : left === 0 ? "🏁" : "–"}<small>${left > 0 ? L("hari lagi", "days") : left === 0 ? L("hari ini", "today") : L("selesai", "done")}</small></span></button>`; };
+  rb.innerHTML = `<div class="d-lbl"><span>${up.length > 1 ? L("Race berikutnya", "Next races") : L("Race berikutnya", "Next race")}</span></div>
+    ${up.length ? up.map(row).join("") : `<div class="rempty">${L("Semua race di program ini sudah selesai 🎉", "All races in this program are done 🎉")}</div>`}`;
+  rb.querySelectorAll(".rrow").forEach(b => b.addEventListener("click", () => { const rx = runs.find(x => x.d.date === b.dataset.date); if (rx) openSession(rx.w.label, rx.d.dow); }));
 }
 renderDash(); loadWx();
 
