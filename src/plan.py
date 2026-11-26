@@ -635,6 +635,14 @@ def fuel_of(w):
     return {"b0": "defisit", "b1": "defisit", "b2": "defisit", "b3": "ringan"}.get(w["block"], "fuel")
 for w in weeks: w["fuel"] = fuel_of(w)
 
+
+# Race dalam program. priority A = race utama (dipakai "Road to …"), B = tune-up.
+RACES = [
+  dict(short="JAKIM", name="Jakarta International Marathon", date="2027-06-13", dist="Half Marathon", abbr="HM", priority="B", ic="🏃", goal=""),
+  dict(short="JRF", name="Jakarta Running Festival", date="2027-10-24", dist="Full Marathon", abbr="FM", priority="A", ic="🏁",
+       goal="≤ 4:30", why="COT 5 jam, cadangan 30 menit untuk sholat, WS & darurat"),
+]
+
 ZONES = [
   dict(name="Recovery", mode="HR", f1="≤ 135 bpm", f2="≤ 135 bpm", use="Recovery run Minggu (Fase B), WU & CD", color="#94a3b8"),
   dict(name="Easy (Z2)", mode="HR", f1="135–148 bpm", f2="135–148 bpm", use="Easy run Selasa. Pace referensi ± 7:15–7:45 /km (akan makin cepat seiring BB turun)", color="#22c55e"),
@@ -647,7 +655,7 @@ ZONES = [
   dict(name="Strides", mode="Feel", f1="± 85–90% effort", f2="± 85–90% effort", use="100 m akselerasi rileks, bukan sprint", color="#eab308"),
 ]
 
-data = dict(start=PROGRAM_START.isoformat(), weeks=weeks, blocks=BLOCKS, zones=ZONES, fuel=FUEL,
+data = dict(start=PROGRAM_START.isoformat(), races=RACES, weeks=weeks, blocks=BLOCKS, zones=ZONES, fuel=FUEL,
             holidays=[dict(date=k.isoformat(), name=v) for k, v in sorted(HOLIDAYS.items())],
             ramadan=[RAMADAN[0].isoformat(), RAMADAN[1].isoformat()])
 

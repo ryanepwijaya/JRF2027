@@ -186,6 +186,38 @@
  "FASE B →": "PHASE B →",
  "__patterns": [
   [
+   "Selesai 🎉 Semoga (.+)-nya lancar!",
+   "Done 🎉 Hope $1 goes great!"
+  ],
+  [
+   "Semoga (.+)-nya lancar!",
+   "Hope $1 goes great!"
+  ],
+  [
+   "Benchmark target (.+)",
+   "$1 target benchmark"
+  ],
+  [
+   "(.+) · race utama",
+   "$1 · main race"
+  ],
+  [
+   "🎯 Target (.+)",
+   "🎯 $1 target"
+  ],
+  [
+   "(.+), time trial & dress rehearsal",
+   "$1, time trials & dress rehearsal"
+  ],
+  [
+   "Program lari (.+) · disusun 28 Okt 2026 dari data Coros & Strava\\. Nutrisi di luar program\\. Gerakan gym diambil dari log latihan Ryan\\.",
+   "$1 running program · built 28 Oct 2026 from Coros & Strava data. Nutrition is outside the program. Gym exercises come from Ryan's training log."
+  ],
+  [
+   "Program lari (.+)",
+   "$1 running program"
+  ],
+  [
    "(\\d+) hari lagi\\. Sementara itu, ini minggu pertamamu\\.",
    "$1 days to go. Meanwhile, here's your first week."
   ],
@@ -289,5 +321,6 @@
  "Mulai 1 Des": "Starts 1 Dec",
  "Blok 0–2 · 1 Des – 6 Jun · 3 lari/mgg": "Blocks 0–2 · 1 Dec – 6 Jun · 3 runs/wk",
  "Program mulai 1 Desember 2026": "Program starts 1 December 2026",
- "Log dimulai 1 Desember 2026": "Logging starts 1 December 2026"
+ "Log dimulai 1 Desember 2026": "Logging starts 1 December 2026",
+ "· disusun 28 Okt 2026 dari data Coros & Strava (Jan–Okt 2026). Nutrisi di luar program ini. Gerakan gym diambil dari log latihan Ryan.": "· built 28 Oct 2026 from Coros & Strava data (Jan–Oct 2026). Nutrition is outside this program. Gym exercises come from Ryan's training log."
 }

@@ -820,9 +820,9 @@ body.sheet-open{overflow:hidden}
         <div class="ios-tip" id="iosTip" hidden>Di Safari: tap tombol <b>Share</b> <span aria-hidden="true">⬆️</span>, lalu pilih <b>Add to Home Screen</b>.</div></div></div></div>
     <div class="dash">
       <div class="d-count">
-        <h1 class="d-title">Road to <span>JRF 2027</span></h1>
+        <h1 class="d-title" id="dTitle"></h1>
         <div class="d-big" id="dCount"></div>
-        <div class="d-sub">Jakarta Running Festival · Full Marathon<br>Minggu, 24 Oktober 2027 · target ≤ 4:30</div>
+        <div class="d-sub" id="dSub"></div>
       </div>
       <button class="d-card d-next" id="dNext"></button>
       <div class="d-card d-wx" id="dWx" hidden></div>
@@ -915,7 +915,7 @@ body.sheet-open{overflow:hidden}
 </nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<footer><div class="wrap">Program lari JRF 2027 · disusun 28 Okt 2026 dari data Coros & Strava (Jan–Okt 2026). Nutrisi di luar program ini. Gerakan gym diambil dari log latihan Ryan.</div></footer>
+<footer><div class="wrap"><span id="footRace">Program lari</span> · disusun 28 Okt 2026 dari data Coros & Strava (Jan–Okt 2026). Nutrisi di luar program ini. Gerakan gym diambil dari log latihan Ryan.</div></footer>
 
 <script>
 const DATA = __DATA__;
@@ -965,7 +965,14 @@ const fmt = n => (Math.round(n*10)/10).toLocaleString(LANG === "en" ? "en-US" : 
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 const weeks = DATA.weeks;
-const JK_WEEK = "B01", JK_DATE = "2027-06-13";
+// ---------- RACE (data-driven: aplikasi tidak terikat ke satu race) ----------
+const RACES = (DATA.races || []).slice().sort((a, b) => a.date < b.date ? -1 : 1);
+const isoNow = (() => { const t = new Date(); return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}`; })();
+const MAIN = RACES.filter(r => r.priority === "A").slice(-1)[0] || RACES[RACES.length - 1] || {short: "Race", name: "Race", date: "2099-01-01", dist: ""};
+const TARGET = RACES.find(r => r.priority === "A" && r.date >= isoNow) || RACES.find(r => r.date >= isoNow) || MAIN;
+const TUNE = RACES.find(r => r.priority === "B") || null;
+const rYear = r => r.date.slice(0, 4);
+const JK_DATE = TUNE ? TUNE.date : "", JK_WEEK = TUNE ? ((DATA.weeks || []).find(w => w.start <= TUNE.date && w.end >= TUNE.date) || {}).label : "";
 const PH = p => p === 1 ? "A" : "B";
 const BL = id => `Fase ${PH(B[id].phase)} · Blok ${B[id].no}`;
 const maxKm = Math.max(...weeks.map(w => w.total));
@@ -977,7 +984,7 @@ const nP = p => weeks.filter(w => w.phase === p).length;
 
 const today = new Date(); today.setHours(0,0,0,0);
 const cur = weeks.find(w => today >= pd(w.start) && today <= pd(w.end));
-const daysLeft = Math.round((pd("2027-10-24") - today) / 86400000);
+const daysLeft = Math.round((pd(TARGET.date) - today) / 86400000);
 
 const blockOrder = [];
 weeks.forEach(w => { if (!blockOrder.includes(w.block)) blockOrder.push(w.block); });
@@ -995,12 +1002,12 @@ const openSess = {};
 
 // ---------- RINGKASAN PROGRAM (di Penjelasan Blok) ----------
 document.getElementById("blkSum").innerHTML = `<div class="pg-grid" style="margin-bottom:10px">${[
-  {k:"Total program", v: fmt(sumP(1)+sumP(2)), u:"km", s: weeks.length+" minggu · 6 blok"},
+  {k:"Total program", v: fmt(sumP(1)+sumP(2)), u:"km", s: weeks.length+" minggu · "+blockOrder.length+" blok"},
   {k:"Fase A · Diet & Base", v: fmt(sumP(1)), u:"km", s:"Blok 0–2 · 1 Des – 6 Jun · 3 lari/mgg"},
   {k:"Fase B · Blok Intensif", v: fmt(sumP(2)), u:"km", s:"Blok 3–6 · 7 Jun – 24 Okt · 4 lari/mgg"},
   {k:"Minggu terberat · LR terjauh", v: fmt(peak.total), u:"km", s: peak.label + " · long run terjauh " + fmt(longest.km) + " km"},
 ].map(x => `<div class="pg-card"><div class="k">${x.k}</div><div class="v">${x.v}<small> ${x.u}</small></div><div class="s">${x.s}</div></div>`).join("")}</div>
-<div class="zone-foot" style="margin:0 0 12px">🎯 Target JRF <b>≤ 4:30</b> (COT 5 jam, cadangan 30 menit untuk sholat, WS & darurat) · 🏃 Tune-up: Jakarta International Marathon (HM), 13 Jun 2027</div>`;
+<div class="zone-foot" style="margin:0 0 12px">🎯 Target ${esc(MAIN.short)} <b>${esc(MAIN.goal || "")}</b>${MAIN.why ? ` (${esc(MAIN.why)})` : ""}${TUNE ? ` · 🏃 Tune-up: ${esc(TUNE.name)} (${esc(TUNE.abbr)}), ${fd(TUNE.date, true)}` : ""}</div>`;
 
 const canHover = window.matchMedia("(hover:hover)").matches;
 function fitLabels(){} function hidePop(){}
@@ -1043,8 +1050,8 @@ function drawHChart(){
     html += `<div class="hc-blk" style="color:${B[id].color}"><span>${BL(id)} · ${esc(B[id].name)}</span><span>${fmt(km)} km</span></div>`;
     ws.forEach(w => {
       const tags = [];
-      if (w.label === JK_WEEK) tags.push("JAKIM");
-      if (w === weeks[weeks.length - 1]) tags.push("🏁 JRF");
+      if (w.label === JK_WEEK) tags.push(TUNE.short);
+      if (w === weeks[weeks.length - 1]) tags.push("🏁 " + MAIN.short);
       if (w === peak) tags.push("Puncak");
       if (w.days.some(d => d.ramadan)) tags.push("🌙");
       const isCur = cur && cur.label === w.label;
@@ -1078,8 +1085,8 @@ function drawChart(){
   weeks.forEach((w, i) => {
     const x = pl + i * bw + bw * 0.14, isCur = cur && cur.label === w.label;
     g += `<rect class="bar" data-i="${i}" x="${x}" y="${y(w.total)}" width="${bw*0.72}" height="${Math.max(y(0)-y(w.total),0)}" rx="3" fill="${B[w.block].color}" ${isCur?'stroke="#14161c" stroke-width="2"':''}/>`;
-    if (w.label === JK_WEEK) g += `<text x="${x + bw*0.36}" y="${y(w.total)-5}" text-anchor="middle" font-size="11" font-weight="800" fill="#db2777">JAKIM</text>`;
-    if (i === weeks.length - 1) g += `<text x="${x + bw*0.36}" y="${y(w.total)-5}" text-anchor="end" font-size="11" font-weight="800" fill="#14161c">🏁 JRF</text>`;
+    if (w.label === JK_WEEK) g += `<text x="${x + bw*0.36}" y="${y(w.total)-5}" text-anchor="middle" font-size="11" font-weight="800" fill="#db2777">${TUNE.short}</text>`;
+    if (i === weeks.length - 1) g += `<text x="${x + bw*0.36}" y="${y(w.total)-5}" text-anchor="end" font-size="11" font-weight="800" fill="#14161c">🏁 ${MAIN.short}</text>`;
     if (i % 2 === 0) g += `<text x="${x + bw*0.36}" y="${H-pb+14}" text-anchor="middle" font-size="9" fill="#8a90a0" font-family="JetBrains Mono, monospace">${w.label}</text>`;
   });
   g += `<text x="${pl}" y="${H-4}" font-size="10" fill="#8a90a0">km/minggu · warna = blok · A = minggu Fase A, B = minggu Fase B</text>`;
@@ -1157,7 +1164,7 @@ function dayHTML(w, d){
 function chipsHTML(w){
   const isCur = cur && cur.label === w.label;
   let c = isCur ? `<span class="chip now">● Minggu ini</span>` : "";
-  if (w.label === JK_WEEK) c += `<span class="chip jkc">JAKIM</span>`;
+  if (w.label === JK_WEEK) c += `<span class="chip jkc">${esc(TUNE.short)}</span>`;
   w.days.forEach(d => {
     if (d.type === "run") c += `<span class="chip k-${d.session.kind}">${DAYS[d.dow].slice(0,3)} ${SHORT[d.session.kind]} <b>${fmt(d.session.km)}</b></span>`;
     else if (d.type === "holiday") c += `<span class="chip h">${DAYS[d.dow].slice(0,3)} libur</span>`;
@@ -1177,7 +1184,7 @@ function weekHTML(w){
   return `<article class="week${isCur?" current":""}${isOpen?" open":""}${isJk?" jakim":""}" id="w-${w.label}" style="--bc:${bk.color}">
     <div class="wk-h" data-toggle="${w.label}">
       <div class="wk-id">${w.label}</div>
-      <div class="wk-meta"><div class="dates">${fd(w.start)} – ${fd(w.end)}</div><div class="blkname">${isJk ? '<span style="color:#db2777">Race week · JAKIM HM (tune-up)</span>' : esc(w.stage)}</div></div>
+      <div class="wk-meta"><div class="dates">${fd(w.start)} – ${fd(w.end)}</div><div class="blkname">${isJk ? `<span style="color:#db2777">Race week · ${esc(TUNE.short)} ${esc(TUNE.abbr)} (tune-up)</span>` : esc(w.stage)}</div></div>
       <div class="chips">${chipsHTML(w)}</div>
       <div class="wk-km"><div class="n">${fmt(w.total)}<small> km</small></div><div class="bar"><i style="width:${w.total/maxKm*100}%"></i></div></div>
       <div class="caret">▼</div>
@@ -1374,7 +1381,7 @@ function renderToday(){
       w = weeks[0];
       html += `<div class="vcard today-empty"><div class="big">⏳</div><h3>Program mulai 1 Desember 2026</h3><p>${startsIn} hari lagi. Sementara itu, ini minggu pertamamu.</p></div>`;
     } else {
-      html += `<div class="vcard today-empty"><div class="big">🎉</div><h3>Program sudah selesai</h3><p>Semoga JRF 2027-nya lancar!</p></div>`;
+      html += `<div class="vcard today-empty"><div class="big">🎉</div><h3>Program sudah selesai</h3><p>Semoga ${esc(MAIN.short)} ${rYear(MAIN)}-nya lancar!</p></div>`;
       el.innerHTML = html; return;
     }
   } else {
@@ -1410,7 +1417,7 @@ function renderRaceList(el){
     if (s.kind === "race" || /Time Trial|Dress Rehearsal/i.test(s.title)) ms.push({w, d, s});
   }));
   el.innerHTML = `<div class="ms-list">${ms.map(({w, d, s}) => {
-    const done = pd(d.date) < today, main = d.date === "2027-10-24", jk = d.date === JK_DATE;
+    const done = pd(d.date) < today, main = RACES.some(r => r.priority === "A" && r.date === d.date), jk = d.date === JK_DATE;
     const a = actualOn(d.date);
     return `<button class="ms${done ? " done" : ""}${main ? " main" : ""}${jk ? " jk" : ""}" data-w="${w.label}" data-dow="${d.dow}">
       <span class="md">${fd(d.date)}</span><span><div class="mt">${esc(s.title)}</div><div class="mw">${w.label} · ${fmt(s.km)} km${a ? ` · <b style="color:#15803d">${fmtDur(a.dur)} · ${fmtPace(a.pace)}</b>` : ""}</div></span><span class="mc" style="margin-left:auto;color:var(--ink3)">›</span></button>`;
@@ -1655,7 +1662,7 @@ function renderProgress(el, page){
 
 function renderMore(){
   const items = [
-    ["p-race", "🏁", "Race & Benchmark", "JRF, JAKIM, time trial & dress rehearsal"],
+    ["p-race", "🏁", "Race & Benchmark", RACES.map(r => r.short).join(", ") + ", time trial & dress rehearsal"],
     ["p-blocks", "🧭", "Penjelasan Blok", "6 blok, periode, dan fokus tiap blok"],
     ["p-chart", "📊", "Volume Mingguan", "Grafik km per minggu dari Jan–Okt"],
     ["p-zones", "🎯", "Panduan Zona", "Rentang HR & pace tiap jenis lari"],
@@ -1668,7 +1675,7 @@ function renderMore(){
   html += `<button class="more-item" data-act="lang"><span class="mi">🌐</span><span><div class="mt">${LANG === "en" ? "Language" : "Bahasa"}</div><div style="font-size:12px;color:var(--ink3)">${LANG === "en" ? "English · tap for Bahasa Indonesia" : "Bahasa Indonesia · tap untuk English"}</div></span><span class="mc">›</span></button>`;
   html += `<button class="more-item" data-act="theme"><span class="mi">${THEME_ICON[themeMode()]}</span><span><div class="mt">Tampilan</div><div style="font-size:12px;color:var(--ink3)">${THEME_LABEL[themeMode()]} · ${L("tap untuk ganti", "tap to change")}</div></span><span class="mc">›</span></button>`;
   html += `<button class="more-item" data-act="about"><span class="mi">ℹ️</span><span><div class="mt">Tentang program ini</div><div style="font-size:12px;color:var(--ink3)">Dipersonalisasi untuk @ryanepwijaya, disusun dengan AI</div></span><span class="mc">›</span></button></div>`;
-  html += `<p class="more-foot">Program lari JRF 2027 · disusun 28 Okt 2026 dari data Coros & Strava. Nutrisi di luar program. Gerakan gym diambil dari log latihan Ryan.</p>`;
+  html += `<p class="more-foot">Program lari ${esc(MAIN.short)} ${rYear(MAIN)} · disusun 28 Okt 2026 dari data Coros & Strava. Nutrisi di luar program. Gerakan gym diambil dari log latihan Ryan.</p>`;
   const el = document.getElementById("v-more"); el.innerHTML = html;
   el.querySelectorAll("[data-page]").forEach(b => b.addEventListener("click", () => navigate("more/" + b.dataset.page)));
   const inst = el.querySelector('[data-act="install"]'); if (inst) inst.addEventListener("click", () => window.__install());
@@ -1786,6 +1793,9 @@ async function loadWx(){
   } catch(e) { /* offline / API error: kartu tetap tersembunyi */ }
 }
 function renderDash(){
+  document.getElementById("dTitle").innerHTML = `Road to <span>${esc(TARGET.short)} ${rYear(TARGET)}</span>`;
+  document.getElementById("dSub").innerHTML = `${esc(TARGET.name)} · ${esc(TARGET.dist)}<br>${LONGDAY(pd(TARGET.date))}${TARGET.goal ? ` · target ${esc(TARGET.goal)}` : ""}`;
+  const fr = document.getElementById("footRace"); if (fr) fr.textContent = `Program lari ${MAIN.short} ${rYear(MAIN)}`;
   // countdown
   document.getElementById("dCount").innerHTML = daysLeft > 0 ? `${daysLeft}<small>hari lagi</small>` : (daysLeft === 0 ? "Race day! 🏁" : "Selesai 🎉");
   // sesi berikutnya
@@ -1805,7 +1815,7 @@ function renderDash(){
       <div class="dmeta"><span class="dkm">${fmt(s.km)} km</span><span class="mode ${s.target.mode}">${s.target.mode}</span><span>${esc(s.target.range)}</span></div>
       ${todayX && todayX.d.type === "gym" && next.d.date !== isoToday ? `<div class="dx">Hari ini: ${esc(todayX.d.session.title)}</div>` : ""}`;
     nb.onclick = () => openSession(next.w.label, next.d.dow);
-  } else { nb.className = "d-card d-next"; nb.innerHTML = `<div class="d-lbl"><span>Program</span></div><div class="dt">Selesai 🎉 Semoga JRF-nya lancar!</div>`; nb.onclick = null; }
+  } else { nb.className = "d-card d-next"; nb.innerHTML = `<div class="d-lbl"><span>Program</span></div><div class="dt">Selesai 🎉 Semoga ${esc(MAIN.short)}-nya lancar!</div>`; nb.onclick = null; }
   // perjalanan program
   const N = weeks.length, ci = cur ? weeks.indexOf(cur) : -1;
   const pos = ci >= 0 ? (ci + ((today.getDay() + 6) % 7 + 1) / 7) / N : (today < pd(weeks[0].start) || today < pd(START) ? 0 : 1);
@@ -1822,7 +1832,7 @@ function renderDash(){
   jb.innerHTML = `<div class="d-lbl"><span>Perjalanan program</span><span>${right} <span class="go">›</span></span></div>
     <div class="jbar">${segs}<span class="jdot" style="left:${jkPos}%"></span>${pos > 0 && pos < 1 ? `<span class="jmark" style="left:${pos*100}%"></span>` : ""}</div>
     <div class="jlabels">${labels}</div>
-    <div class="jcap"><span><b>●</b> JAKIM 13 Jun</span><span>🏁 JRF 24 Okt</span></div>`;
+    <div class="jcap"><span>${TUNE ? `<b>●</b> ${esc(TUNE.short)} ${fd(TUNE.date)}` : ""}</span><span>🏁 ${esc(MAIN.short)} ${fd(MAIN.date)}</span></div>`;
   jb.onclick = () => { if (isMobile()) { navigate("program"); window.scrollTo(0, 0); } else document.getElementById("toolbar").scrollIntoView({behavior: "smooth"}); };
   // minggu ini (strip 7 hari)
   const wk = cur || weeks.find(w => w.days.filter(d => d.type === "run").length >= 3) || weeks[0];
@@ -1851,10 +1861,9 @@ function renderDash(){
   // race berikutnya
   const hmtt = runs.find(x => /HM Time Trial/i.test(x.d.session.title));
   const races = [
-    {date: JK_DATE, name: "Jakarta International Marathon", sub: "Half Marathon · tune-up", ic: "🏃"},
-    hmtt && {date: hmtt.d.date, name: "HM Time Trial", sub: "Benchmark target JRF", ic: "⏱️"},
-    {date: "2027-10-24", name: "Jakarta Running Festival", sub: "Full Marathon · race utama", ic: "🏁"},
-  ].filter(Boolean);
+    ...RACES.map(r => ({date: r.date, name: r.name, sub: `${r.dist} · ${r.priority === "A" ? L("race utama", "main race") : "tune-up"}`, ic: r.ic || "🏁"})),
+    hmtt && {date: hmtt.d.date, name: "HM Time Trial", sub: L(`Benchmark target ${MAIN.short}`, `${MAIN.short} target benchmark`), ic: "⏱️"},
+  ].filter(Boolean).sort((a, b) => a.date < b.date ? -1 : 1);
   const nr = races.find(r => r.date >= isoToday) || races[races.length - 1];
   const left = Math.round((pd(nr.date) - today) / 86400000);
   const rb = document.getElementById("dRace");
