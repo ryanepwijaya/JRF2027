@@ -1,5 +1,5 @@
-// Service worker Road to JRF 2027 — dibuat otomatis oleh build.py (versi: 20b006e653)
-const CACHE = "jrf2027-20b006e653";
+// Service worker Road to JRF 2027 — dibuat otomatis oleh build.py (versi: a9058ad4ff)
+const CACHE = "jrf2027-a9058ad4ff";
 const CORE = ["/", "/manifest.webmanifest", "/icons/icon.svg", "/icons/icon-192.png", "/icons/icon-512.png", "/icons/apple-touch-icon.png", "/icons/favicon-32.png"];
 
 self.addEventListener("install", e => {

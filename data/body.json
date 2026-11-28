@@ -1,5 +1,22 @@
 {
   "target_kg": 63,
   "note": "Berat & komposisi tubuh (InBody / timbangan / Coros). Diperbarui saat update mingguan.",
-  "entries": []
+  "entries": [
+    {
+      "date": "2026-11-28",
+      "tag": "pre",
+      "source": "InBody",
+      "device": "InBody H30",
+      "weight": 71.2,
+      "bodyfat": 32.4,
+      "fat_kg": 23.1,
+      "smm": 26.8,
+      "slm": 45.3,
+      "bmi": 26.2,
+      "visceral": 9,
+      "whr": 0.88,
+      "bmr_kj": 5895,
+      "score": 63
+    }
+  ]
 }
