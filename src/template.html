@@ -880,6 +880,18 @@ body.sheet-open{overflow:hidden}
 .cm .cd{font-family:var(--font);font-size:11px;font-weight:800;margin-left:6px;color:var(--ink3)}
 .cm .cd.good{color:#16a34a}.cm .cd.bad{color:#dc2626}
 .cnote{font-size:11.5px;color:var(--ink3);margin-top:10px;line-height:1.45}
+
+/* ===== Realisasi gym & aktivitas ekstra ===== */
+.gx{margin-top:8px;border-top:1px dashed var(--line);padding-top:6px}
+.gx-r{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:4px 0;color:var(--ink2)}
+.gx-r b{font-family:var(--mono);font-weight:700;color:var(--ink);white-space:nowrap}
+.gx-r b small{font-family:var(--font);font-weight:600;color:var(--ink3)}
+.xact{margin-top:10px;padding:14px 16px}
+.xact .xh{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink3);margin-bottom:6px}
+.xact .xt{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-top:8px}
+.xact .rv{display:flex;gap:16px;flex-wrap:wrap;margin-top:4px}
+.xact .rv span{font-family:var(--mono);font-weight:700;font-size:17px}
+.xact .rv small{display:block;font-family:var(--font);font-size:10.5px;color:var(--ink3);font-weight:600}
 </style>
 </head>
 <body>
@@ -1500,6 +1512,7 @@ function renderToday(dir){
     else if (d && d.session) html += detailHTML(wkOf, d);
     else if (d && d.type === "holiday") html += `<div class="vcard today-empty"><div class="big">🇮🇩</div><h3>Libur: ${esc(d.holiday)}</h3><p>Isi sendiri dengan easy run kalau mau.</p></div>`;
     else html += `<div class="vcard today-empty"><div class="big">😴</div><h3>Hari istirahat</h3><p>Tidak ada sesi terjadwal. Pulihkan badan.</p></div>`;
+    html += extraActHTML(iso, d && d.session ? d.type : null);
     if (!(d && d.type === "run")) html += nextSessionCard(iso);
     html += `</div>`;
   }
@@ -1574,13 +1587,39 @@ function weekActual(w){
 }
 function realHTML(d){
   const st = statusOf(d); if (!st) return "";
-  if (d.type === "gym") return `<div class="real"><div class="rl">Realisasi <span class="st ${st.cls}">${st.txt}</span></div></div>`;
+  if (d.type === "gym") return `<div class="real"><div class="rl">Realisasi <span class="st ${st.cls}">${st.txt}</span></div>${gymActHTML(gymOn(d.date))}</div>`;
   if (!st.a) return `<div class="real"><div class="rl">Realisasi <span class="st ${st.cls}">${st.txt}</span></div></div>`;
   const a = st.a;
   return `<div class="real"><div class="rl">Realisasi <span><span class="st ${st.cls}">${st.txt}</span>${st.hot ? ` <span class="st hot">🔥 ${st.hot}</span>` : ""}</span></div>
     <div class="rv"><span>${fmt(a.km)}<small>km</small></span><span>${fmtDur(a.dur)}<small>durasi</small></span><span>${fmtPace(a.pace)}<small>pace</small></span>${a.hr ? `<span>${a.hr}<small>bpm</small></span>` : ""}</div></div>`;
 }
 
+
+// realisasi gym: durasi + gerakan & set dari Strava/Hevy
+function exSummary(sets){
+  if (!sets || !sets.length) return "";
+  const same = sets.every(x => x === sets[0]);
+  if (same) { const m = sets[0].match(/^(.+?)\s*×\s*(\d+)$/); return m ? `${sets.length} × ${m[2]}<small> · ${esc(m[1])}</small>` : `${sets.length > 1 ? sets.length + " × " : ""}${esc(sets[0])}`; }
+  return sets.map(esc).join(" · ");
+}
+function gymActHTML(acts){
+  if (!acts || !acts.length) return "";
+  const dur = acts.reduce((t, a) => t + (a.dur || 0), 0), ex = acts.flatMap(a => a.ex || []);
+  const work = ex.filter(e => !/^(warm ?up|stretch|cool ?down)/i.test(e.n));
+  const nSets = work.reduce((t, e) => t + (e.sets ? e.sets.length : 0), 0);
+  return `<div class="rv"><span>${fmtDur(dur)}<small>${L("durasi", "duration")}</small></span>${work.length ? `<span>${work.length}<small>${L("gerakan", "exercises")}</small></span><span>${nSets}<small>set</small></span>` : ""}</div>
+    ${ex.length ? `<div class="gx">${ex.map(e => `<div class="gx-r"><span>${esc(e.n)}</span><b>${exSummary(e.sets)}</b></div>`).join("")}</div>` : ""}`;
+}
+// aktivitas yang tercatat tapi tidak ada di jadwal (mis. hari libur / sebelum program)
+function extraActHTML(iso, plannedType){
+  const acts = ACT.filter(a => a.date === iso && a.type !== plannedType);
+  if (!acts.length) return "";
+  const runs = acts.filter(a => a.type === "run"), gyms = acts.filter(a => a.type === "gym");
+  let h = `<div class="vcard xact"><div class="xh"><span class="st ok">✅ ${L("Tercatat", "Logged")}</span><span>${L("di luar jadwal", "not in the plan")}</span></div>`;
+  if (gyms.length) h += `<div class="xt">Gym</div>${gymActHTML(gyms)}`;
+  runs.forEach(a => { const pace = a.km ? a.dur / a.km : null; h += `<div class="xt">${L("Lari", "Run")}</div><div class="rv"><span>${fmt(a.km)}<small>km</small></span><span>${fmtDur(a.dur)}<small>${L("durasi", "duration")}</small></span><span>${fmtPace(pace)}<small>pace</small></span>${a.hr ? `<span>${a.hr}<small>bpm</small></span>` : ""}</div>`; });
+  return h + `</div>`;
+}
 function weightCard(){
   const E = (BODY.entries || []).slice().sort((x, y) => x.date < y.date ? -1 : 1), tgt = BODY.target_kg || 63;
   if (!E.length) return `<div class="pg-empty"><div class="big">⚖️</div><h4>Berat badan · target ${tgt} kg</h4><p>Belum ada data. Diisi dari hasil InBody / timbangan saat update mingguan.</p></div>`;

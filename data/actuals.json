@@ -1,5 +1,59 @@
 {
-  "updated": null,
-  "note": "Realisasi latihan dari Coros/Strava. Diperbarui mingguan. Hanya tanggal, jenis, jarak, durasi, pace, HR rata-rata — tanpa rute, jam mulai, atau nama aktivitas.",
-  "activities": []
+ "updated": "2026-11-28",
+ "note": "Realisasi latihan dari Coros/Strava. Hanya tanggal, jenis, jarak, durasi, pace, HR rata-rata, dan (untuk gym) gerakan + set — tanpa rute, jam mulai, atau nama aktivitas.",
+ "activities": [
+  {
+   "date": "2026-11-28",
+   "type": "gym",
+   "km": 0,
+   "dur": 2066,
+   "hr": null,
+   "ex": [
+    {
+     "n": "Warm Up",
+     "sets": [
+      "2:30"
+     ]
+    },
+    {
+     "n": "Incline Chest Press (Machine)",
+     "sets": [
+      "30 kg × 12",
+      "30 kg × 12",
+      "30 kg × 12"
+     ]
+    },
+    {
+     "n": "Chest Fly (Machine)",
+     "sets": [
+      "30 kg × 12",
+      "30 kg × 12",
+      "30 kg × 12"
+     ]
+    },
+    {
+     "n": "Lat Pulldown (Cable)",
+     "sets": [
+      "30 kg × 12",
+      "30 kg × 12",
+      "30 kg × 12"
+     ]
+    },
+    {
+     "n": "Seated Cable Row - V Grip (Cable)",
+     "sets": [
+      "30 kg × 12",
+      "30 kg × 12",
+      "30 kg × 12"
+     ]
+    },
+    {
+     "n": "Stretching",
+     "sets": [
+      "1:30"
+     ]
+    }
+   ]
+  }
+ ]
 }
